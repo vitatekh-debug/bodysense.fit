@@ -40,7 +40,10 @@
       "Bash(pnpm --filter web tsc --noEmit)",
       "Bash(pnpm --filter mobile tsc --noEmit)",
       "Bash(pnpm --filter mobile add @react-native-async-storage/async-storage @react-native-community/netinfo)",
-      "Bash(dir \"C:\\\\Users\\\\TECNICO\\\\Documents\\\\vitatekh\\\\apps\\\\mobile\")"
+      "Bash(dir \"C:\\\\Users\\\\TECNICO\\\\Documents\\\\vitatekh\\\\apps\\\\mobile\")",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebFetch(domain:expo.dev)",
+      "Bash(npx expo *)"
     ]
   }
 }
