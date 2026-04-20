@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0F172A;
+  --foreground: #F1F5F9;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Print styles (used by /reports PDF export) ──────────── */
+@media print {
+  /* Hide navigation chrome */
+  aside, header, nav { display: none !important; }
+
+  /* Reset dark background for PDF */
+  body, .bg-surface, .bg-surface-dark {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  /* Remove dark borders */
+  .border-slate-700, .border-slate-800 {
+    border-color: #D1D5DB !important;
+  }
+
+  /* Show content that uses print:block */
+  .print\:block { display: block !important; }
+  .print\:hidden { display: none !important; }
+
+  /* Page breaks */
+  .print\:break-before-page { break-before: page; }
+
+  /* Make sure tables render fully */
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; page-break-after: auto; }
+
+  /* Main content takes full width */
+  main { padding: 20px !important; }
+  .flex-1 { overflow: visible !important; }
+}

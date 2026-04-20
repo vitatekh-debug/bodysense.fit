@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitatekh — Demo Atleta</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0F172A;
+      --surface: #1E293B;
+      --surface2:#273348;
+      --border:  #334155;
+      --text:    #F1F5F9;
+      --muted:   #94A3B8;
+      --dim:     #64748B;
+      --brand:   #6366F1;
+      --brand-l: #818CF8;
+      --green:   #22C55E;
+      --yellow:  #F59E0B;
+      --orange:  #F97316;
+      --red:     #EF4444;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .app { display: flex; height: 100vh; overflow: hidden; }
+    .sidebar {
+      width: 220px; background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; padding: 0;
+      flex-shrink: 0;
+    }
+    .sidebar-logo {
+      padding: 20px 20px 16px;
+      font-size: 18px; font-weight: 900; color: var(--brand-l);
+      letter-spacing: 3px; border-bottom: 1px solid var(--border);
+    }
+    .sidebar-nav { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      background: none; border: none; cursor: pointer;
+      color: var(--dim); font-size: 13px; font-weight: 600;
+      transition: all .15s; width: 100%; text-align: left;
+    }
+    .nav-btn:hover { background: rgba(99,102,241,.12); color: var(--brand-l); }
+    .nav-btn.active { background: rgba(99,102,241,.2); color: var(--brand-l); }
+    .nav-icon { font-size: 18px; width: 22px; text-align: center; }
+
+    .main { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+    }
+    .card + .card { margin-top: 16px; }
+    .card-title {
+      font-size: 11px; font-weight: 800; color: var(--dim);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    /* ── Sliders ── */
+    .slider-row { margin-bottom: 14px; }
+    .slider-label {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 6px;
+    }
+    .slider-label span { font-size: 13px; color: var(--muted); font-weight: 600; }
+    .slider-label strong { font-size: 18px; font-weight: 900; }
+    input[type=range] {
+      width: 100%; height: 6px; -webkit-appearance: none; appearance: none;
+      background: var(--border); border-radius: 3px; outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px;
+      border-radius: 50%; cursor: pointer; border: 2px solid var(--bg);
+    }
+    .slider-ends {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--dim); margin-top: 3px;
+    }
+
+    /* ── Body Map ── */
+    .body-map-wrap { display: flex; gap: 20px; align-items: flex-start; }
+    .body-svg-container { position: relative; flex-shrink: 0; }
+    .body-svg-container svg { display: block; }
+    .pain-zone {
+      cursor: pointer; fill: rgba(99,102,241,.15);
+      stroke: var(--border); stroke-width: 1.5;
+      transition: fill .15s;
+    }
+    .pain-zone:hover { fill: rgba(99,102,241,.4); }
+    .pain-zone.selected-green  { fill: rgba(34,197,94,.5);  stroke: var(--green); }
+    .pain-zone.selected-yellow { fill: rgba(245,158,11,.5); stroke: var(--yellow); }
+    .pain-zone.selected-orange { fill: rgba(249,115,22,.5); stroke: var(--orange); }
+    .pain-zone.selected-red    { fill: rgba(239,68,68,.6);  stroke: var(--red); }
+    .pain-zone-label { font-size: 8px; fill: var(--dim); pointer-events: none; }
+
+    .eva-panel { flex: 1; }
+    .eva-panel h4 { font-size: 12px; color: var(--dim); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
+    .eva-selected {
+      background: var(--surface2); border-radius: 10px; padding: 12px; margin-bottom: 12px;
+      font-size: 13px; color: var(--muted);
+    }
+    .eva-selected strong { color: var(--text); font-size: 16px; }
+
+    /* ── Chips ── */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; font-weight: 600; color: var(--dim);
+      cursor: pointer; transition: all .15s;
+    }
+    .chip:hover { border-color: var(--brand); color: var(--brand-l); }
+    .chip.active { background: rgba(99,102,241,.2); border-color: var(--brand); color: var(--brand-l); }
+
+    /* ── Inputs ── */
+    .input-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .input-group { flex: 1; }
+    .input-group label { display: block; font-size: 11px; color: var(--dim); font-weight: 700; margin-bottom: 6px; letter-spacing: .5px; }
+    .input-group input, .input-group select {
+      width: 100%; padding: 10px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 15px; font-weight: 700;
+      outline: none; transition: border-color .15s;
+    }
+    .input-group input:focus, .input-group select:focus { border-color: var(--brand); }
+    .input-group select option { background: var(--surface); }
+
+    /* ── Submit button ── */
+    .btn-submit {
+      width: 100%; padding: 14px; margin-top: 16px;
+      background: var(--brand); border: none; border-radius: 12px;
+      color: #fff; font-size: 15px; font-weight: 800; cursor: pointer;
+      transition: background .15s; letter-spacing: .5px;
+    }
+    .btn-submit:hover { background: var(--brand-l); }
+    .btn-submit:active { transform: scale(.98); }
+    .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Dashboard ── */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:800px){ .dashboard-grid { grid-template-columns: 1fr; } }
+
+    /* ── Speedometer ── */
+    .speedo-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .speedo-value { font-size: 48px; font-weight: 900; line-height: 1; }
+    .speedo-label { font-size: 13px; font-weight: 700; }
+    .speedo-sub { font-size: 11px; color: var(--dim); }
+
+    /* ── Alert banners ── */
+    .alert-banner {
+      border-radius: 12px; padding: 14px 16px;
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;
+    }
+    .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .alert-title { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+    .alert-desc  { font-size: 12px; line-height: 1.5; }
+    .alert-red    { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.4); }
+    .alert-orange { background: rgba(249,115,22,.12); border: 1px solid rgba(249,115,22,.4); }
+    .alert-yellow { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.4); }
+    .alert-green  { background: rgba(34,197,94,.12);  border: 1px solid rgba(34,197,94,.4); }
+    .alert-red    .alert-title { color: var(--red); }
+    .alert-orange .alert-title { color: var(--orange); }
+    .alert-yellow .alert-title { color: var(--yellow); }
+    .alert-green  .alert-title { color: var(--green); }
+
+    /* ── Traffic light ── */
+    .traffic-lights { display: flex; gap: 8px; justify-content: center; margin: 12px 0; }
+    .tl-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      transition: all .3s; opacity: .25;
+    }
+    .tl-dot.active { opacity: 1; box-shadow: 0 0 12px currentColor; }
+    .tl-green  { background: var(--green);  color: var(--green); }
+    .tl-yellow { background: var(--yellow); color: var(--yellow); }
+    .tl-orange { background: var(--orange); color: var(--orange); }
+    .tl-red    { background: var(--red);    color: var(--red); }
+
+    /* ── Prescription card ── */
+    .rx-card {
+      background: rgba(99,102,241,.1); border: 1px solid rgba(99,102,241,.3);
+      border-radius: 12px; padding: 14px 16px; margin-top: 10px;
+    }
+    .rx-title { font-size: 13px; font-weight: 800; color: var(--brand-l); margin-bottom: 6px; }
+    .rx-item  { font-size: 12px; color: var(--muted); padding-left: 12px; position: relative; margin-bottom: 3px; }
+    .rx-item::before { content: "→"; position: absolute; left: 0; color: var(--brand); }
+
+    /* ── Stat row ── */
+    .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
+    .stat-box { background: var(--surface2); border-radius: 10px; padding: 12px; text-align: center; }
+    .stat-box-val { font-size: 22px; font-weight: 900; }
+    .stat-box-lbl { font-size: 10px; color: var(--dim); margin-top: 2px; font-weight: 700; letter-spacing: .5px; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--green); color: #fff;
+      padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4); z-index: 999;
+      animation: slideIn .3s ease;
+    }
+    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* ── ACWR Arc ── */
+    .acwr-arc-label { font-size: 10px; fill: var(--dim); }
+
+    /* misc */
+    .section-title { font-size: 24px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+    .section-sub   { font-size: 13px; color: var(--dim); margin-bottom: 20px; }
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .tag {
+      display: inline-block; font-size: 10px; font-weight: 800;
+      padding: 2px 8px; border-radius: 20px; margin-left: 6px;
+    }
+    .hq-display {
+      text-align: center; padding: 16px;
+      background: var(--surface2); border-radius: 12px; margin-top: 10px;
+    }
+    .hq-ratio-val { font-size: 44px; font-weight: 900; }
+    .poms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+    .poms-item { background: var(--surface2); border-radius: 10px; padding: 12px; }
+    .poms-item-label { font-size: 10px; color: var(--dim); font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; }
+    .poms-item-val { font-size: 20px; font-weight: 900; }
+    .history-bar {
+      display: flex; gap: 3px; align-items: flex-end; height: 50px; margin-top: 10px;
+    }
+    .h-bar {
+      flex: 1; border-radius: 3px 3px 0 0; transition: height .3s;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useCallback, useMemo } = React;
+
+// ═══════════════════════════════════════════════════════════
+// MOTOR DE LÓGICA
+// ═══════════════════════════════════════════════════════════
+
+/** Historial ficticio de 28 días de sRPE */
+const FAKE_HISTORY_28D = [
+  520, 480, 0, 610, 570, 530, 0,
+  590, 620, 580, 0, 640, 600, 560,
+  510, 580, 0, 630, 610, 590, 0,
+  560, 540, 580, 0, 610, 570, 530,
+];
+
+function calculateACWR(history28d, todayLoad) {
+  const all = [...history28d.slice(-27), todayLoad];
+  const last7  = all.slice(-7);
+  const last28 = all.slice(-28);
+
+  const acute   = last7.reduce((s, v) => s + v, 0);
+  const chronic = last28.reduce((s, v) => s + v, 0) / 4;
+  const ratio   = chronic > 0 ? acute / chronic : 0;
+
+  return {
+    acute: Math.round(acute),
+    chronic: Math.round(chronic),
+    ratio: parseFloat(ratio.toFixed(2)),
+  };
+}
+
+function getRiskZone(ratio) {
+  if (ratio < 0.80) return "low";
+  if (ratio < 1.30) return "optimal";
+  if (ratio < 1.50) return "high";
+  return "very_high";
+}
+
+const ZONE_CONFIG = {
+  low:       { label: "Carga Baja",      color: "#6366F1", tl: "tl-yellow" },
+  optimal:   { label: "Zona Óptima",     color: "#22C55E", tl: "tl-green"  },
+  high:      { label: "Riesgo Alto",     color: "#F97316", tl: "tl-orange" },
+  very_high: { label: "Zona Crítica",    color: "#EF4444", tl: "tl-red"    },
+};
+
+function runAlertEngine({ vigor, fatigue, stress, hqRatio, acwrRatio, evaZones }) {
+  const alerts = [];
+
+  // A1 — Disponibilidad baja
+  if (vigor < 3 || fatigue > 6) {
+    alerts.push({
+      level: "orange",
+      title: "Baja Disponibilidad",
+      desc: `Vigor ${vigor}/10 · Fatiga ${fatigue}/10. Reducir intensidad hoy un 20–30%. Priorizar recuperación activa.`,
+      icon: "🧠",
+    });
+  }
+
+  // A2 — Estrés
+  if (stress > 6) {
+    alerts.push({
+      level: "yellow",
+      title: "Estrés Elevado",
+      desc: `Estrés ${stress}/10. Considerar sesión de mindfulness o técnicas de regulación antes de entrenar.`,
+      icon: "😤",
+    });
+  }
+
+  // A3 — H/Q
+  if (hqRatio > 0 && hqRatio < 0.6) {
+    alerts.push({
+      level: "red",
+      title: "Riesgo de Lesión — Déficit H/Q",
+      desc: `Ratio ${hqRatio.toFixed(2)} (umbral: 0.60). Déficit excéntrico de isquiotibiales confirmado.`,
+      icon: "⚡",
+      prescription: ["Nordic Hamstring 3×6–8 rep (excéntrico)", "HSR Hamstring — 70% 1RM, 3×10", "Reducir sprint máximo 50% esta semana"],
+    });
+  }
+
+  // A4 — ACWR
+  if (acwrRatio > 1.5) {
+    alerts.push({
+      level: "red",
+      title: "ACWR Crítico",
+      desc: `Ratio ${acwrRatio} — Zona muy alta. Riesgo de lesión significativamente elevado. Descanso obligatorio.`,
+      icon: "🔴",
+    });
+  } else if (acwrRatio >= 1.3) {
+    alerts.push({
+      level: "orange",
+      title: "ACWR Elevado",
+      desc: `Ratio ${acwrRatio} — Zona de precaución. Monitorear carga las próximas 72h.`,
+      icon: "🟠",
+    });
+  }
+
+  // A5 — Dolor severo (EVA rojo en mapa)
+  const redPain = evaZones.filter(z => z.eva >= 7);
+  if (redPain.length > 0) {
+    alerts.push({
+      level: "red",
+      title: "Dolor Severo Reportado",
+      desc: `EVA ${redPain[0].eva}/10 en ${redPain[0].name}. Derivar a fisioterapeuta. No entrenar esa zona.`,
+      icon: "🩸",
+    });
+  }
+
+  return alerts;
+}
+
+// ═══════════════════════════════════════════════════════════
+// COMPONENTES
+// ═══════════════════════════════════════════════════════════
+
+// ── Slider ──────────────────────────────────────────────────
+function Slider({ label, min, max, value, onChange, color = "#6366F1", leftLabel, rightLabel }) {
+  const pct = ((value - min) / (max - min)) * 100;
+  return (
+    <div className="slider-row">
+      <div className="slider-label">
+        <span>{label}</span>
+        <strong style={{ color }}>{value}</strong>
+      </div>
+      <input
+        type="range" min={min} max={max} value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        style={{
+          background: `linear-gradient(to right, ${color} ${pct}%, var(--border) ${pct}%)`
+        }}
+      />
+      <div className="slider-ends">
+        <span>{leftLabel ?? min}</span>
+        <span>{rightLabel ?? max}</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Body Map (SVG humano simplificado) ──────────────────────
+const BODY_ZONES = [
+  { id:"head",      name:"Cabeza",        d:"M 80,10 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0", cx:80, cy:10 },
+  { id:"neck",      name:"Cuello",        d:"M72,28 h16 l-3,14 h-10z", cx:80, cy:35 },
+  { id:"shoulder_r",name:"Hombro Der.",   d:"M40,42 h26 v18 h-22 q-8,-2,-8,-10z", cx:51, cy:51 },
+  { id:"shoulder_l",name:"Hombro Izq.",   d:"M94,42 h26 q4,2,4,12 l-4,6 h-22 v-18z", cx:109,cy:51 },
+  { id:"chest",     name:"Pecho/Dorsal",  d:"M66,42 h28 v26 h-28z", cx:80, cy:55 },
+  { id:"abdomen",   name:"Abdomen/Lumbar",d:"M66,68 h28 v20 h-28z", cx:80, cy:78 },
+  { id:"arm_r",     name:"Brazo Der.",    d:"M34,60 h12 v30 h-12z", cx:40, cy:75 },
+  { id:"arm_l",     name:"Brazo Izq.",    d:"M114,60 h12 v30 h-12z", cx:120,cy:75 },
+  { id:"groin",     name:"Ingle/Cadera",  d:"M66,88 h28 v14 h-28z", cx:80, cy:95 },
+  { id:"quad_r",    name:"Cuádriceps Der.",d:"M57,102 h16 v28 h-16z", cx:65, cy:116 },
+  { id:"quad_l",    name:"Cuádriceps Izq.",d:"M87,102 h16 v28 h-16z", cx:95, cy:116 },
+  { id:"knee_r",    name:"Rodilla Der.",  d:"M57,130 h16 v10 h-16z", cx:65, cy:135 },
+  { id:"knee_l",    name:"Rodilla Izq.",  d:"M87,130 h16 v10 h-16z", cx:95, cy:135 },
+  { id:"calf_r",    name:"Gemelo Der.",   d:"M58,140 h14 v24 h-14z", cx:65, cy:152 },
+  { id:"calf_l",    name:"Gemelo Izq.",   d:"M88,140 h14 v24 h-14z", cx:95, cy:152 },
+  { id:"ham_r",     name:"Isquio Der.",   d:"M58,102 a6,6 0 0,0 -12,0 v28 h12z", cx:50, cy:116 },
+  { id:"ham_l",     name:"Isquio Izq.",   d:"M102,102 a6,6 0 0,1 12,0 v28 h-12z", cx:110,cy:116 },
+];
+
+const EVA_COLORS = { 0:"none", 1:"green", 2:"green", 3:"green", 4:"yellow", 5:"yellow", 6:"orange", 7:"orange", 8:"red", 9:"red", 10:"red" };
+
+function BodyMap({ selectedZones, onZoneChange }) {
+  const [activeZone, setActiveZone] = useState(null);
+  const [evaScore, setEvaScore] = useState(5);
+
+  function handleZoneClick(zone) {
+    setActiveZone(zone);
+  }
+  function applyEva() {
+    if (!activeZone) return;
+    if (evaScore === 0) {
+      onZoneChange(selectedZones.filter(z => z.id !== activeZone.id));
+    } else {
+      const updated = selectedZones.filter(z => z.id !== activeZone.id);
+      updated.push({ id: activeZone.id, name: activeZone.name, eva: evaScore, color: EVA_COLORS[evaScore] });
+      onZoneChange(updated);
+    }
+    setActiveZone(null);
+  }
+
+  function getZoneClass(zoneId) {
+    const found = selectedZones.find(z => z.id === zoneId);
+    if (!found) return "pain-zone";
+    return `pain-zone selected-${found.color}`;
+  }
+
+  return (
+    <div className="body-map-wrap">
+      <div className="body-svg-container">
+        <svg width="160" height="180" viewBox="0 0 160 180">
+          {BODY_ZONES.map(zone => (
+            <g key={zone.id} onClick={() => handleZoneClick(zone)} title={zone.name}>
+              <path d={zone.d} className={getZoneClass(zone.id)} />
+            </g>
+          ))}
+        </svg>
+        <div style={{fontSize:10,color:"var(--dim)",textAlign:"center",marginTop:4}}>
+          Toca una zona para marcar dolor
+        </div>
+      </div>
+
+      <div className="eva-panel">
+        <h4>ESCALA EVA</h4>
+
+        {activeZone ? (
+          <>
+            <div className="eva-selected">
+              Zona: <strong>{activeZone.name}</strong>
+              <div style={{marginTop:8}}>
+                <Slider
+                  label="Intensidad del Dolor"
+                  min={0} max={10} value={evaScore}
+                  onChange={setEvaScore}
+                  color={evaScore<=3?"#22C55E":evaScore<=6?"#F59E0B":evaScore<=8?"#F97316":"#EF4444"}
+                  leftLabel="0 — Sin dolor"
+                  rightLabel="10 — Insoportable"
+                />
+              </div>
+              <button
+                className="btn-submit"
+                style={{marginTop:8,padding:"8px 14px",fontSize:13}}
+                onClick={applyEva}
+              >
+                {evaScore === 0 ? "Quitar zona" : "Marcar dolor"}
+              </button>
+            </div>
+          </>
+        ) : (
+          <div style={{fontSize:12,color:"var(--dim)",lineHeight:1.6}}>
+            Selecciona una zona del cuerpo para registrar el nivel de dolor.
+          </div>
+        )}
+
+        {selectedZones.length > 0 && (
+          <div style={{marginTop:12}}>
+            <div style={{fontSize:10,color:"var(--dim)",fontWeight:700,letterSpacing:1,marginBottom:6}}>ZONAS MARCADAS</div>
+            {selectedZones.map(z => {
+              const c = z.color==="green"?"#22C55E":z.color==="yellow"?"#F59E0B":z.color==="orange"?"#F97316":"#EF4444";
+              return (
+                <div key={z.id} style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                  <div style={{width:8,height:8,borderRadius:"50%",background:c}} />
+                  <span style={{fontSize:12,color:"var(--muted)"}}>{z.name}</span>
+                  <strong style={{fontSize:13,color:c,marginLeft:"auto"}}>EVA {z.eva}/10</strong>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── ACWR Speedometer (SVG Arc) ───────────────────────────────
+function AcwrGauge({ ratio }) {
+  const zone = getRiskZone(ratio);
+  const cfg  = ZONE_CONFIG[zone];
+
+  // Arc: 0→180° semicircle, ratio 0→2 maps to 0→180°
+  const clamped = Math.min(ratio, 2.0);
+  const angleDeg = (clamped / 2.0) * 180; // 0° = left, 180° = right
+  const angleRad = ((angleDeg - 180) * Math.PI) / 180;
+  const cx = 100, cy = 95, r = 75;
+  const needleX = cx + r * Math.cos(angleRad);
+  const needleY = cy + r * Math.sin(angleRad);
+
+  // Arc segments
+  function describeArc(startAngle, endAngle, color) {
+    const s = ((startAngle - 180) * Math.PI) / 180;
+    const e = ((endAngle - 180) * Math.PI) / 180;
+    const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
+    const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
+    const large = endAngle - startAngle > 180 ? 1 : 0;
+    return (
+      <path
+        d={`M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2}`}
+        fill="none" stroke={color} strokeWidth="14" strokeLinecap="round"
+      />
+    );
+  }
+
+  return (
+    <div className="speedo-wrap">
+      <svg width="200" height="110" viewBox="0 0 200 110">
+        {/* Track */}
+        <path d={`M25,95 A75,75 0 0,1 175,95`} fill="none" stroke="var(--border)" strokeWidth="14" strokeLinecap="round"/>
+        {/* Zones */}
+        {describeArc(0,   72,  "#6366F1")}  {/* low: 0–0.8 */}
+        {describeArc(72,  117, "#22C55E")}  {/* optimal: 0.8–1.3 */}
+        {describeArc(117, 135, "#F97316")}  {/* high: 1.3–1.5 */}
+        {describeArc(135, 180, "#EF4444")}  {/* very_high: 1.5–2.0 */}
+        {/* Needle */}
+        <line
+          x1={cx} y1={cy}
+          x2={needleX} y2={needleY}
+          stroke="var(--text)" strokeWidth="2.5" strokeLinecap="round"
+        />
+        <circle cx={cx} cy={cy} r={6} fill={cfg.color} />
+        {/* Labels */}
+        <text x="18"  y="108" style={{fontSize:9,fill:"var(--dim)"}}>0.0</text>
+        <text x="87"  y="16"  style={{fontSize:9,fill:"var(--dim)"}}>1.0</text>
+        <text x="170" y="108" style={{fontSize:9,fill:"var(--dim)"}}>2.0</text>
+      </svg>
+      <div className="speedo-value" style={{color: cfg.color}}>{ratio.toFixed(2)}</div>
+      <div className="speedo-label" style={{color: cfg.color}}>{cfg.label}</div>
+      <div className="speedo-sub">ACWR — Ratio Carga Aguda:Crónica</div>
+    </div>
+  );
+}
+
+// ── ACWR History Bars ────────────────────────────────────────
+function HistoryBars({ history, todayLoad }) {
+  const allValues = [...history.slice(-13), todayLoad].slice(-14);
+  const max = Math.max(...allValues, 1);
+  return (
+    <div>
+      <div style={{fontSize:10,color:"var(--dim)",fontWeight:700,letterSpacing:1,marginBottom:4}}>HISTORIAL sRPE — 14 DÍAS</div>
+      <div className="history-bar">
+        {allValues.map((v,i) => {
+          const isToday = i === allValues.length - 1;
+          const h = Math.max((v/max)*44, 2);
+          return (
+            <div
+              key={i}
+              className="h-bar"
+              title={`${v} UA`}
+              style={{
+                height: h + "px",
+                background: isToday ? "#6366F1" : v===0 ? "var(--border)" : "#334155",
+                border: isToday ? "1px solid var(--brand-l)" : "none",
+              }}
+            />
+          );
+        })}
+      </div>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:9,color:"var(--dim)",marginTop:3}}>
+        <span>−13d</span><span>Hoy</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Traffic light ────────────────────────────────────────────
+function TrafficLight({ acwrRatio, alerts }) {
+  const zone = getRiskZone(acwrRatio);
+  const hasRed    = alerts.some(a => a.level === "red");
+  const hasOrange = alerts.some(a => a.level === "orange");
+
+  let active = "tl-green";
+  if (hasRed || zone === "very_high") active = "tl-red";
+  else if (hasOrange || zone === "high") active = "tl-orange";
+  else if (zone === "low") active = "tl-yellow";
+
+  const labels = { "tl-green":"Verde — Entrenar", "tl-yellow":"Precaución", "tl-orange":"Reducir Carga", "tl-red":"No Entrenar" };
+
+  return (
+    <div style={{textAlign:"center"}}>
+      <div className="traffic-lights">
+        {["tl-red","tl-orange","tl-yellow","tl-green"].map(tl => (
+          <div key={tl} className={`tl-dot ${tl} ${active===tl?"active":""}`} />
+        ))}
+      </div>
+      <div style={{fontSize:13,fontWeight:800,color:
+        active==="tl-red"?"var(--red)":active==="tl-orange"?"var(--orange)":active==="tl-yellow"?"var(--yellow)":"var(--green)"
+      }}>
+        {labels[active]}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+// PANTALLAS
+// ═══════════════════════════════════════════════════════════
+
+function WellnessScreen({ onSubmit }) {
+  const [sleep,   setSleep]   = useState(3);
+  const [fatigue, setFatigue] = useState(3);
+  const [stress,  setStress]  = useState(3);
+  const [vigor,   setVigor]   = useState(5);
+  const [confusion,setConf]  = useState(2);
+  const [evaZones, setEvaZones] = useState([]);
+
+  return (
+    <div>
+      <div className="section-title">Check-in Pre-Entreno</div>
+      <div className="section-sub">Daily Wellness — {new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long"})}</div>
+
+      <div className="card">
+        <div className="card-title">💤 Sueño & Recuperación</div>
+        <Slider label="Calidad del Sueño" min={1} max={5} value={sleep}
+          onChange={setSleep} color="#6366F1" leftLabel="Muy mal" rightLabel="Excelente" />
+        <Slider label="Fatiga CR-10" min={0} max={10} value={fatigue}
+          onChange={setFatigue} color={fatigue>6?"#EF4444":fatigue>3?"#F59E0B":"#22C55E"}
+          leftLabel="0 — Sin fatiga" rightLabel="10 — Agotado" />
+        <Slider label="Nivel de Estrés" min={0} max={10} value={stress}
+          onChange={setStress} color={stress>6?"#F97316":stress>3?"#F59E0B":"#22C55E"}
+          leftLabel="0 — Sin estrés" rightLabel="10 — Muy alto" />
+      </div>
+
+      <div className="card">
+        <div className="card-title">🧠 POMS — Estado de Ánimo</div>
+        <div className="poms-grid">
+          <div className="poms-item">
+            <div className="poms-item-label">⚡ VIGOR</div>
+            <div className="poms-item-val" style={{color:vigor>=3?"#22C55E":"#EF4444"}}>{vigor}/10</div>
+            <input type="range" min={0} max={10} value={vigor}
+              onChange={e=>setVigor(Number(e.target.value))}
+              style={{width:"100%",marginTop:6,background:`linear-gradient(to right,${vigor>=3?"#22C55E":"#EF4444"} ${vigor*10}%,var(--border) ${vigor*10}%)`}} />
+            {vigor < 3 && <div style={{fontSize:10,color:"var(--red)",marginTop:3}}>⚠ Vigor bajo</div>}
+          </div>
+          <div className="poms-item">
+            <div className="poms-item-label">😵 CONFUSIÓN</div>
+            <div className="poms-item-val" style={{color:confusion<=3?"#22C55E":"#F97316"}}>{confusion}/10</div>
+            <input type="range" min={0} max={10} value={confusion}
+              onChange={e=>setConf(Number(e.target.value))}
+              style={{width:"100%",marginTop:6,background:`linear-gradient(to right,${confusion<=3?"#22C55E":"#F97316"} ${confusion*10}%,var(--border) ${confusion*10}%)`}} />
+          </div>
+        </div>
+        <div className="divider" />
+        <div style={{fontSize:12,color:"var(--dim)"}}>
+          TMD estimado: <strong style={{color:vigor<3||fatigue>6?"var(--orange)":"var(--green)"}}>
+            {vigor < 3 || fatigue > 6 ? "Disponibilidad reducida" : "Estado normal"}
+          </strong>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">🩹 Mapa de Molestias (EVA)</div>
+        <BodyMap selectedZones={evaZones} onZoneChange={setEvaZones} />
+      </div>
+
+      <button className="btn-submit" onClick={() => onSubmit({ sleep, fatigue, stress, vigor, confusion, evaZones })}>
+        Registrar Wellness ✓
+      </button>
+    </div>
+  );
+}
+
+function SessionScreen({ onSubmit }) {
+  const [rpe,      setRpe]      = useState(6);
+  const [duration, setDuration] = useState(60);
+
+  const srpe = rpe * duration;
+  const rpeLabels = {6:"Muy ligero",7:"Ligero",8:"Moderado",9:"Algo intenso",10:"Intenso",
+    11:"Moderadamente intenso",12:"Bastante intenso",13:"Duro",14:"Muy duro",
+    15:"Muy duro+",16:"Extremo",17:"Muy extremo",18:"Casi máximo",19:"Máximo",20:"Límite absoluto"};
+
+  const acwrPreview = calculateACWR(FAKE_HISTORY_28D, srpe);
+
+  return (
+    <div>
+      <div className="section-title">Sesión de Entrenamiento</div>
+      <div className="section-sub">Registro Post-Entreno — Escala de Borg 6–20</div>
+
+      <div className="card">
+        <div className="card-title">⚡ Esfuerzo Percibido (RPE)</div>
+        <div style={{textAlign:"center",margin:"12px 0"}}>
+          <div style={{fontSize:64,fontWeight:900,color:"#F59E0B",lineHeight:1}}>{rpe}</div>
+          <div style={{fontSize:15,fontWeight:700,color:"#F59E0B"}}>{rpeLabels[rpe] ?? "—"}</div>
+        </div>
+        <Slider label="RPE" min={6} max={20} value={rpe} onChange={setRpe}
+          color={rpe<10?"#22C55E":rpe<15?"#F59E0B":"#EF4444"}
+          leftLabel="6 — Reposo" rightLabel="20 — Máximo" />
+      </div>
+
+      <div className="card">
+        <div className="card-title">⏱ Duración de la Sesión</div>
+        <Slider label="Minutos" min={10} max={180} value={duration} onChange={setDuration}
+          color="#6366F1" leftLabel="10 min" rightLabel="180 min" />
+      </div>
+
+      <div className="card">
+        <div className="card-title">📊 Carga de Sesión (sRPE)</div>
+        <div style={{textAlign:"center",padding:"12px 0"}}>
+          <div style={{fontSize:11,color:"var(--dim)",letterSpacing:1}}>RPE × DURACIÓN</div>
+          <div style={{fontSize:36,fontWeight:900,color:"var(--brand-l)",margin:"6px 0"}}>
+            {rpe} × {duration} = <span style={{color:"var(--text)"}}>{srpe}</span>
+          </div>
+          <div style={{fontSize:12,color:"var(--dim)"}}>Unidades de Carga (UA)</div>
+        </div>
+        <div className="divider" />
+        <div style={{fontSize:11,color:"var(--dim)",fontWeight:700,letterSpacing:1,marginBottom:8}}>PREVIEW ACWR CON ESTA SESIÓN</div>
+        <div className="stat-row">
+          <div className="stat-box">
+            <div className="stat-box-val" style={{color:"var(--brand-l)"}}>{acwrPreview.acute}</div>
+            <div className="stat-box-lbl">Carga Aguda 7d</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-box-val">{acwrPreview.chronic}</div>
+            <div className="stat-box-lbl">Carga Crónica 28d</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-box-val" style={{color:ZONE_CONFIG[getRiskZone(acwrPreview.ratio)].color}}>
+              {acwrPreview.ratio}
+            </div>
+            <div className="stat-box-lbl">Ratio ACWR</div>
+          </div>
+        </div>
+      </div>
+
+      <button className="btn-submit" onClick={() => onSubmit({ rpe, duration, srpe })}>
+        Registrar Sesión ✓
+      </button>
+    </div>
+  );
+}
+
+function ArticularScreen({ onSubmit }) {
+  const [surface,  setSurface]  = useState("");
+  const [footwear, setFootwear] = useState("");
+  const [quadTorque, setQuad]   = useState("");
+  const [hamTorque,  setHam]    = useState("");
+
+  const quad = parseFloat(quadTorque) || 0;
+  const ham  = parseFloat(hamTorque)  || 0;
+  const hqRatio = quad > 0 ? parseFloat((ham / quad).toFixed(3)) : 0;
+  const hqRisk  = hqRatio > 0 && hqRatio < 0.6;
+  const hqColor = hqRatio === 0 ? "var(--dim)" : hqRisk ? "#EF4444" : "#22C55E";
+
+  const surfaces  = ["Césped natural","Césped artificial 3G","Césped artificial 4G","Pista dura","Parqué","Gimnasio"];
+  const footwears = ["Tacos FG","Tacos AG","Baloncesto","Voleibol","Entrenamiento","Descalzo"];
+
+  return (
+    <div>
+      <div className="section-title">Ficha Articular</div>
+      <div className="section-sub">Protocolo Universal — Contexto Biomecánico + Ratio H/Q</div>
+
+      <div className="card">
+        <div className="card-title">🌍 Superficie de Entrenamiento</div>
+        <div className="chip-row">
+          {surfaces.map(s => (
+            <div key={s} className={`chip ${surface===s?"active":""}`} onClick={()=>setSurface(s)}>{s}</div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">👟 Calzado</div>
+        <div className="chip-row">
+          {footwears.map(f => (
+            <div key={f} className={`chip ${footwear===f?"active":""}`} onClick={()=>setFootwear(f)}>{f}</div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">⚡ Ratio H/Q — Dinamometría Isocinética (60°/s)</div>
+        <div className="input-row">
+          <div className="input-group">
+            <label>TORQUE PICO — CUÁDRICEPS (Nm)</label>
+            <input type="number" value={quadTorque} onChange={e=>setQuad(e.target.value)}
+              placeholder="ej. 185.0" min="0" max="500" />
+          </div>
+          <div className="input-group">
+            <label>TORQUE PICO — ISQUIOTIBIALES (Nm)</label>
+            <input type="number" value={hamTorque} onChange={e=>setHam(e.target.value)}
+              placeholder="ej. 110.0" min="0" max="500" />
+          </div>
+        </div>
+
+        {hqRatio > 0 && (
+          <div className="hq-display">
+            <div style={{fontSize:11,color:"var(--dim)",letterSpacing:1,marginBottom:4}}>
+              ISQUIO ÷ CUÁD
+            </div>
+            <div className="hq-ratio-val" style={{color:hqColor}}>{hqRatio.toFixed(3)}</div>
+            <div style={{fontSize:14,fontWeight:800,color:hqColor,marginTop:4}}>
+              {hqRisk ? "⚠ Déficit Excéntrico — RIESGO DE LESIÓN" : "✓ Dentro del rango seguro"}
+            </div>
+            <div style={{fontSize:12,color:"var(--dim)",marginTop:6}}>
+              Umbral convencional: H/Q ≥ 0.60
+            </div>
+
+            {hqRisk && (
+              <div className="rx-card" style={{textAlign:"left",marginTop:12}}>
+                <div className="rx-title">💊 Prescripción Automática</div>
+                <div className="rx-item">Nordic Hamstring — 3×6 rep excéntrico</div>
+                <div className="rx-item">HSR (Heavy Slow Resistance) — 70% 1RM, 3×10</div>
+                <div className="rx-item">Reducir sprints máximos 50% esta semana</div>
+                <div className="rx-item">Reevaluar en 4 semanas tras trabajo correctivo</div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <button className="btn-submit" onClick={() => onSubmit({ surface, footwear, hqRatio })}>
+        Guardar Ficha Articular ✓
+      </button>
+    </div>
+  );
+}
+
+function DashboardScreen({ data }) {
+  const hasData = data.wellness || data.session || data.articular;
+
+  // Default values when no data submitted yet
+  const wellness  = data.wellness  || { fatigue:3, stress:3, vigor:5, confusion:2, evaZones:[] };
+  const session   = data.session   || { rpe:0, duration:60, srpe:0 };
+  const articular = data.articular || { hqRatio:0 };
+
+  const todayLoad = session.srpe;
+  const acwr = calculateACWR(FAKE_HISTORY_28D, todayLoad);
+  const zone = getRiskZone(acwr.ratio);
+  const zoneCfg = ZONE_CONFIG[zone];
+
+  const alerts = runAlertEngine({
+    vigor:     wellness.vigor,
+    fatigue:   wellness.fatigue,
+    stress:    wellness.stress,
+    hqRatio:   articular.hqRatio,
+    acwrRatio: acwr.ratio,
+    evaZones:  wellness.evaZones,
+  });
+
+  return (
+    <div>
+      <div className="section-title">Dashboard de Riesgo</div>
+      <div className="section-sub">Estado del atleta en tiempo real</div>
+
+      {!hasData && (
+        <div style={{background:"rgba(99,102,241,.1)",border:"1px solid rgba(99,102,241,.3)",borderRadius:12,padding:"14px 16px",marginBottom:16,fontSize:13,color:"var(--muted)"}}>
+          📋 Completa los formularios para ver el análisis en tiempo real.
+          Mostrando datos de ejemplo con sesión ficticia de 28 días.
+        </div>
+      )}
+
+      <div className="dashboard-grid">
+        {/* ACWR Gauge */}
+        <div className="card">
+          <div className="card-title">📊 ACWR — Ratio Carga</div>
+          <AcwrGauge ratio={acwr.ratio} />
+          <div className="divider" />
+          <div className="stat-row">
+            <div className="stat-box">
+              <div className="stat-box-val" style={{color:"var(--brand-l)"}}>{acwr.acute}</div>
+              <div className="stat-box-lbl">Aguda 7d (UA)</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-box-val">{acwr.chronic}</div>
+              <div className="stat-box-lbl">Crónica 28d (UA)</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-box-val">{todayLoad}</div>
+              <div className="stat-box-lbl">Sesión Hoy (UA)</div>
+            </div>
+          </div>
+          <HistoryBars history={FAKE_HISTORY_28D} todayLoad={todayLoad} />
+        </div>
+
+        {/* Semáforo + Alertas */}
+        <div className="card">
+          <div className="card-title">🚦 Semáforo de Disponibilidad</div>
+          <TrafficLight acwrRatio={acwr.ratio} alerts={alerts} />
+
+          <div className="divider" />
+          <div style={{fontSize:11,color:"var(--dim)",fontWeight:700,letterSpacing:1,marginBottom:10}}>
+            ALERTAS DEL MOTOR DE REGLAS — {alerts.length} ACTIVA{alerts.length!==1?"S":""}
+          </div>
+
+          {alerts.length === 0 ? (
+            <div className="alert-banner alert-green">
+              <span className="alert-icon">✅</span>
+              <div>
+                <div className="alert-title">Todo en orden</div>
+                <div className="alert-desc">No se detectaron alertas. El atleta puede entrenar con normalidad.</div>
+              </div>
+            </div>
+          ) : (
+            alerts.map((a, i) => (
+              <div key={i} className={`alert-banner alert-${a.level}`}>
+                <span className="alert-icon">{a.icon}</span>
+                <div>
+                  <div className="alert-title">{a.title}</div>
+                  <div className="alert-desc">{a.desc}</div>
+                  {a.prescription && (
+                    <div className="rx-card" style={{marginTop:8}}>
+                      <div className="rx-title">💊 Protocolo prescrito</div>
+                      {a.prescription.map((p,j) => (
+                        <div key={j} className="rx-item">{p}</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Métricas Wellness */}
+        <div className="card">
+          <div className="card-title">🏃 Parámetros del Atleta</div>
+          <div className="stat-row">
+            <div className="stat-box">
+              <div className="stat-box-val" style={{color:wellness.fatigue>6?"var(--red)":wellness.fatigue>3?"var(--yellow)":"var(--green)"}}>
+                {wellness.fatigue}
+              </div>
+              <div className="stat-box-lbl">Fatiga CR-10</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-box-val" style={{color:wellness.vigor>=3?"var(--green)":"var(--red)"}}>
+                {wellness.vigor}
+              </div>
+              <div className="stat-box-lbl">Vigor POMS</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-box-val" style={{color:wellness.stress>6?"var(--orange)":"var(--green)"}}>
+                {wellness.stress}
+              </div>
+              <div className="stat-box-lbl">Estrés</div>
+            </div>
+          </div>
+          {wellness.evaZones.length > 0 && (
+            <>
+              <div className="divider" />
+              <div style={{fontSize:11,color:"var(--dim)",fontWeight:700,letterSpacing:1,marginBottom:8}}>MOLESTIAS REPORTADAS</div>
+              {wellness.evaZones.map(z => {
+                const c = z.color==="green"?"#22C55E":z.color==="yellow"?"#F59E0B":z.color==="orange"?"#F97316":"#EF4444";
+                return (
+                  <div key={z.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                    <span style={{fontSize:13,color:"var(--muted)"}}>{z.name}</span>
+                    <span style={{fontSize:14,fontWeight:800,color:c}}>EVA {z.eva}/10</span>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </div>
+
+        {/* H/Q */}
+        <div className="card">
+          <div className="card-title">⚡ Ratio H/Q & Biomecánica</div>
+          {articular.hqRatio > 0 ? (
+            <>
+              <div className="hq-display">
+                <div style={{fontSize:11,color:"var(--dim)",letterSpacing:1}}>RATIO H/Q CONVENCIONAL (60°/s)</div>
+                <div className="hq-ratio-val" style={{color:articular.hqRatio<0.6?"var(--red)":"var(--green)"}}>
+                  {articular.hqRatio.toFixed(3)}
+                </div>
+                <div style={{fontSize:13,fontWeight:700,color:articular.hqRatio<0.6?"var(--red)":"var(--green)"}}>
+                  {articular.hqRatio < 0.6 ? "⚠ Riesgo de Lesión" : "✓ Rango Seguro"}
+                </div>
+              </div>
+              {articular.surface && (
+                <div style={{marginTop:12,fontSize:12,color:"var(--muted)"}}>
+                  🌍 Superficie: <strong>{articular.surface}</strong>
+                  {articular.footwear && <> &nbsp;·&nbsp; 👟 Calzado: <strong>{articular.footwear}</strong></>}
+                </div>
+              )}
+            </>
+          ) : (
+            <div style={{fontSize:13,color:"var(--dim)",textAlign:"center",padding:"24px 0"}}>
+              Completa la Ficha Articular para ver el ratio H/Q
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+// APP ROOT
+// ═══════════════════════════════════════════════════════════
+
+const SCREENS = [
+  { id:"dashboard", label:"Dashboard",   icon:"📊" },
+  { id:"wellness",  label:"Wellness",    icon:"🌡️" },
+  { id:"session",   label:"Sesión",      icon:"⚡" },
+  { id:"articular", label:"Ficha Articular", icon:"🦵" },
+];
+
+function App() {
+  const [screen, setScreen] = useState("dashboard");
+  const [data, setData]     = useState({ wellness:null, session:null, articular:null });
+  const [toast, setToast]   = useState(null);
+
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2800);
+  }
+
+  function handleWellness(d)  { setData(p=>({...p,wellness:d}));  showToast("✅ Wellness registrado"); setScreen("dashboard"); }
+  function handleSession(d)   { setData(p=>({...p,session:d}));   showToast("✅ Sesión registrada");   setScreen("dashboard"); }
+  function handleArticular(d) { setData(p=>({...p,articular:d})); showToast("✅ Ficha guardada");      setScreen("dashboard"); }
+
+  return (
+    <div className="app">
+      <aside className="sidebar">
+        <div className="sidebar-logo">VITATEKH</div>
+        <nav className="sidebar-nav">
+          {SCREENS.map(s => (
+            <button
+              key={s.id}
+              className={`nav-btn ${screen===s.id?"active":""}`}
+              onClick={() => setScreen(s.id)}
+            >
+              <span className="nav-icon">{s.icon}</span>
+              {s.label}
+            </button>
+          ))}
+        </nav>
+        <div style={{padding:"12px 8px",borderTop:"1px solid var(--border)"}}>
+          <div style={{fontSize:10,color:"var(--dim)",padding:"0 12px 8px",letterSpacing:1,fontWeight:700}}>DATOS INGRESADOS</div>
+          {["wellness","session","articular"].map(k => (
+            <div key={k} style={{display:"flex",alignItems:"center",gap:8,padding:"4px 12px"}}>
+              <div style={{width:6,height:6,borderRadius:"50%",background:data[k]?"var(--green)":"var(--border)"}} />
+              <span style={{fontSize:11,color:data[k]?"var(--green)":"var(--dim)"}}>
+                {k==="wellness"?"Wellness":k==="session"?"Sesión":"Articular"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      <main className="main">
+        {screen === "dashboard"  && <DashboardScreen data={data} />}
+        {screen === "wellness"   && <WellnessScreen  onSubmit={handleWellness} />}
+        {screen === "session"    && <SessionScreen   onSubmit={handleSession} />}
+        {screen === "articular"  && <ArticularScreen onSubmit={handleArticular} />}
+      </main>
+
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

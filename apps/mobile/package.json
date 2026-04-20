@@ -1,0 +1,45 @@
+{
+  "name": "@vitatekh/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "build": "expo export",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.4",
+    "@react-native-async-storage/async-storage": "^3.0.2",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@react-native-community/slider": "^4.5.5",
+    "@react-navigation/native": "^6.1.18",
+    "@supabase/supabase-js": "^2.47.10",
+    "@vitatekh/shared": "workspace:*",
+    "expo": "~52.0.0",
+    "expo-constants": "~17.0.3",
+    "expo-font": "~13.0.2",
+    "expo-haptics": "~14.0.0",
+    "expo-notifications": "~0.29.9",
+    "expo-router": "~4.0.0",
+    "expo-secure-store": "~14.0.0",
+    "expo-splash-screen": "~0.29.13",
+    "expo-status-bar": "~2.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.3",
+    "react-native-reanimated": "~3.16.1",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "~4.1.0",
+    "react-native-svg": "15.8.0",
+    "victory-native": "36.9.2",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.7.2"
+  }
+}
