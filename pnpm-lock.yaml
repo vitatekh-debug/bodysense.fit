@@ -14,7 +14,7 @@ importers:
     dependencies:
       styled-jsx:
         specifier: ^5.1.7
-        version: 5.1.7(@babel/core@7.29.0)(react@18.3.1)
+        version: 5.1.7(react@18.3.1)
     devDependencies:
       turbo:
         specifier: ^2.3.3
@@ -103,9 +103,6 @@ importers:
       react-native-web:
         specifier: ^0.21.2
         version: 0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      styled-jsx:
-        specifier: ^5.1.7
-        version: 5.1.7(@babel/core@7.29.0)(react@18.3.1)
       victory-native:
         specifier: 36.9.2
         version: 36.9.2(react@18.3.1)
@@ -171,6 +168,9 @@ importers:
       postcss:
         specifier: ^8.4.49
         version: 8.5.10
+      styled-jsx:
+        specifier: ^5.1.6
+        version: 5.1.7(react@18.3.1)
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.19(yaml@2.8.3)
@@ -925,7 +925,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {node: '>=0.10.0'}
+    engines: {'0': node >=0.10.0}
 
   '@expo/cli@0.22.28':
     resolution: {integrity: sha512-lvt72KNitGuixYD2l3SZmRKVu2G4zJpmg5V7WfUBNpmUU5oODBw/6qmiJ6kSLAlfDozscUk+BBGknBBzxUrwrA==}
@@ -9293,12 +9293,10 @@ snapshots:
       client-only: 0.0.1
       react: 18.3.1
 
-  styled-jsx@5.1.7(@babel/core@7.29.0)(react@18.3.1):
+  styled-jsx@5.1.7(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1
-    optionalDependencies:
-      '@babel/core': 7.29.0
 
   styleq@0.1.3: {}
 
