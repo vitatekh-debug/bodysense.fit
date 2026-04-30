@@ -14,7 +14,7 @@ importers:
     dependencies:
       styled-jsx:
         specifier: ^5.1.7
-        version: 5.1.7(react@18.3.1)
+        version: 5.1.7(@babel/core@7.29.0)(react@18.3.1)
     devDependencies:
       turbo:
         specifier: ^2.3.3
@@ -103,6 +103,9 @@ importers:
       react-native-web:
         specifier: ^0.21.2
         version: 0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      styled-jsx:
+        specifier: ^5.1.7
+        version: 5.1.7(@babel/core@7.29.0)(react@18.3.1)
       victory-native:
         specifier: 36.9.2
         version: 36.9.2(react@18.3.1)
@@ -9290,10 +9293,12 @@ snapshots:
       client-only: 0.0.1
       react: 18.3.1
 
-  styled-jsx@5.1.7(react@18.3.1):
+  styled-jsx@5.1.7(@babel/core@7.29.0)(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1
+    optionalDependencies:
+      '@babel/core': 7.29.0
 
   styleq@0.1.3: {}
 
