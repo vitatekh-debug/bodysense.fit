@@ -6,7 +6,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
@@ -16,19 +15,46 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   async function handleLogin() {
-    if (!email || !password) {
-      Alert.alert("Error", "Por favor completa todos los campos.");
+    setErrorMsg(null);
+
+    if (!email.trim() || !password) {
+      setErrorMsg("Por favor completa todos los campos.");
       return;
     }
+
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) {
-      Alert.alert("Error al iniciar sesión", error.message);
+
+    try {
+      console.log("[Login] Intentando signIn con:", email.trim());
+      console.log("[Login] Supabase URL:", process.env.EXPO_PUBLIC_SUPABASE_URL ?? "⚠ UNDEFINED");
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) {
+        console.error("[Login] Error de Supabase:", error.status, error.message, error);
+        setErrorMsg(error.message);
+        return;
+      }
+
+      console.log("[Login] Sesión obtenida:", data.session?.user?.email);
+      // La redirección la maneja onAuthStateChange en _layout.tsx
+      // Fallback explícito por si el listener tarda en web
+      if (data.session) {
+        router.replace("/");
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Error inesperado";
+      console.error("[Login] Excepción no manejada:", err);
+      setErrorMsg(msg);
+    } finally {
+      setLoading(false);
     }
-    // Navigation handled by _layout auth state listener
   }
 
   return (
@@ -57,6 +83,12 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
         />
+
+        {errorMsg ? (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}>{errorMsg}</Text>
+          </View>
+        ) : null}
 
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
@@ -106,6 +138,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 1,
     borderColor: "#334155",
+  },
+  errorBox: {
+    backgroundColor: "#450A0A",
+    borderRadius: 10,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#7F1D1D",
+  },
+  errorText: {
+    color: "#FCA5A5",
+    fontSize: 14,
+    textAlign: "center",
   },
   button: {
     backgroundColor: "#6366F1",
