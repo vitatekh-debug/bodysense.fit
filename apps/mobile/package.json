@@ -39,7 +39,6 @@
     "react-native-screens": "~4.1.0",
     "react-native-svg": "15.8.0",
     "react-native-web": "^0.21.2",
-    "styled-jsx": "^5.1.7",
     "victory-native": "36.9.2",
     "zustand": "^5.0.2"
   },

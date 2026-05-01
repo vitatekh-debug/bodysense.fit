@@ -1,7 +1,5 @@
 [build]
-  # pnpm install desde la raíz para resolver workspace packages (@vitatekh/shared)
-  # luego ejecuta el build solo del paquete web
-  command = "pnpm install --frozen-lockfile && pnpm --filter @vitatekh/web build"
+  command = "pnpm install && pnpm --filter @vitatekh/web build"
   publish  = "apps/web/.next"
 
 [build.environment]
@@ -9,8 +7,8 @@
   PNPM_VERSION            = "9"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Next.js 14 con SSR requiere el plugin oficial de Netlify
-# Netlify lo instala automáticamente al detectar Next.js,
-# pero declararlo aquí lo fija a la versión correcta.
+[functions]
+  node_bundler = "nft"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
