@@ -67,7 +67,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-surface-dark px-4">
       <div className="w-full max-w-md">
         <h1 className="text-4xl font-black text-brand text-center tracking-widest mb-2">
-          VITATEKH
+          BODYSENSE
         </h1>
         <p className="text-center text-slate-400 text-sm mb-10">
           Crear cuenta de Profesional Deportivo

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Vitatekh",
-    "slug": "vitatekh",
+    "name": "Bodysense",
+    "slug": "bodysense",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "vitatekh",
+    "scheme": "bodysense",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.vitatekh.app"
+      "bundleIdentifier": "com.bodysense.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0F172A"
       },
-      "package": "com.vitatekh.app"
+      "package": "com.bodysense.app"
     },
     "plugins": [
       "expo-router",

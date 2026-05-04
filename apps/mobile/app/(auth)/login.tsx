@@ -63,7 +63,7 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.inner}>
-        <Text style={styles.logo}>VITATEKH</Text>
+        <Text style={styles.logo}>BODYSENSE</Text>
         <Text style={styles.subtitle}>Gestión de Carga Deportiva</Text>
 
         <TextInput

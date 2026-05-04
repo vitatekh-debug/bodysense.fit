@@ -1,5 +1,5 @@
 {
-  "name": "vitatekh",
+  "name": "bodysense",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",

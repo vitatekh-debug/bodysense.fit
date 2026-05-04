@@ -35,10 +35,10 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <h1 className="text-4xl font-black text-brand text-center tracking-widest mb-2">
-          VITATEKH
+          BODYSENSE
         </h1>
         <p className="text-center text-slate-400 text-sm mb-10">
-          Dashboard de Gestión de Carga Deportiva
+          Dashboard de Gestión de Carga Deportiva · bodysense.fit
         </p>
 
         {/* Form */}

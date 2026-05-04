@@ -36,7 +36,7 @@ export default function Sidebar() {
     <aside className="w-60 flex flex-col bg-surface border-r border-slate-700 h-full">
       {/* Logo */}
       <div className="px-6 py-7 border-b border-slate-700">
-        <span className="text-2xl font-black text-brand tracking-widest">VITATEKH</span>
+        <span className="text-2xl font-black text-brand tracking-widest">BODYSENSE</span>
       </div>
 
       {/* Nav */}
