@@ -1,5 +1,5 @@
 /**
- * Skeleton — Animated loading placeholders for Vitatekh Mobile
+ * Skeleton — Animated loading placeholders for Bodysense Mobile
  *
  * Usage:
  *   import { Skeleton, SkeletonCheckin } from "@/components/Skeleton";

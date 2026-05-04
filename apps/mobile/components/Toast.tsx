@@ -1,5 +1,5 @@
 /**
- * Toast — Lightweight in-app notification system for Vitatekh Mobile
+ * Toast — Lightweight in-app notification system for Bodysense Mobile
  *
  * Usage:
  *   import { useToast, ToastContainer } from "@/components/Toast";

@@ -1,5 +1,5 @@
 /**
- * Vitatekh — Offline Queue
+ * Bodysense — Offline Queue
  *
  * Persists critical athlete registrations to AsyncStorage when there is no
  * network connection, then replays them automatically when connectivity is
