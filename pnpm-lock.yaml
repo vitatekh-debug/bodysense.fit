@@ -11,10 +11,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      styled-jsx:
-        specifier: ^5.1.7
-        version: 5.1.7(react@18.3.1)
     devDependencies:
       turbo:
         specifier: ^2.3.3
@@ -168,9 +164,6 @@ importers:
       postcss:
         specifier: ^8.4.49
         version: 8.5.10
-      styled-jsx:
-        specifier: ^5.1.6
-        version: 5.1.7(react@18.3.1)
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.19(yaml@2.8.3)
@@ -4069,19 +4062,6 @@ packages:
       '@babel/core': '*'
       babel-plugin-macros: '*'
       react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      babel-plugin-macros:
-        optional: true
-
-  styled-jsx@5.1.7:
-    resolution: {integrity: sha512-HPLmEIYprxCeWDMLYiaaAhsV3yGfIlCqzuVOybE6fjF3SUJmH67nCoMDO+nAvHNHo46OfvpCNu4Rcue82dMNFg==}
-    engines: {node: '>= 12.0.0'}
-    peerDependencies:
-      '@babel/core': '*'
-      babel-plugin-macros: '*'
-      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0'
     peerDependenciesMeta:
       '@babel/core':
         optional: true
@@ -9289,11 +9269,6 @@ snapshots:
   structured-headers@0.4.1: {}
 
   styled-jsx@5.1.1(react@18.3.1):
-    dependencies:
-      client-only: 0.0.1
-      react: 18.3.1
-
-  styled-jsx@5.1.7(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1

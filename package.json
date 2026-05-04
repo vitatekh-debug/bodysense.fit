@@ -22,8 +22,5 @@
       "react-native-reanimated": "~3.16.1",
       "react-native-worklets": "^0.5.0"
     }
-  },
-  "dependencies": {
-    "styled-jsx": "^5.1.7"
   }
 }
