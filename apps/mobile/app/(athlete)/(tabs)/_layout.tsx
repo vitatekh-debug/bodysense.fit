@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { BS } from "../../../lib/theme";
 
 export default function AthleteTabsLayout() {
   return (
@@ -7,11 +8,17 @@ export default function AthleteTabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#0F172A",
-          borderTopColor: "#1E293B",
+          backgroundColor: BS.void,            // #080808
+          borderTopColor:  BS.borderFaint,     // rgba(255,255,255,0.05)
+          borderTopWidth:  1,
         },
-        tabBarActiveTintColor: "#6366F1",
-        tabBarInactiveTintColor: "#475569",
+        tabBarActiveTintColor:   BS.brandLight,  // #818CF8
+        tabBarInactiveTintColor: BS.textDisabled, // #334155
+        tabBarLabelStyle: {
+          fontSize:      10,
+          fontWeight:    "600",
+          letterSpacing: 0.3,
+        },
       }}
     >
       <Tabs.Screen
