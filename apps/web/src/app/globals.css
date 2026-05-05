@@ -2,7 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Bodysense CSS Design Tokens ─────────────────────────────
+   Central source of truth for design values used in box-shadow,
+   filter, and other properties that Tailwind can't inline easily. */
 :root {
+  /* Background hierarchy */
+  --bs-void:         #080808;
+  --bs-surface:      #111111;
+  --bs-surface-high: #191919;
+
+  /* Brand spectrum */
+  --bs-brand:        #6366F1;
+  --bs-brand-light:  #818CF8;
+  --bs-brand-dark:   #4F46E5;
+
+  /* ACWR zone colours (also available as Tailwind arbitrary values) */
+  --bs-zone-low:       #3B82F6;
+  --bs-zone-optimal:   #22C55E;
+  --bs-zone-high:      #F59E0B;
+  --bs-zone-very-high: #EF4444;
+
+  /* Legacy page background — kept for dashboard layout */
   --background: #0F172A;
   --foreground: #F1F5F9;
 }
@@ -12,46 +32,145 @@ body {
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Auth pages: industrial dot-grid overlay ─────────────────
-   Applied via className="auth-grid-bg" on the root <div>.
-   Creates a barely-visible dot matrix at 24 px pitch —
-   subtle enough not to distract, present enough to feel crafted. */
+/* ── Dot-grid texture ────────────────────────────────────────
+   Single definition, used via both .bs-grid-bg (new canonical)
+   and .auth-grid-bg (legacy alias kept for backward compat). */
+.bs-grid-bg,
 .auth-grid-bg {
-  background-image:
-    radial-gradient(circle, rgba(129, 140, 248, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(129, 140, 248, 0.07) 1px,
+    transparent 1px
+  );
   background-size: 24px 24px;
 }
 
-/* ── Print styles (used by /reports PDF export) ──────────── */
+/* ── Bento glass card ────────────────────────────────────────
+   Reusable component class for all dark-glass surfaces.
+   Includes: subtle gradient top-edge highlight + backdrop blur. */
+@layer components {
+  .bs-card {
+    @apply rounded-2xl border border-white/[0.09] bg-white/[0.025];
+    @apply backdrop-blur-md;
+    /* Top-edge highlight simulates gradient border */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  .bs-card-brand {
+    @apply bs-card border-[#818cf8]/25;
+    box-shadow:
+      inset 0 1px 0 rgba(129, 140, 248, 0.12),
+      0 0 0 1px rgba(129, 140, 248, 0.08),
+      0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ── Staggered fade-up animation ─────────────────────────────
+   Apply .bs-fade-up + .bs-d{n} to cascade elements in.
+   Uses CSS fill-mode "both" so elements start invisible. */
+@keyframes bs-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .bs-fade-up {
+    animation: bs-fade-up 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  /* Stagger delays: 0 → 300 ms in 50 ms steps */
+  .bs-d0  { animation-delay:   0ms; }
+  .bs-d1  { animation-delay:  50ms; }
+  .bs-d2  { animation-delay: 100ms; }
+  .bs-d3  { animation-delay: 150ms; }
+  .bs-d4  { animation-delay: 200ms; }
+  .bs-d5  { animation-delay: 250ms; }
+  .bs-d6  { animation-delay: 300ms; }
+  .bs-d7  { animation-delay: 350ms; }
+
+  /* Inline stagger for 7-column week grid (DayColumns) */
+  .bs-week-d0 { animation-delay:   0ms; }
+  .bs-week-d1 { animation-delay:  35ms; }
+  .bs-week-d2 { animation-delay:  70ms; }
+  .bs-week-d3 { animation-delay: 105ms; }
+  .bs-week-d4 { animation-delay: 140ms; }
+  .bs-week-d5 { animation-delay: 175ms; }
+  .bs-week-d6 { animation-delay: 210ms; }
+}
+
+/* ── ACWR glow utility ───────────────────────────────────────
+   Dynamic glow is applied via inline style for zone-specific colour.
+   Static variants below for common zones. */
+@layer utilities {
+  .bs-glow-brand {
+    box-shadow: 0 0 12px rgba(129, 140, 248, 0.35),
+                0 0 32px rgba(129, 140, 248, 0.12);
+  }
+  .bs-glow-optimal {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.35),
+                0 0 28px rgba(34, 197, 94, 0.10);
+  }
+  .bs-glow-high {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.40),
+                0 0 28px rgba(245, 158, 11, 0.12);
+  }
+  .bs-glow-critical {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.45),
+                0 0 28px rgba(239, 68, 68, 0.14);
+  }
+}
+
+/* ── Skeleton shimmer ────────────────────────────────────────*/
+@keyframes bs-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+@layer utilities {
+  .bs-skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.07) 50%,
+      rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 800px 100%;
+    animation: bs-shimmer 1.6s ease-in-out infinite;
+  }
+}
+
+/* ── Print styles ────────────────────────────────────────────*/
 @media print {
-  /* Hide navigation chrome */
   aside, header, nav { display: none !important; }
 
-  /* Reset dark background for PDF */
-  body, .bg-surface, .bg-surface-dark {
+  body {
     background: #ffffff !important;
     color: #111827 !important;
   }
 
-  /* Remove dark borders */
-  .border-slate-700, .border-slate-800 {
-    border-color: #D1D5DB !important;
+  .border-slate-700,
+  .border-slate-800 {
+    border-color: #d1d5db !important;
   }
 
-  /* Show content that uses print:block */
-  .print\:block { display: block !important; }
-  .print\:hidden { display: none !important; }
-
-  /* Page breaks */
+  .print\:block  { display: block !important; }
+  .print\:hidden { display: none  !important; }
   .print\:break-before-page { break-before: page; }
 
-  /* Make sure tables render fully */
   table { page-break-inside: auto; }
-  tr { page-break-inside: avoid; page-break-after: auto; }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
 
-  /* Main content takes full width */
-  main { padding: 20px !important; }
-  .flex-1 { overflow: visible !important; }
+  main      { padding: 20px !important; }
+  .flex-1   { overflow: visible !important; }
 }

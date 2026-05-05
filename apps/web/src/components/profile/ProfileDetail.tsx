@@ -1,35 +1,39 @@
 /**
  * ProfileDetail — Bodysense
  *
- * Server component. Orchestrates the full athlete profile view:
- *   ProfileHeader        — dark cover with avatar, ACWR zone pill, edit button
- *   ProfileMetricCards   — 4-card bento grid (ACWR hero, acute, chronic, sessions)
- *   AcwrHistoryChart     — recharts area chart (client component, existing)
- *   ProfileWellnessTable — last 7 wellness check-ins
- *   ProfileSessionsTable — last 10 sessions with RPE/sRPE
+ * Server Component orchestrator. Renders the athlete profile shell immediately,
+ * then streams each heavy data section independently via React Suspense.
  *
- * All data is received as props from the parent page.tsx — no fetching here.
+ * Streaming waterfall (approximate):
+ *   0ms   — ProfileHeader (profile + latestAcwr already in props)
+ *   async — MetricsSection   (1 ACWR row + session count)
+ *   async — AcwrChartSection (30-day ACWR history)
+ *   async — WellnessSection  (7 wellness rows)
+ *   async — SessionsSection  (10 training sessions)
+ *
+ * Each async section is independent; they resolve in parallel thanks to
+ * React's concurrent Suspense model.
  */
 
+import { Suspense } from "react";
+import { createClient } from "@/lib/supabase/server";
 import { ACWR_ZONES } from "@vitatekh/shared";
-import type {
-  Profile,
-  AcwrRiskZone,
-  SessionType,
-  SessionPhase,
-  DailyWellness,
-} from "@vitatekh/shared";
+import type { Profile, AcwrRiskZone, SessionType, SessionPhase } from "@vitatekh/shared";
 
 import ProfileHeader from "./ProfileHeader";
 import ProfileMetricCards from "./ProfileMetricCards";
 import ProfileWellnessTable from "./ProfileWellnessTable";
 import ProfileSessionsTable from "./ProfileSessionsTable";
 import AcwrHistoryChart from "@/app/(dashboard)/athletes/[id]/AcwrHistoryChart";
+import {
+  MetricCardsSkeleton,
+  AcwrChartSkeleton,
+  TableSkeleton,
+} from "./ProfileSkeletons";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Prop types ───────────────────────────────────────────────────────────────
 
-/** Partial AcwrSnapshot — only the columns the page query selects. */
-export interface AcwrHistoryRow {
+interface AcwrSummary {
   date: string;
   acwr_ratio: number;
   acute_load: number;
@@ -37,45 +41,134 @@ export interface AcwrHistoryRow {
   risk_zone: AcwrRiskZone;
 }
 
-/** Partial DailyWellness — only the columns the page query selects. */
-export type WellnessRow = Pick<
-  DailyWellness,
-  "date" | "fatigue" | "sleep_hours" | "sleep_quality" | "mood"
->;
-
-/** Partial TrainingSession with joined SessionRpe. */
-export interface SessionRow {
-  id: string;
-  date: string;
-  duration_min: number;
-  session_type: SessionType;
-  phase: SessionPhase;
-  session_rpe: { rpe: number; srpe: number }[] | unknown;
-}
-
 export interface ProfileDetailProps {
   profile: Profile;
   athleteId: string;
-  acwrHistory: AcwrHistoryRow[];
-  wellness: WellnessRow[];
-  sessions: SessionRow[];
+  latestAcwr: AcwrSummary | null;
 }
 
-// ─── Empty-state card ─────────────────────────────────────────────────────────
+// ─── Async Section: MetricsSection ───────────────────────────────────────────
 
-function EmptyState({ message }: { message: string }) {
+async function MetricsSection({ athleteId, latestAcwr }: {
+  athleteId: string;
+  latestAcwr: AcwrSummary | null;
+}) {
+  const supabase = createClient();
+
+  // Session count for the "Sesiones recientes" metric card
+  const { count } = await supabase
+    .from("training_sessions")
+    .select("id", { count: "exact", head: true })
+    .eq("athlete_id", athleteId);
+
   return (
-    <div className="flex items-center justify-center rounded-2xl border border-white/[0.09] bg-white/[0.025] p-10 text-center">
-      <p className="max-w-sm text-sm text-slate-600">{message}</p>
+    <ProfileMetricCards
+      latestAcwr={latestAcwr}
+      sessionCount={count ?? 0}
+    />
+  );
+}
+
+// ─── Async Section: AcwrChartSection ─────────────────────────────────────────
+
+async function AcwrChartSection({ athleteId }: { athleteId: string }) {
+  const supabase = createClient();
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const { data } = await supabase
+    .from("acwr_snapshots")
+    .select("date, acwr_ratio, acute_load, chronic_load, risk_zone")
+    .eq("athlete_id", athleteId)
+    .gte("date", thirtyDaysAgo.toISOString().split("T")[0]!)
+    .order("date", { ascending: true });
+
+  if (!data || data.length === 0) {
+    return (
+      <EmptyState message="Sin datos de ACWR todavía. Registra sesiones de entrenamiento y sRPE para calcular." />
+    );
+  }
+
+  return (
+    <div
+      className={[
+        "rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6 backdrop-blur-md",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
+        "bs-fade-up bs-d2",
+      ].join(" ")}
+    >
+      <AcwrHistoryChart data={data} />
     </div>
   );
 }
 
-// ─── Section heading ──────────────────────────────────────────────────────────
+// ─── Async Section: WellnessSection ──────────────────────────────────────────
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
+async function WellnessSection({ athleteId }: { athleteId: string }) {
+  const supabase = createClient();
+
+  const { data } = await supabase
+    .from("daily_wellness")
+    .select("date, fatigue, sleep_hours, sleep_quality, mood")
+    .eq("athlete_id", athleteId)
+    .order("date", { ascending: false })
+    .limit(7);
+
+  return <ProfileWellnessTable rows={data ?? []} />;
+}
+
+// ─── Async Section: SessionsSection ──────────────────────────────────────────
+
+async function SessionsSection({ athleteId }: { athleteId: string }) {
+  const supabase = createClient();
+
+  const { data } = await supabase
+    .from("training_sessions")
+    .select(`id, date, duration_min, session_type, phase, session_rpe (rpe, srpe)`)
+    .eq("athlete_id", athleteId)
+    .order("date", { ascending: false })
+    .limit(10);
+
   return (
-    <h2 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+    <ProfileSessionsTable
+      rows={(data ?? []) as Parameters<typeof ProfileSessionsTable>[0]["rows"]}
+    />
+  );
+}
+
+// ─── Shared presentational helpers ───────────────────────────────────────────
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div
+      className={[
+        "flex items-center justify-center rounded-2xl p-10 text-center",
+        "border border-white/[0.09] bg-white/[0.025] backdrop-blur-md",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
+      ].join(" ")}
+    >
+      <p className="max-w-sm text-[13px] leading-relaxed text-white/25">{message}</p>
+    </div>
+  );
+}
+
+function SectionHeading({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <h2
+      className={[
+        "mb-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white/30",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {children}
     </h2>
   );
@@ -86,53 +179,50 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 export default function ProfileDetail({
   profile,
   athleteId,
-  acwrHistory,
-  wellness,
-  sessions,
+  latestAcwr,
 }: ProfileDetailProps) {
-  const latestAcwr = acwrHistory.at(-1) ?? null;
-
   return (
     <div className="max-w-5xl space-y-8">
-      {/* ── 1. Hero header ── */}
-      <ProfileHeader
-        profile={profile}
-        athleteId={athleteId}
-        latestAcwr={latestAcwr}
-      />
-
-      {/* ── 2. Bento metric cards ── */}
-      <section aria-label="Métricas de carga">
-        <ProfileMetricCards
+      {/* ── 1. Hero header — renders synchronously (data already in props) ── */}
+      <div className="bs-fade-up bs-d0">
+        <ProfileHeader
+          profile={profile}
+          athleteId={athleteId}
           latestAcwr={latestAcwr}
-          sessionCount={sessions.length}
         />
+      </div>
+
+      {/* ── 2. Bento metric cards ────────────────────────────────────────── */}
+      <section aria-label="Métricas de carga" className="bs-fade-up bs-d1">
+        <Suspense fallback={<MetricCardsSkeleton />}>
+          <MetricsSection athleteId={athleteId} latestAcwr={latestAcwr} />
+        </Suspense>
       </section>
 
-      {/* ── 3. ACWR chart ── */}
-      <section aria-label="Evolución ACWR">
+      {/* ── 3. ACWR history chart ─────────────────────────────────────────── */}
+      <section aria-label="Evolución ACWR" className="bs-fade-up bs-d2">
         <SectionHeading>Evolución ACWR — últimos 30 días</SectionHeading>
-        {acwrHistory.length > 0 ? (
-          <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6 backdrop-blur-sm">
-            <AcwrHistoryChart data={acwrHistory} />
-          </div>
-        ) : (
-          <EmptyState message="Sin datos de ACWR todavía. Registra sesiones de entrenamiento y sRPE para calcular." />
-        )}
+        <Suspense fallback={<AcwrChartSkeleton />}>
+          <AcwrChartSection athleteId={athleteId} />
+        </Suspense>
       </section>
 
-      {/* ── 4. Wellness + Sessions (2-col on large screens) ── */}
+      {/* ── 4. Wellness + Sessions ──────────────────────────────────────────*/}
       <section
         aria-label="Wellness y sesiones recientes"
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
       >
-        <div>
+        <div className="bs-fade-up bs-d3">
           <SectionHeading>Wellness reciente</SectionHeading>
-          <ProfileWellnessTable rows={wellness} />
+          <Suspense fallback={<TableSkeleton rows={7} />}>
+            <WellnessSection athleteId={athleteId} />
+          </Suspense>
         </div>
-        <div>
+        <div className="bs-fade-up bs-d4">
           <SectionHeading>Sesiones recientes</SectionHeading>
-          <ProfileSessionsTable rows={sessions as SessionRow[]} />
+          <Suspense fallback={<TableSkeleton rows={7} />}>
+            <SessionsSection athleteId={athleteId} />
+          </Suspense>
         </div>
       </section>
     </div>

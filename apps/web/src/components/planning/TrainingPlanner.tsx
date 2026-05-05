@@ -25,7 +25,7 @@
  * />
  */
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight, Plus, Trash2, X, Zap, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ACWR_ZONES } from "@vitatekh/shared";
@@ -177,7 +177,7 @@ interface LoadImpactBarProps {
   acwr?: number;
 }
 
-function LoadImpactBar({ srpe, maxSrpe, acwr }: LoadImpactBarProps) {
+const LoadImpactBar = memo(function LoadImpactBar({ srpe, maxSrpe, acwr }: LoadImpactBarProps) {
   const fillPct  = maxSrpe > 0 ? Math.min((srpe / maxSrpe) * 100, 100) : 0;
   const color    = acwrZoneColor(acwr);
   const label    = acwrZoneLabel(acwr);
@@ -214,7 +214,7 @@ function LoadImpactBar({ srpe, maxSrpe, acwr }: LoadImpactBarProps) {
       </div>
     </div>
   );
-}
+});
 
 // ─── Sub-component: SessionCard ───────────────────────────────────────────────
 
@@ -223,7 +223,7 @@ interface SessionCardProps {
   onRemove?: (id: string) => void | Promise<void>;
 }
 
-function SessionCard({ session, onRemove }: SessionCardProps) {
+const SessionCard = memo(function SessionCard({ session, onRemove }: SessionCardProps) {
   const cfg  = SESSION_TYPE_CONFIG[session.session_type];
   const srpe =
     session.rpe_target != null
@@ -328,7 +328,7 @@ function SessionCard({ session, onRemove }: SessionCardProps) {
       </div>
     </article>
   );
-}
+});
 
 // ─── Sub-component: AddSessionForm ────────────────────────────────────────────
 
@@ -522,18 +522,22 @@ interface DayColumnProps {
   dayLoad?: DayLoad;
   maxSrpe: number;
   isAddingHere: boolean;
+  columnIndex: number;
   onStartAdd: () => void;
   onCancelAdd: () => void;
   onSubmitAdd: (draft: DraftSession) => void;
   onRemoveSession?: (id: string) => void | Promise<void>;
 }
 
-function DayColumn({
+const WEEK_STAGGER = ["bs-week-d0","bs-week-d1","bs-week-d2","bs-week-d3","bs-week-d4","bs-week-d5","bs-week-d6"] as const;
+
+const DayColumn = memo(function DayColumn({
   date,
   sessions,
   dayLoad,
   maxSrpe,
   isAddingHere,
+  columnIndex,
   onStartAdd,
   onCancelAdd,
   onSubmitAdd,
@@ -550,10 +554,17 @@ function DayColumn({
   return (
     <div
       className={cn(
-        "relative flex flex-col min-h-[420px] rounded-2xl",
-        "border border-white/[0.09] overflow-hidden",
-        today && "border-[#818cf8]/40",
-        "bg-[#080808]"
+        "relative flex flex-col min-h-[420px] rounded-2xl overflow-hidden",
+        "border bg-[#080808]",
+        "backdrop-blur-md",
+        // Inset top-edge highlight
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.5)]",
+        today
+          ? "border-[#818cf8]/40 shadow-[inset_0_1px_0_rgba(129,140,248,0.12),0_0_20px_rgba(129,140,248,0.08),0_2px_8px_rgba(0,0,0,0.5)]"
+          : "border-white/[0.07]",
+        // Staggered fade-up
+        "bs-fade-up",
+        WEEK_STAGGER[columnIndex] ?? "bs-week-d6"
       )}
       aria-label={`${DAY_NAMES_SHORT[(date.getDay() + 6) % 7]} ${formatMonthDay(date)}`}
     >
@@ -656,17 +667,17 @@ function DayColumn({
       </div>
     </div>
   );
-}
+});
 
 // ─── Sub-component: ZoneLegend ────────────────────────────────────────────────
 
-function ZoneLegend({ currentAcwr }: { currentAcwr?: number }) {
+const ZoneLegend = memo(function ZoneLegend({ currentAcwr }: { currentAcwr?: number }) {
   return (
     <footer
       className="flex flex-wrap items-center gap-x-5 gap-y-2"
       aria-label="Leyenda de zonas ACWR"
     >
-      <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-700">
+      <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/25">
         Impacto de carga
       </span>
       {Object.entries(ACWR_ZONES).map(([key, zone]) => (
@@ -676,12 +687,12 @@ function ZoneLegend({ currentAcwr }: { currentAcwr?: number }) {
             style={{ backgroundColor: zone.color }}
             aria-hidden
           />
-          <span className="text-[9px] text-slate-600">{zone.label}</span>
+          <span className="text-[9px] text-white/30">{zone.label}</span>
         </div>
       ))}
       {currentAcwr != null && (
         <div className="ml-auto flex items-center gap-1.5">
-          <span className="text-[9px] text-slate-600">ACWR actual:</span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-white/25">ACWR actual:</span>
           <span
             className="text-[10px] font-bold tabular-nums"
             style={{ color: acwrZoneColor(currentAcwr) }}
@@ -692,7 +703,7 @@ function ZoneLegend({ currentAcwr }: { currentAcwr?: number }) {
       )}
     </footer>
   );
-}
+});
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -789,7 +800,9 @@ export default function TrainingPlanner({
         className={cn(
           "auth-grid-bg relative overflow-hidden rounded-2xl",
           "bg-[#080808] px-6 py-5",
-          "border border-white/[0.07]"
+          "border border-white/[0.09] backdrop-blur-md",
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.5)]",
+          "bs-fade-up bs-d0"
         )}
       >
         {/* Bottom gradient bleed */}
@@ -801,10 +814,10 @@ export default function TrainingPlanner({
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           {/* Title + range */}
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.20em] text-white/30">
               Bodysense · Planificación
             </p>
-            <h2 className="mt-1 text-xl font-black text-white">
+            <h2 className="mt-1.5 text-xl font-black text-white/90">
               {formatWeekRange(weekStart)}
             </h2>
           </div>
@@ -865,7 +878,7 @@ export default function TrainingPlanner({
         aria-label="Cuadrícula semanal"
       >
         <div className="grid min-w-[840px] grid-cols-7 gap-3">
-          {weekDays.map((date) => {
+          {weekDays.map((date, i) => {
             const isoDate = toISODate(date);
             return (
               <DayColumn
@@ -875,6 +888,7 @@ export default function TrainingPlanner({
                 dayLoad={loadByDate.get(isoDate)}
                 maxSrpe={maxSrpe}
                 isAddingHere={addingToDate === isoDate}
+                columnIndex={i}
                 onStartAdd={() => setAddingToDate(isoDate)}
                 onCancelAdd={() => setAddingToDate(null)}
                 onSubmitAdd={(draft) => handleAddSession(isoDate, draft)}

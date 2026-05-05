@@ -1,6 +1,23 @@
-import { createClient } from "@/lib/supabase/server";
+/**
+ * Athlete Detail Page — Server Component
+ *
+ * Minimal fast path:
+ *   1. Auth guard — professional must own a team containing this athlete
+ *   2. Profile + latest ACWR snapshot (2 lightweight queries in parallel)
+ *   3. Delegates heavy data sections to ProfileDetail via Suspense boundaries
+ *
+ * This keeps Time To First Byte minimal: the shell + header render immediately,
+ * then metric cards / chart / wellness / sessions stream in independently.
+ */
+
 import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import ProfileDetail from "@/components/profile/ProfileDetail";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Perfil de Atleta",
+};
 
 interface Props {
   params: { id: string };
@@ -8,15 +25,18 @@ interface Props {
 
 export default async function AthleteDetailPage({ params }: Props) {
   const supabase = createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // ── Authorization: athlete must belong to this professional's teams ──────
+  if (!user) notFound();
+
+  // ── Auth guard ──────────────────────────────────────────────────────────────
   const { data: teams } = await supabase
     .from("teams")
     .select("id")
-    .eq("professional_id", user!.id);
+    .eq("professional_id", user.id);
 
   const teamIds = (teams ?? []).map((t) => t.id);
 
@@ -29,55 +49,26 @@ export default async function AthleteDetailPage({ params }: Props) {
 
   if (!memberCheck) notFound();
 
-  // ── Data fetching ────────────────────────────────────────────────────────
+  // ── Fast parallel fetch: profile + latest ACWR (needed for the header) ─────
+  const [{ data: profile }, { data: latestAcwrArr }] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", params.id).single(),
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", params.id)
-    .single();
+    supabase
+      .from("acwr_snapshots")
+      .select("date, acwr_ratio, acute_load, chronic_load, risk_zone")
+      .eq("athlete_id", params.id)
+      .order("date", { ascending: false })
+      .limit(1),
+  ]);
 
   if (!profile) notFound();
 
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-  const [{ data: acwrHistory }, { data: wellness }, { data: sessions }] =
-    await Promise.all([
-      supabase
-        .from("acwr_snapshots")
-        .select("date, acwr_ratio, acute_load, chronic_load, risk_zone")
-        .eq("athlete_id", params.id)
-        .gte("date", thirtyDaysAgo.toISOString().split("T")[0])
-        .order("date", { ascending: true }),
-
-      supabase
-        .from("daily_wellness")
-        .select("date, fatigue, sleep_hours, sleep_quality, mood")
-        .eq("athlete_id", params.id)
-        .order("date", { ascending: false })
-        .limit(7),
-
-      supabase
-        .from("training_sessions")
-        .select(
-          `id, date, duration_min, session_type, phase,
-           session_rpe (rpe, srpe)`
-        )
-        .eq("athlete_id", params.id)
-        .order("date", { ascending: false })
-        .limit(10),
-    ]);
-
-  // ── Render ───────────────────────────────────────────────────────────────
-
+  // ── Render shell — heavy sections stream via Suspense in ProfileDetail ──────
   return (
     <ProfileDetail
       profile={profile}
       athleteId={params.id}
-      acwrHistory={acwrHistory ?? []}
-      wellness={wellness ?? []}
-      sessions={(sessions ?? []) as Parameters<typeof ProfileDetail>[0]["sessions"]}
+      latestAcwr={latestAcwrArr?.[0] ?? null}
     />
   );
 }
