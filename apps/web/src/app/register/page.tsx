@@ -7,11 +7,11 @@ import Link from "next/link";
 export default function RegisterPage() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
+  const [error, setError]       = useState<string | null>(null);
+  const [loading, setLoading]   = useState(false);
+  const [done, setDone]         = useState(false);
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +29,7 @@ export default function RegisterPage() {
       options: {
         data: {
           full_name: fullName,
-          role: "professional",      // web register = always professional
+          role: "professional",   // web register = always professional
         },
       },
     });
@@ -42,19 +42,26 @@ export default function RegisterPage() {
     }
   }
 
+  /* ── Success state ── */
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-dark px-4">
-        <div className="w-full max-w-md text-center space-y-4">
-          <div className="text-5xl">✅</div>
-          <h2 className="text-2xl font-black text-slate-100">¡Cuenta creada!</h2>
-          <p className="text-slate-400 text-sm">
+      <div className="min-h-screen flex items-center justify-center bg-[#080808] px-4 auth-grid-bg">
+        <div className="w-full max-w-sm text-center rounded-2xl border border-white/[0.07] bg-white/[0.025] p-10 shadow-xl shadow-black/60">
+          <div className="text-5xl mb-6">✅</div>
+          <h2 className="text-2xl font-black text-slate-100 mb-3">¡Cuenta creada!</h2>
+          <p className="text-slate-400 text-sm leading-relaxed mb-8">
             Revisa tu correo para confirmar la cuenta,<br />
             luego inicia sesión.
           </p>
           <Link
             href="/login"
-            className="inline-block mt-4 bg-brand text-white font-bold px-8 py-3 rounded-xl hover:bg-brand-dark transition"
+            className="
+              inline-block w-full
+              bg-[#6366F1] hover:bg-[#4F46E5] active:bg-[#4338CA]
+              text-white font-bold text-sm tracking-wide
+              py-3.5 rounded-lg
+              transition-colors duration-150
+            "
           >
             Ir al Login
           </Link>
@@ -64,72 +71,160 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-dark px-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-4xl font-black text-brand text-center tracking-widest mb-2">
-          BODYSENSE
-        </h1>
-        <p className="text-center text-slate-400 text-sm mb-10">
-          Crear cuenta de Profesional Deportivo
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-[#080808] px-4 auth-grid-bg">
+      <div className="w-full max-w-sm">
 
-        <form onSubmit={handleRegister} className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Nombre completo"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="bg-surface rounded-xl px-4 py-3 text-slate-100 border border-slate-700 focus:outline-none focus:border-brand placeholder-slate-500"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Correo electrónico"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-surface rounded-xl px-4 py-3 text-slate-100 border border-slate-700 focus:outline-none focus:border-brand placeholder-slate-500"
-            required
-            autoComplete="email"
-          />
-          <input
-            type="password"
-            placeholder="Contraseña (mín. 8 caracteres)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-surface rounded-xl px-4 py-3 text-slate-100 border border-slate-700 focus:outline-none focus:border-brand placeholder-slate-500"
-            required
-            autoComplete="new-password"
-          />
+        {/* ── Brand mark ── */}
+        <div className="text-center mb-10">
+          <span className="inline-block text-[11px] font-bold tracking-[0.35em] text-[#818cf8]/60 uppercase mb-4">
+            bodysense.fit
+          </span>
+          <h1 className="text-5xl font-black tracking-[0.18em] text-white mb-1">
+            BODY<span className="text-[#818cf8]">SENSE</span>
+          </h1>
+          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-[#818cf8] to-transparent opacity-60" />
+          <p className="mt-4 text-[13px] text-slate-500 tracking-wide">
+            Crear cuenta de Profesional Deportivo
+          </p>
+        </div>
 
-          {/* Role info */}
-          <div className="bg-surface rounded-xl px-4 py-3 border border-slate-700 flex gap-3 items-start">
-            <span className="text-brand text-lg mt-0.5">🏥</span>
-            <div>
-              <p className="text-slate-200 text-sm font-semibold">Cuenta Profesional</p>
-              <p className="text-slate-500 text-xs mt-0.5">
-                Fisioterapeuta, entrenador o preparador físico. Podrás gestionar equipos y atletas.
-              </p>
+        {/* ── Form card ── */}
+        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm p-8 shadow-xl shadow-black/60">
+          <form onSubmit={handleRegister} className="flex flex-col gap-5">
+
+            {/* Full name */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="fullName"
+                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+              >
+                Nombre completo
+              </label>
+              <input
+                id="fullName"
+                type="text"
+                placeholder="Ej. Carlos Mendoza"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="
+                  bg-black/40 border border-white/[0.09] rounded-lg
+                  px-4 py-3 text-slate-100 text-sm
+                  placeholder-slate-700
+                  focus:outline-none focus:border-[#818cf8]
+                  focus:ring-2 focus:ring-[#818cf8]/20
+                  transition-all duration-200
+                "
+                required
+              />
             </div>
-          </div>
 
-          {error && (
-            <div className="bg-red-950/50 border border-red-800 rounded-xl px-4 py-3">
-              <p className="text-red-300 text-sm">{error}</p>
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="email"
+                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+              >
+                Correo electrónico
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="hola@bodysense.fit"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="
+                  bg-black/40 border border-white/[0.09] rounded-lg
+                  px-4 py-3 text-slate-100 text-sm
+                  placeholder-slate-700
+                  focus:outline-none focus:border-[#818cf8]
+                  focus:ring-2 focus:ring-[#818cf8]/20
+                  transition-all duration-200
+                "
+                required
+                autoComplete="email"
+              />
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-xl transition disabled:opacity-50 mt-1"
-          >
-            {loading ? "Creando cuenta..." : "Crear Cuenta"}
-          </button>
-        </form>
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="password"
+                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+              >
+                Contraseña
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Mínimo 8 caracteres"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="
+                  bg-black/40 border border-white/[0.09] rounded-lg
+                  px-4 py-3 text-slate-100 text-sm
+                  placeholder-slate-700
+                  focus:outline-none focus:border-[#818cf8]
+                  focus:ring-2 focus:ring-[#818cf8]/20
+                  transition-all duration-200
+                "
+                required
+                autoComplete="new-password"
+              />
+            </div>
 
-        <p className="text-center text-slate-500 text-sm mt-6">
+            {/* Role info chip */}
+            <div className="flex gap-3 items-start rounded-lg border border-[#6366F1]/20 bg-[#6366F1]/[0.06] px-4 py-3">
+              <span className="text-[#818cf8] text-base mt-0.5 shrink-0">🏥</span>
+              <div>
+                <p className="text-slate-200 text-sm font-semibold">Cuenta Profesional</p>
+                <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">
+                  Fisioterapeuta, entrenador o preparador físico.<br />
+                  Podrás gestionar equipos y atletas.
+                </p>
+              </div>
+            </div>
+
+            {/* Error banner */}
+            {error && (
+              <div className="flex items-start gap-3 bg-red-950/40 border border-red-900/60 rounded-lg px-4 py-3">
+                <span className="text-red-400 text-base mt-0.5 shrink-0">⚠</span>
+                <p className="text-red-300 text-sm leading-snug">{error}</p>
+              </div>
+            )}
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="
+                mt-1 w-full
+                bg-[#6366F1] hover:bg-[#4F46E5] active:bg-[#4338CA]
+                text-white font-bold text-sm tracking-wide
+                py-3.5 rounded-lg
+                transition-colors duration-150
+                disabled:opacity-50 disabled:cursor-not-allowed
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/50
+              "
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                  Creando cuenta…
+                </span>
+              ) : (
+                "Crear Cuenta"
+              )}
+            </button>
+          </form>
+        </div>
+
+        {/* ── Footer link ── */}
+        <p className="text-center text-[13px] text-slate-600 mt-6">
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-brand hover:text-brand-light transition">
+          <Link
+            href="/login"
+            className="text-[#818cf8] hover:text-[#6366F1] transition-colors duration-150 font-medium"
+          >
             Iniciar sesión
           </Link>
         </p>

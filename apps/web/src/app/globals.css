@@ -14,6 +14,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── Auth pages: industrial dot-grid overlay ─────────────────
+   Applied via className="auth-grid-bg" on the root <div>.
+   Creates a barely-visible dot matrix at 24 px pitch —
+   subtle enough not to distract, present enough to feel crafted. */
+.auth-grid-bg {
+  background-image:
+    radial-gradient(circle, rgba(129, 140, 248, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 /* ── Print styles (used by /reports PDF export) ──────────── */
 @media print {
   /* Hide navigation chrome */

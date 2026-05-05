@@ -87,7 +87,7 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
 
       {/* Disclaimer */}
       <p className="text-slate-700 text-xs">
-        * Las prescripciones son generadas automáticamente por el Motor de Reglas de Vitatekh
+        * Las prescripciones son generadas automáticamente por el Motor de Reglas de Bodysense
         basado en evidencia científica. No sustituyen el criterio clínico del profesional.
       </p>
     </div>

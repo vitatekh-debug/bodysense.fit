@@ -91,7 +91,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
       <div className="hidden print:block mb-6">
         <div className="flex items-center justify-between border-b border-gray-300 pb-4">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Vitatekh — Informe SMCP</h1>
+            <h1 className="text-2xl font-black text-gray-900">Bodysense — Informe SMCP</h1>
             <p className="text-gray-500 text-sm mt-1">Generado el {generatedAt}</p>
           </div>
           <p className="text-gray-400 text-sm">Sistema de Monitoreo de Carga y Prevención</p>
@@ -271,7 +271,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
 
       {/* Disclaimer */}
       <p className="text-slate-700 text-xs print:text-gray-400">
-        * Las prescripciones son generadas automáticamente por el Motor de Reglas de Vitatekh basado en evidencia
+        * Las prescripciones son generadas automáticamente por el Motor de Reglas de Bodysense basado en evidencia
         científica. No sustituyen el criterio clínico del profesional.
       </p>
     </div>
