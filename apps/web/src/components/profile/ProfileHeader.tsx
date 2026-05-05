@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Pencil } from "lucide-react";
+import { ArrowLeft, Pencil, CalendarDays } from "lucide-react";
 import { ACWR_ZONES, SPORT_LABELS } from "@vitatekh/shared";
 import type { AcwrRiskZone, Profile, Sport } from "@vitatekh/shared";
 import { cn } from "@/lib/utils";
@@ -122,7 +122,21 @@ export default function ProfileHeader({
         </div>
 
         {/* Action buttons */}
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 flex-wrap items-center gap-3">
+          {/* Plan sessions */}
+          <Link
+            href={`/athletes/${athleteId}/plan`}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-lg border border-[#818cf8]/50",
+              "bg-[#818cf8]/12 px-4 py-2 text-[13px] font-semibold text-[#818cf8]",
+              "transition-colors hover:border-[#818cf8]/80 hover:bg-[#818cf8]/20",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
+            )}
+          >
+            <CalendarDays size={13} />
+            Planificar
+          </Link>
+
           {/* Edit profile — indigo outline style per design spec */}
           <Link
             href={`/athletes/${athleteId}/edit`}
