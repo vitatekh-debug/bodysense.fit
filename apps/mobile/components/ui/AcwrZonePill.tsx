@@ -2,7 +2,8 @@
  * AcwrZonePill — Bodysense Mobile
  *
  * Compact ACWR zone indicator with:
- *   • Coloured border + semi-transparent background per zone
+ *   • Coloured border + semi-transparent fill per zone
+ *   • Zone-coloured shadow / elevation glow (iOS neon + Android elevation)
  *   • Animated pulsing dot for high / very_high risk (useNativeDriver: true)
  *   • Graceful "Sin ACWR" empty state
  *
@@ -15,18 +16,20 @@ import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { ACWR_ZONES } from "@vitatekh/shared";
 import type { AcwrRiskZone } from "@vitatekh/shared";
+import { BS, ZONE_GLOW } from "../../lib/theme";
 
 interface AcwrZonePillProps {
-  ratio:  number;
-  zone:   AcwrRiskZone;
+  ratio:   number;
+  zone:    AcwrRiskZone;
   /** Show "Sin ACWR" placeholder instead of real data. */
   noData?: boolean;
 }
 
 export default function AcwrZonePill({ ratio, zone, noData }: AcwrZonePillProps) {
-  const zoneInfo   = ACWR_ZONES[zone];
-  const color      = zoneInfo.color;
-  const isPulsing  = zone === "high" || zone === "very_high";
+  const zoneInfo  = ACWR_ZONES[zone];
+  const color     = zoneInfo.color;
+  const isPulsing = zone === "high" || zone === "very_high";
+  const glow      = ZONE_GLOW[zone];
 
   // ── Pulse animation (opacity 1 → 0.15 → 1) ──────────────────────────────
   const dotOpacity = useRef(new Animated.Value(1)).current;
@@ -39,13 +42,13 @@ export default function AcwrZonePill({ ratio, zone, noData }: AcwrZonePillProps)
     const anim = Animated.loop(
       Animated.sequence([
         Animated.timing(dotOpacity, {
-          toValue:         0.15,
-          duration:        750,
+          toValue:         0.12,
+          duration:        700,
           useNativeDriver: true,
         }),
         Animated.timing(dotOpacity, {
           toValue:         1,
-          duration:        750,
+          duration:        700,
           useNativeDriver: true,
         }),
       ])
@@ -57,17 +60,9 @@ export default function AcwrZonePill({ ratio, zone, noData }: AcwrZonePillProps)
   // ── Empty state ───────────────────────────────────────────────────────────
   if (noData) {
     return (
-      <View
-        style={[
-          styles.pill,
-          {
-            borderColor:     "rgba(100,116,139,0.25)",
-            backgroundColor: "rgba(100,116,139,0.07)",
-          },
-        ]}
-      >
-        <View style={[styles.dot, { backgroundColor: "#475569" }]} />
-        <Text style={[styles.text, { color: "#475569" }]}>Sin ACWR</Text>
+      <View style={styles.pillEmpty}>
+        <View style={[styles.dot, { backgroundColor: "#334155" }]} />
+        <Text style={styles.textEmpty}>Sin ACWR</Text>
       </View>
     );
   }
@@ -79,6 +74,13 @@ export default function AcwrZonePill({ ratio, zone, noData }: AcwrZonePillProps)
         {
           borderColor:     color + "40",
           backgroundColor: color + "14",
+          // ── iOS neon glow ──
+          shadowColor:     color,
+          shadowOpacity:   glow.opacity,
+          shadowRadius:    glow.radius,
+          shadowOffset:    { width: 0, height: 0 },
+          // ── Android elevation ──
+          elevation:       glow.elevation,
         },
       ]}
     >
@@ -93,10 +95,10 @@ export default function AcwrZonePill({ ratio, zone, noData }: AcwrZonePillProps)
       </Text>
 
       {/* Separator */}
-      <Text style={[styles.separator, { color: color + "70" }]}>·</Text>
+      <Text style={[styles.separator, { color: color + "60" }]}>·</Text>
 
       {/* Zone label */}
-      <Text style={[styles.text, { color }]}>
+      <Text style={[styles.zoneLabel, { color }]}>
         {zoneInfo.label}
       </Text>
     </View>
@@ -105,32 +107,60 @@ export default function AcwrZonePill({ ratio, zone, noData }: AcwrZonePillProps)
 
 const styles = StyleSheet.create({
   pill: {
-    flexDirection:   "row",
-    alignItems:      "center",
-    alignSelf:       "flex-start",
-    gap:             5,
-    borderWidth:     1,
-    borderRadius:    20,
+    flexDirection:     "row",
+    alignItems:        "center",
+    alignSelf:         "flex-start",
+    gap:               5,
+    borderWidth:       1,
+    borderRadius:      20,
     paddingHorizontal: 10,
     paddingVertical:   5,
   },
+
+  // Empty state — no glow, muted colours
+  pillEmpty: {
+    flexDirection:     "row",
+    alignItems:        "center",
+    alignSelf:         "flex-start",
+    gap:               5,
+    borderWidth:       1,
+    borderRadius:      20,
+    paddingHorizontal: 10,
+    paddingVertical:   5,
+    borderColor:       "rgba(51,65,85,0.5)",
+    backgroundColor:   "rgba(51,65,85,0.10)",
+  },
+
   dot: {
     width:        6,
     height:       6,
     borderRadius: 3,
   },
+
+  // Numeric ACWR value — tabular nums, tight tracking
   value: {
-    fontSize:     12,
-    fontWeight:   "700",
-    letterSpacing: 0.3,
+    fontSize:      12,
+    fontWeight:    "800",
+    letterSpacing: 0.5,
   },
+
   separator: {
     fontSize:   11,
     fontWeight: "600",
   },
-  text: {
-    fontSize:     11,
-    fontWeight:   "600",
-    letterSpacing: 0.2,
+
+  // Zone name (e.g. "Óptimo", "Alto")
+  zoneLabel: {
+    fontSize:      11,
+    fontWeight:    "700",
+    letterSpacing: 0.4,
+  },
+
+  // Empty state text
+  textEmpty: {
+    color:         "#334155",
+    fontSize:      11,
+    fontWeight:    "600",
+    letterSpacing: BS.labelTracking,
   },
 });

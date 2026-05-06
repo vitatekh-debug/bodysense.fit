@@ -3,27 +3,45 @@
  *
  * High-impact home-screen header. Adapts the web ProfileHeader to mobile:
  *   • #080808 Industrial Dark cover with SVG dot-grid overlay
- *   • 64 px avatar with neon-indigo ring + glow shadow (iOS)
- *   • Uppercase 10 px labels (DEPORTISTA · DEPORTE)
- *   • AcwrZonePill with animated pulse for high-risk zones
+ *   • 64px avatar with neon-indigo ring + iOS neon glow shadow
+ *   • Uppercase 10px labels with 1.8 letterSpacing ("Technical Spec" style)
+ *   • AcwrZonePill with zone-coloured glow (animated pulse for high/very_high)
+ *   • Ambient zone-coloured bottom glow on header when ACWR is high/very_high
  *   • Date string + pending-sync badge
+ *
+ * v2 changes:
+ *   - labelTracking updated to BS.labelTracking (1.8)
+ *   - Avatar glow intensity increased
+ *   - Zone-coloured ambient shadow on header container (iOS only)
  */
 
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SPORT_LABELS } from "@vitatekh/shared";
 import type { AcwrRiskZone, Profile, Sport } from "@vitatekh/shared";
-import { BS } from "../../lib/theme";
+import { BS, ZONE_GLOW } from "../../lib/theme";
 import DotGrid from "./DotGrid";
 import AcwrZonePill from "./AcwrZonePill";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface AthleteHeaderProps {
-  profile:      Profile | null;
-  acwrRatio?:   number | null;
-  acwrZone?:    AcwrRiskZone | null;
+  profile:       Profile | null;
+  acwrRatio?:    number | null;
+  acwrZone?:     AcwrRiskZone | null;
   pendingCount?: number;
+}
+
+// ─── ACWR zone colour helper ──────────────────────────────────────────────────
+
+function zoneColor(zone: AcwrRiskZone | null | undefined): string {
+  const map: Record<AcwrRiskZone, string> = {
+    low:       "#3B82F6",
+    optimal:   "#22C55E",
+    high:      "#F59E0B",
+    very_high: "#EF4444",
+  };
+  return zone ? (map[zone] ?? BS.brandLight) : BS.brandLight;
 }
 
 // ─── Avatar ───────────────────────────────────────────────────────────────────
@@ -63,10 +81,24 @@ export default function AthleteHeader({
     month:   "long",
   });
 
-  const hasAcwr = acwrRatio != null && acwrZone != null;
+  const hasAcwr     = acwrRatio != null && acwrZone != null;
+  const isElevated  = acwrZone === "high" || acwrZone === "very_high";
+  const glowSpec    = acwrZone ? ZONE_GLOW[acwrZone] : null;
+  const ambientColor = zoneColor(acwrZone);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        // Ambient zone glow: only on iOS where shadowColor renders
+        isElevated && glowSpec && {
+          shadowColor:   ambientColor,
+          shadowOpacity: glowSpec.opacity * 0.5,
+          shadowRadius:  glowSpec.radius * 1.5,
+          shadowOffset:  { width: 0, height: 6 },
+        },
+      ]}
+    >
       {/* Dot-grid texture — z-index below content */}
       <DotGrid />
 
@@ -90,7 +122,7 @@ export default function AthleteHeader({
           {profile ? (
             <AthleteAvatar name={profile.full_name} />
           ) : (
-            <View style={[styles.avatarRing, { opacity: 0.3 }]}>
+            <View style={[styles.avatarRing, { opacity: 0.25 }]}>
               <View style={styles.avatarInner} />
             </View>
           )}
@@ -132,27 +164,27 @@ export default function AthleteHeader({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: BS.void,
-    overflow:        "hidden",
-    paddingTop:      56,           // safe area top approximation
+    backgroundColor:   BS.void,
+    overflow:          "hidden",
+    paddingTop:        56,
     paddingHorizontal: BS.pagePad,
-    paddingBottom:   24,
+    paddingBottom:     24,
   },
 
   content: { gap: 14, zIndex: 1 },
 
   // ── Top row ──
   topRow: {
-    flexDirection:   "row",
-    alignItems:      "center",
-    justifyContent:  "space-between",
+    flexDirection:  "row",
+    alignItems:     "center",
+    justifyContent: "space-between",
   },
   dateText: {
-    color:          BS.textMuted,
-    fontSize:       12,
-    fontWeight:     "600",
-    letterSpacing:  0.4,
-    textTransform:  "capitalize",
+    color:         BS.textMuted,
+    fontSize:      12,
+    fontWeight:    "600",
+    letterSpacing: 0.5,
+    textTransform: "capitalize",
   },
   pendingBadge: {
     backgroundColor: "rgba(146,64,14,0.85)",
@@ -173,20 +205,20 @@ const styles = StyleSheet.create({
     gap:           14,
   },
 
-  // Avatar ring with neon glow
+  // Avatar ring — neon glow on iOS
   avatarRing: {
-    width:        64,
-    height:       64,
-    borderRadius: 32,
-    borderWidth:  2,
-    borderColor:  BS.borderBrand,
-    alignItems:   "center",
+    width:          64,
+    height:         64,
+    borderRadius:   32,
+    borderWidth:    2,
+    borderColor:    BS.borderBrand,
+    alignItems:     "center",
     justifyContent: "center",
-    // Neon shadow (iOS only — Android ignores shadowColor on View)
-    shadowColor:   BS.brandLight,
-    shadowOpacity: 0.3,
-    shadowRadius:  8,
-    shadowOffset:  { width: 0, height: 0 },
+    // iOS neon glow — enhanced from v1
+    shadowColor:    BS.brandLight,
+    shadowOpacity:  0.45,
+    shadowRadius:   12,
+    shadowOffset:   { width: 0, height: 0 },
   },
   avatarInner: {
     width:           56,
@@ -219,10 +251,10 @@ const styles = StyleSheet.create({
     color:         BS.textMuted,
     fontSize:      10,
     fontWeight:    "700",
-    letterSpacing: BS.labelTracking,
+    letterSpacing: BS.labelTracking,  // 1.8 — premium tracking
   },
   labelDot: {
-    color:      BS.textDisabled,
-    fontSize:   10,
+    color:    BS.textDisabled,
+    fontSize: 10,
   },
 });

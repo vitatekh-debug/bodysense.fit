@@ -1,15 +1,16 @@
 /**
- * Athlete Check-in — Bodysense Industrial Dark redesign
+ * Athlete Check-in — Bodysense Industrial Dark
  *
- * Logic preserved from previous version (offline-first, toasts, skeleton, etc.)
- * Visual layer updated to Bodysense Design System:
+ * Logic: offline-first, optimistic toasts, skeleton, ACWR banner.
+ *
+ * Design System v2 (final pass):
  *   ✅ #080808 Industrial Dark background
- *   ✅ AthleteHeader with dot-grid, neon avatar, AcwrZonePill (pulsing dot)
- *   ✅ Glass cards: #111111 + border rgba(255,255,255,0.09)
- *   ✅ Uppercase 10px labels with 1.5 letter-spacing
- *   ✅ #818CF8 submit button (session registration)
- *   ✅ All quick-action arrows use brandLight
- *   ✅ Zero "Vitatekh" references
+ *   ✅ AthleteHeader with ambient zone glow + enhanced avatar
+ *   ✅ Glass cards: rgba(255,255,255,0.028) + borderTop highlight trick
+ *   ✅ Uppercase labels with 1.8 letterSpacing (Technical Spec)
+ *   ✅ #818CF8 CTA with neon glow (iOS shadow + Android elevation)
+ *   ✅ riskBanner: zone-coloured glow shadow
+ *   ✅ doneBanner: green neon glow
  */
 
 import {
@@ -31,7 +32,7 @@ import { writeWithFallback, getPendingCount } from "../../../lib/offline-queue";
 import { ACWR_ZONES } from "@vitatekh/shared";
 import type { AcwrSnapshot } from "@vitatekh/shared";
 import AthleteHeader from "../../../components/ui/AthleteHeader";
-import { BS } from "../../../lib/theme";
+import { BS, BRAND_GLOW, ZONE_GLOW } from "../../../lib/theme";
 
 // ─── Quick actions ─────────────────────────────────────────────────────────
 
@@ -48,14 +49,14 @@ const QUICK_ACTIONS = [
     emoji:    "🧠",
     subtitle: "Cuestionario POMS",
     route:    "/(athlete)/register-poms" as const,
-    color:    BS.brandLight,          // #818CF8 — brand color for registration
+    color:    BS.brandLight,
   },
   {
     label:    "Registrar RPE",
     emoji:    "⚡",
     subtitle: "Esfuerzo post-sesión",
     route:    "/(athlete)/my-sessions" as const,
-    color:    BS.brandLight,          // #818CF8 — session registration
+    color:    BS.brandLight,
   },
 ] as const;
 
@@ -79,8 +80,7 @@ export default function AthleteCheckin() {
   const [pendingCount, setPendingCount] = useState(0);
   const [latestSnap,   setLatestSnap]   = useState<AcwrSnapshot | null>(null);
 
-  // ── Load today's existing check-in + latest ACWR snapshot ───────
-  // Promise.all for parallel fetching — no sequential waterfall
+  // ── Load today's check-in + latest ACWR snapshot in parallel ────
   useEffect(() => {
     if (!profile) return;
 
@@ -104,7 +104,6 @@ export default function AthleteCheckin() {
         getPendingCount(),
       ]);
 
-      // Pre-fill form if already checked in today
       if (wellnessRes.data) {
         setTodayDone(true);
         setFatigue(wellnessRes.data.fatigue ?? 5);
@@ -167,24 +166,24 @@ export default function AthleteCheckin() {
       );
     } else {
       toast.success("¡Check-in registrado!", "Datos guardados correctamente.");
-      // Trigger ACWR recalculation (non-blocking, best-effort)
       supabase.functions
         .invoke("calculate-acwr", { body: { athlete_id: profile.id } })
         .catch(() => {});
     }
   }
 
-  // ── Risk zone from latest ACWR ──────────────────────────────────
+  // ── Risk zone helpers ───────────────────────────────────────────
   const zone       = latestSnap ? ACWR_ZONES[latestSnap.risk_zone] : null;
   const isAtRisk   = latestSnap?.risk_zone === "high" || latestSnap?.risk_zone === "very_high";
   const isCritical = latestSnap?.risk_zone === "very_high";
+  const riskGlow   = latestSnap?.risk_zone ? ZONE_GLOW[latestSnap.risk_zone] : null;
 
   // ── Render ──────────────────────────────────────────────────────
   if (initializing) return <SkeletonCheckin />;
 
   return (
     <View style={styles.screen}>
-      {/* ── High-impact header (outside scroll, fixed) ───────────── */}
+      {/* ── High-impact header ────────────────────────────────── */}
       <AthleteHeader
         profile={profile}
         acwrRatio={latestSnap?.acwr_ratio ?? null}
@@ -199,13 +198,19 @@ export default function AthleteCheckin() {
       >
 
         {/* ── ACWR Risk Banner ─────────────────────────────────── */}
-        {isAtRisk && latestSnap && (
+        {isAtRisk && latestSnap && zone && riskGlow && (
           <View
             style={[
               styles.riskBanner,
               {
-                borderColor:     zone!.color + "70",
-                backgroundColor: zone!.color + "12",
+                borderColor:     zone.color + "70",
+                backgroundColor: zone.color + "0f",
+                // Zone-coloured neon glow (iOS)
+                shadowColor:     zone.color,
+                shadowOpacity:   riskGlow.opacity,
+                shadowRadius:    riskGlow.radius,
+                shadowOffset:    { width: 0, height: 0 },
+                elevation:       riskGlow.elevation,
               },
             ]}
           >
@@ -214,7 +219,7 @@ export default function AthleteCheckin() {
                 {isCritical ? "🚨" : "⚠️"}
               </Text>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.riskBannerTitle, { color: zone!.color }]}>
+                <Text style={[styles.riskBannerTitle, { color: zone.color }]}>
                   {isCritical ? "Riesgo Muy Alto" : "Riesgo Alto"} — ACWR{" "}
                   {latestSnap.acwr_ratio.toFixed(2)}
                 </Text>
@@ -226,7 +231,7 @@ export default function AthleteCheckin() {
               </View>
             </View>
             <TouchableOpacity
-              style={[styles.riskCta, { backgroundColor: zone!.color }]}
+              style={[styles.riskCta, { backgroundColor: zone.color }]}
               onPress={() => router.push("/(athlete)/(tabs)/prevention" as any)}
               accessibilityLabel="Ver rutina de prevención"
               accessibilityRole="button"
@@ -245,7 +250,7 @@ export default function AthleteCheckin() {
           </View>
         )}
 
-        {/* ── Fatigue ───────────────────────────────────────────── */}
+        {/* ── Fatigue card ──────────────────────────────────────── */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardLabel}>Nivel de Fatiga</Text>
@@ -273,7 +278,7 @@ export default function AthleteCheckin() {
             value={fatigue}
             onValueChange={setFatigueSafe}
             minimumTrackTintColor={fatigue > 7 ? BS.error : BS.brandLight}
-            maximumTrackTintColor="rgba(255,255,255,0.1)"
+            maximumTrackTintColor="rgba(255,255,255,0.08)"
             thumbTintColor={fatigue > 7 ? "#FCA5A5" : BS.brandLight}
           />
           <View style={styles.sliderLabels}>
@@ -282,7 +287,7 @@ export default function AthleteCheckin() {
           </View>
         </View>
 
-        {/* ── Sleep hours ───────────────────────────────────────── */}
+        {/* ── Sleep hours card ──────────────────────────────────── */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardLabel}>Horas de Sueño</Text>
@@ -310,7 +315,7 @@ export default function AthleteCheckin() {
             value={sleepHours}
             onValueChange={setSleepHoursSafe}
             minimumTrackTintColor={sleepHours < 6 ? BS.warning : BS.success}
-            maximumTrackTintColor="rgba(255,255,255,0.1)"
+            maximumTrackTintColor="rgba(255,255,255,0.08)"
             thumbTintColor={sleepHours < 6 ? "#FCD34D" : "#4ADE80"}
           />
           <View style={styles.sliderLabels}>
@@ -324,7 +329,7 @@ export default function AthleteCheckin() {
           )}
         </View>
 
-        {/* ── Sleep quality ─────────────────────────────────────── */}
+        {/* ── Sleep quality card ────────────────────────────────── */}
         <View style={styles.card}>
           <Text style={styles.cardLabel}>Calidad del Sueño</Text>
           <View style={styles.emojiRow}>
@@ -346,7 +351,7 @@ export default function AthleteCheckin() {
           </View>
         </View>
 
-        {/* ── Mood ──────────────────────────────────────────────── */}
+        {/* ── Mood card ─────────────────────────────────────────── */}
         <View style={styles.card}>
           <Text style={styles.cardLabel}>Estado de Ánimo</Text>
           <View style={styles.emojiRow}>
@@ -368,7 +373,7 @@ export default function AthleteCheckin() {
           </View>
         </View>
 
-        {/* ── Submit ────────────────────────────────────────────── */}
+        {/* ── Submit CTA ────────────────────────────────────────── */}
         <TouchableOpacity
           style={[styles.submitBtn, submitting && styles.submitBtnDisabled]}
           onPress={handleSubmit}
@@ -432,17 +437,19 @@ const styles = StyleSheet.create({
 
   // ── Banners ──────────────────────────────────────────────────────
   riskBanner: {
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth:  1.5,
     padding:      14,
     gap:          12,
+    overflow:     "visible",
   },
   riskBannerTop:  { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   riskBannerIcon: { fontSize: 22, marginTop: 1 },
-  riskBannerTitle:{
-    fontSize:   14,
-    fontWeight: "800",
-    marginBottom: 4,
+  riskBannerTitle: {
+    fontSize:      14,
+    fontWeight:    "800",
+    letterSpacing: 0.2,
+    marginBottom:  4,
   },
   riskBannerSub: {
     color:      BS.textSecondary,
@@ -462,15 +469,23 @@ const styles = StyleSheet.create({
     padding:         12,
     borderWidth:     1,
     borderColor:     "rgba(22,101,52,0.8)",
+    // Subtle green glow (iOS)
+    shadowColor:     "#22C55E",
+    shadowOpacity:   0.20,
+    shadowRadius:    10,
+    shadowOffset:    { width: 0, height: 0 },
+    elevation:       3,
   },
   doneBannerText: { color: "#4ADE80", fontSize: 13, fontWeight: "600" },
 
   // ── Glass cards ──────────────────────────────────────────────────
+  // Premium: near-transparent background + brighter top border edge
   card: {
-    backgroundColor: BS.surface,
+    backgroundColor: BS.surface,               // rgba(255,255,255,0.028)
     borderRadius:    BS.cardRadius,
     borderWidth:     1,
-    borderColor:     BS.border,
+    borderColor:     BS.border,                // rgba(255,255,255,0.07)
+    borderTopColor:  BS.borderTop,             // rgba(255,255,255,0.13) — top highlight
     padding:         BS.cardPad,
     gap:             10,
   },
@@ -479,23 +494,23 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems:     "center",
   },
-  // Uppercase 10px label — matches web design spec
+  // Uppercase label — Technical Spec style with 1.8 letterSpacing
   cardLabel: {
-    color:          BS.textMuted,
-    fontSize:       10,
-    fontWeight:     "700",
-    letterSpacing:  BS.labelTracking,
-    textTransform:  "uppercase",
+    color:         BS.textMuted,
+    fontSize:      10,
+    fontWeight:    "700",
+    letterSpacing: BS.labelTracking,           // 1.8
+    textTransform: "uppercase",
   },
   valueBadge: {
-    borderRadius:     20,
+    borderRadius:      20,
     paddingHorizontal: 12,
     paddingVertical:   4,
   },
   cardValue: { fontSize: 15, fontWeight: "800" },
 
   // Slider — min 44px for a11y
-  slider: { width: "100%", height: 44 },
+  slider:       { width: "100%", height: 44 },
   sliderLabels: {
     flexDirection:  "row",
     justifyContent: "space-between",
@@ -512,17 +527,23 @@ const styles = StyleSheet.create({
     borderRadius:    26,
     justifyContent:  "center",
     alignItems:      "center",
-    backgroundColor: "rgba(255,255,255,0.04)",
+    backgroundColor: "rgba(255,255,255,0.03)",
     borderWidth:     1,
     borderColor:     "transparent",
   },
   emojiBtnActive: {
     backgroundColor: "rgba(129,140,248,0.15)",
     borderColor:     BS.brandLight,
+    // Subtle brand glow on selected emoji (iOS)
+    shadowColor:     BS.brandLight,
+    shadowOpacity:   0.30,
+    shadowRadius:    8,
+    shadowOffset:    { width: 0, height: 0 },
+    elevation:       4,
   },
   emoji: { fontSize: 28 },
 
-  // Submit — #818CF8 (brandLight) — session registration primary CTA
+  // Submit CTA — brandLight with neon glow
   submitBtn: {
     backgroundColor: BS.brandLight,
     borderRadius:    14,
@@ -530,42 +551,58 @@ const styles = StyleSheet.create({
     alignItems:      "center",
     justifyContent:  "center",
     marginTop:       4,
+    // iOS neon glow
+    shadowColor:     BS.brandLight,
+    shadowOpacity:   BRAND_GLOW.opacity,
+    shadowRadius:    BRAND_GLOW.radius,
+    shadowOffset:    { width: 0, height: 4 },
+    // Android elevation
+    elevation:       BRAND_GLOW.elevation,
   },
-  submitBtnDisabled: { opacity: 0.55 },
-  submitText: { color: "#fff", fontWeight: "800", fontSize: 16 },
+  submitBtnDisabled: { opacity: 0.50 },
+  submitText: {
+    color:         "#fff",
+    fontWeight:    "800",
+    fontSize:      16,
+    letterSpacing: 0.4,
+  },
 
-  // Quick actions section
+  // Quick actions
   quickSection: { gap: 10 },
   sectionLabel: {
     color:         BS.textDisabled,
     fontSize:      10,
     fontWeight:    "700",
-    letterSpacing: BS.labelTracking,
+    letterSpacing: BS.labelTracking,   // 1.8
     textTransform: "uppercase",
     marginTop:     8,
   },
   quickCard: {
+    // Same glass card treatment as main cards
     backgroundColor: BS.surface,
     borderRadius:    14,
     borderWidth:     1,
     borderColor:     BS.border,
+    borderTopColor:  BS.borderTop,
     padding:         16,
     minHeight:       60,
     flexDirection:   "row",
     alignItems:      "center",
     gap:             14,
   },
-  quickEmoji:     { fontSize: 24 },
-  quickCardText:  { flex: 1 },
+  quickEmoji: { fontSize: 24 },
+  quickCardText: { flex: 1 },
   quickCardLabel: {
-    color:      BS.textPrimary,
-    fontSize:   14,
-    fontWeight: "700",
+    color:         BS.textPrimary,
+    fontSize:      14,
+    fontWeight:    "700",
+    letterSpacing: 0.3,
   },
   quickCardSub: {
-    color:     BS.textMuted,
-    fontSize:  12,
-    marginTop: 2,
+    color:         BS.textMuted,
+    fontSize:      12,
+    marginTop:     2,
+    letterSpacing: 0.2,
   },
   quickArrow: {
     width:          36,

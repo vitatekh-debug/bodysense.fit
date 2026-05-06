@@ -1,11 +1,13 @@
 /**
  * Perfil del Atleta — Bodysense Industrial Dark
  *
- * Redesigned to match the home screen's design system:
+ * Design System v2 (final pass):
  *   • #080808 background + dot-grid texture
- *   • Avatar with neon-indigo ring (consistent with AthleteHeader)
- *   • Uppercase 10px labels
- *   • #818CF8 role badge, #EF4444 sign-out border
+ *   • Avatar con neon ring intensificado (shadowOpacity 0.45, radius 14)
+ *   • Badge "DEPORTISTA" con brand glow sutil (iOS)
+ *   • Info card glass: borderTopColor highlight + rgba surface
+ *   • Uppercase labels con letterSpacing 1.8 (BS.labelTracking)
+ *   • Botón sign-out con borde rojo sutil — sin glow (acción destructiva)
  */
 
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
@@ -63,7 +65,7 @@ export default function AthleteProfileTab() {
 
   return (
     <View style={styles.screen}>
-      {/* ── Hero section with dot-grid ── */}
+      {/* ── Hero section con dot-grid ── */}
       <View style={styles.hero}>
         <DotGrid />
         <View style={styles.heroContent}>
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
   },
   heroContent: { alignItems: "center", gap: 12, zIndex: 1 },
 
+  // Avatar ring — neon-indigo glow intensificado (v2)
   avatarRing: {
     width:          88,
     height:         88,
@@ -122,9 +125,10 @@ const styles = StyleSheet.create({
     borderColor:    BS.borderBrand,
     alignItems:     "center",
     justifyContent: "center",
+    // iOS neon glow — más intenso que v1
     shadowColor:    BS.brandLight,
-    shadowOpacity:  0.3,
-    shadowRadius:   10,
+    shadowOpacity:  0.45,
+    shadowRadius:   14,
     shadowOffset:   { width: 0, height: 0 },
   },
   avatarInner: {
@@ -147,6 +151,8 @@ const styles = StyleSheet.create({
     fontWeight:    "800",
     letterSpacing: 0.2,
   },
+
+  // Role badge con glow brand sutil (iOS)
   roleBadge: {
     backgroundColor: "rgba(129,140,248,0.12)",
     borderWidth:     1,
@@ -154,28 +160,35 @@ const styles = StyleSheet.create({
     borderRadius:    20,
     paddingHorizontal: 14,
     paddingVertical:   5,
+    // iOS brand glow sutil
+    shadowColor:     BS.brandLight,
+    shadowOpacity:   0.28,
+    shadowRadius:    8,
+    shadowOffset:    { width: 0, height: 0 },
+    elevation:       3,
   },
   roleBadgeText: {
     color:         BS.brandLight,
     fontSize:      10,
     fontWeight:    "700",
-    letterSpacing: BS.labelTracking,
+    letterSpacing: BS.labelTracking,   // 1.8 — Technical Spec
   },
 
-  // Info card
+  // Info card — glass premium con top-border highlight
   infoCard: {
     marginHorizontal: BS.pagePad,
     marginTop:        8,
-    backgroundColor:  BS.surface,
+    backgroundColor:  BS.surface,          // rgba(255,255,255,0.028)
     borderRadius:     BS.cardRadius,
     borderWidth:      1,
-    borderColor:      BS.border,
+    borderColor:      BS.border,           // rgba(255,255,255,0.07)
+    borderTopColor:   BS.borderTop,        // rgba(255,255,255,0.13) — top highlight
     overflow:         "hidden",
   },
   infoRow: {
-    flexDirection:  "row",
-    alignItems:     "center",
-    justifyContent: "space-between",
+    flexDirection:     "row",
+    alignItems:        "center",
+    justifyContent:    "space-between",
     paddingHorizontal: 16,
     paddingVertical:   14,
     borderBottomWidth: 1,
@@ -185,13 +198,14 @@ const styles = StyleSheet.create({
     color:         BS.textMuted,
     fontSize:      10,
     fontWeight:    "700",
-    letterSpacing: BS.labelTracking,
+    letterSpacing: BS.labelTracking,       // 1.8
     textTransform: "uppercase",
   },
   infoValue: {
-    color:      BS.textPrimary,
-    fontSize:   14,
-    fontWeight: "600",
+    color:         BS.textPrimary,
+    fontSize:      14,
+    fontWeight:    "600",
+    letterSpacing: 0.1,
   },
 
   // Footer
@@ -201,15 +215,16 @@ const styles = StyleSheet.create({
   },
   signOutBtn: {
     borderWidth:     1,
-    borderColor:     "rgba(239,68,68,0.5)",
+    borderColor:     "rgba(239,68,68,0.45)",
     borderRadius:    12,
     paddingVertical: 14,
     alignItems:      "center",
-    backgroundColor: "rgba(239,68,68,0.06)",
+    backgroundColor: "rgba(239,68,68,0.05)",
   },
   signOutText: {
-    color:      BS.error,
-    fontWeight: "700",
-    fontSize:   15,
+    color:         BS.error,
+    fontWeight:    "700",
+    fontSize:      15,
+    letterSpacing: 0.3,
   },
 });
