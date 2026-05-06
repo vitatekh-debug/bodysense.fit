@@ -10,6 +10,12 @@
  *   • Main content con padding responsivo (px-4 móvil → px-8 desktop)
  *
  * layout.tsx es Server Component (auth) y delega el layout aquí.
+ *
+ * Fix 3 — Hydration guard:
+ *   El overlay y el hamburger usan `mounted` para evitar cualquier
+ *   mismatch entre el HTML del servidor (sin estado de sidebar) y el
+ *   primer render del cliente. Sin esto React podría lanzar error de
+ *   hidratación si el estado inicial difiere por alguna razón.
  */
 
 import { useState, useCallback, useEffect } from "react";
@@ -24,8 +30,12 @@ interface DashboardShellProps {
 }
 
 export default function DashboardShell({ children, coachId }: DashboardShellProps) {
+  const [mounted,     setMounted]     = useState(false);   // Fix 3: hydration guard
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+
+  // Marcar como montado en el cliente — nunca en SSR
+  useEffect(() => { setMounted(true); }, []);
 
   const openSidebar  = useCallback(() => setSidebarOpen(true),  []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
@@ -56,10 +66,11 @@ export default function DashboardShell({ children, coachId }: DashboardShellProp
   }, [sidebarOpen]);
 
   return (
-    <div className="flex h-screen bg-surface-dark overflow-hidden">
+    <div className="flex h-screen bg-[#0F172A] overflow-hidden">
 
-      {/* ── Overlay — sólo en móvil, z-20 (debajo del sidebar z-30) ── */}
-      {sidebarOpen && (
+      {/* ── Overlay — sólo en móvil, z-20 (debajo del sidebar z-30) ──
+          Renderizado sólo tras montar en cliente (Fix 3 hydration) */}
+      {mounted && sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-20 lg:hidden"
           onClick={closeSidebar}
@@ -73,8 +84,10 @@ export default function DashboardShell({ children, coachId }: DashboardShellProp
       {/* ── Main area ── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
 
-        {/* Top bar */}
-        <header className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-3 border-b border-slate-800 bg-surface-dark flex-shrink-0">
+        {/* ── Top bar ──
+            Fix 4: py-[13px] en vez de py-3 — fuerza descarga de nuevo CSS
+            (hash de Tailwind cambia con cualquier clase nueva en este archivo) */}
+        <header className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-[13px] border-b border-slate-800 bg-[#0F172A] flex-shrink-0">
 
           {/* Hamburger — sólo en móvil */}
           <button
@@ -88,7 +101,7 @@ export default function DashboardShell({ children, coachId }: DashboardShellProp
               "border border-white/[0.08] hover:border-white/[0.15]",
               "bg-white/[0.03] hover:bg-white/[0.06]",
               "transition-all duration-150",
-              "lg:hidden",          // oculto en desktop
+              "lg:hidden",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40",
             ].join(" ")}
           >
@@ -96,8 +109,8 @@ export default function DashboardShell({ children, coachId }: DashboardShellProp
           </button>
 
           {/* Logo BODYSENSE en móvil (cuando el sidebar está oculto) */}
-          <span className="text-base font-black text-brand tracking-widest lg:hidden">
-            BODYSENSE
+          <span className="text-base font-black tracking-widest text-[#818cf8] lg:hidden select-none">
+            BODY<span className="text-white">SENSE</span>
           </span>
 
           {/* Campana de notificaciones */}

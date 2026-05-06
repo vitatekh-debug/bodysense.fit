@@ -150,6 +150,39 @@ body {
   }
 }
 
+/* ── Mobile sidebar hard reset ───────────────────────────────
+   Fix 2: Belt + suspenders sobre las clases Tailwind.
+   Garantiza que el sidebar esté fixed y off-screen en móvil
+   independientemente de si el JS/CSS anterior quedó cacheado.
+   ─────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Mata cualquier .sidebar de HTML viejo cacheado */
+  .sidebar {
+    display: none !important;
+  }
+
+  /* Fuerza posicionamiento correcto en el <aside> real */
+  aside[aria-label="Navegación principal"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    z-index: 30 !important;
+    width: 280px !important;
+    transition: transform 300ms ease-in-out !important;
+  }
+
+  /* Cuando JS añade translate-x-0, el sidebar aparece */
+  aside[aria-label="Navegación principal"].translate-x-0 {
+    transform: translateX(0) !important;
+  }
+
+  /* Estado cerrado por defecto — off-screen a la izquierda */
+  aside[aria-label="Navegación principal"].\-translate-x-full {
+    transform: translateX(-100%) !important;
+  }
+}
+
 /* ── Print styles ────────────────────────────────────────────*/
 @media print {
   aside, header, nav { display: none !important; }

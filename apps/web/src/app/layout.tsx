@@ -1,5 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+
+// ── Fix 1: Viewport meta — crítico para layout móvil correcto ──────────────
+// Sin esto el navegador aplica zoom virtual y los media queries no disparan.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {
