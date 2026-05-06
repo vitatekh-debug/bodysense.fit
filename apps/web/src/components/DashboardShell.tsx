@@ -3,19 +3,27 @@
 /**
  * DashboardShell — Client Component
  *
- * Manages the responsive layout state for the dashboard:
- *   • sidebarOpen toggle (móvil)
- *   • Overlay bg-black/50 cuando el sidebar está abierto en móvil
- *   • Header con botón hamburguesa (< lg) y NotificationBell
- *   • Main content con padding responsivo (px-4 móvil → px-8 desktop)
+ * Estructura responsiva del dashboard:
  *
- * layout.tsx es Server Component (auth) y delega el layout aquí.
+ *   Móvil (< 1024px):
+ *     ┌──────────────────────────────────┐  ← h-dvh
+ *     │  Header fijo (h-14)              │  hamburger + logo + bell
+ *     ├──────────────────────────────────┤
+ *     │  Main (overflow-y-auto)          │  px-4 py-5
+ *     └──────────────────────────────────┘
+ *     Sidebar = Sheet fixed (z-40) que desliza desde la izquierda
+ *     Overlay  = bg-black/60 backdrop-blur-sm (z-30) debajo del Sheet
  *
- * Fix 3 — Hydration guard:
- *   El overlay y el hamburger usan `mounted` para evitar cualquier
- *   mismatch entre el HTML del servidor (sin estado de sidebar) y el
- *   primer render del cliente. Sin esto React podría lanzar error de
- *   hidratación si el estado inicial difiere por alguna razón.
+ *   Desktop (≥ 1024px):
+ *     ┌──────────┬───────────────────────┐  ← h-dvh
+ *     │ Sidebar  │  Header (h-14)        │
+ *     │  w-60    ├───────────────────────┤
+ *     │ (static) │  Main (overflow-auto) │
+ *     └──────────┴───────────────────────┘
+ *
+ *   Hydration guard:
+ *     `mounted` previene mismatches SSR↔client. El overlay
+ *     y el sidebar abierto solo se renderizan post-mount.
  */
 
 import { useState, useCallback, useEffect } from "react";
@@ -25,102 +33,89 @@ import Sidebar from "@/components/Sidebar";
 import NotificationBell from "@/components/NotificationBell";
 
 interface DashboardShellProps {
-  children:  React.ReactNode;
-  coachId:   string;
+  children: React.ReactNode;
+  coachId:  string;
 }
 
 export default function DashboardShell({ children, coachId }: DashboardShellProps) {
-  const [mounted,     setMounted]     = useState(false);   // Fix 3: hydration guard
+  const [mounted,     setMounted]     = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  // Marcar como montado en el cliente — nunca en SSR
+  // Marcar montado (solo cliente — jamás SSR)
   useEffect(() => { setMounted(true); }, []);
 
   const openSidebar  = useCallback(() => setSidebarOpen(true),  []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
-  // Cerrar sidebar automáticamente al navegar (en móvil)
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [pathname]);
+  // Cerrar sidebar al navegar
+  useEffect(() => { setSidebarOpen(false); }, [pathname]);
 
-  // Cerrar sidebar con Escape
+  // Cerrar con Escape
   useEffect(() => {
     if (!sidebarOpen) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeSidebar();
-    };
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") closeSidebar(); };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [sidebarOpen, closeSidebar]);
 
-  // Bloquear scroll del body cuando el sidebar está abierto en móvil
+  // Bloquear scroll del body cuando el Sheet está abierto
   useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = sidebarOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [sidebarOpen]);
 
   return (
-    <div className="flex h-screen bg-[#0F172A] overflow-hidden">
+    /*
+     * Viewport Fix (#5):
+     *   h-dvh    → usa el viewport real del móvil (excluye barra de dirección)
+     *   w-full   → 100% del ancho sin forzar 100vw (evita scroll horizontal)
+     *   overflow-hidden → ningún hijo puede desbordarse lateralmente
+     */
+    <div className="flex h-dvh w-full overflow-hidden bg-[#0a0a0a]">
 
-      {/* ── Overlay — sólo en móvil, z-20 (debajo del sidebar z-30) ──
-          Renderizado sólo tras montar en cliente (Fix 3 hydration) */}
+      {/* ── Overlay Sheet — solo en móvil, solo cuando mounted ── */}
       {mounted && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
           onClick={closeSidebar}
           aria-hidden="true"
         />
       )}
 
-      {/* ── Sidebar ── */}
+      {/* ── Sidebar (Sheet en móvil, columna estática en desktop) ── */}
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
-      {/* ── Main area ── */}
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+      {/* ── Columna principal ── */}
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
 
-        {/* ── Top bar ──
-            Fix 4: py-[13px] en vez de py-3 — fuerza descarga de nuevo CSS
-            (hash de Tailwind cambia con cualquier clase nueva en este archivo) */}
-        <header className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-[13px] border-b border-slate-800 bg-[#0F172A] flex-shrink-0">
+        {/* ── Header fijo (#4) ── */}
+        <header className="flex shrink-0 items-center gap-3 h-14 px-4 sm:px-5 lg:px-6 border-b border-slate-800/80 bg-[#0a0a0a]">
 
-          {/* Hamburger — sólo en móvil */}
+          {/* Botón hamburguesa — solo móvil (#1) */}
           <button
             onClick={openSidebar}
             aria-label="Abrir menú de navegación"
             aria-expanded={sidebarOpen}
-            className={[
-              "flex items-center justify-center",
-              "h-9 w-9 rounded-lg",
-              "text-slate-400 hover:text-slate-200",
-              "border border-white/[0.08] hover:border-white/[0.15]",
-              "bg-white/[0.03] hover:bg-white/[0.06]",
-              "transition-all duration-150",
-              "lg:hidden",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40",
-            ].join(" ")}
+            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-xl border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:border-white/[0.15] hover:bg-white/[0.06] transition-all duration-150 lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
           >
             <Menu size={18} />
           </button>
 
-          {/* Logo BODYSENSE en móvil (cuando el sidebar está oculto) */}
-          <span className="text-base font-black tracking-widest text-[#818cf8] lg:hidden select-none">
-            BODY<span className="text-white">SENSE</span>
+          {/* Logo — solo móvil */}
+          <span className="text-sm font-black tracking-[0.15em] select-none lg:hidden">
+            <span className="text-[#818cf8]">BODY</span>
+            <span className="text-slate-100">SENSE</span>
           </span>
 
-          {/* Campana de notificaciones */}
+          {/* Campana — siempre, empujada a la derecha */}
           <div className="ml-auto">
             <NotificationBell coachId={coachId} />
           </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+        {/* ── Contenido scrolleable (#5 overflow-x-hidden) ── */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
           {children}
         </main>
       </div>

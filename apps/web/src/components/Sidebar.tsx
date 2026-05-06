@@ -3,19 +3,20 @@
 /**
  * Sidebar — Bodysense
  *
- * Navegación lateral responsiva:
+ * Comportamiento:
  *
- * Móvil (< 1024px):
- *   • position: fixed, full height, z-30
- *   • Oculto: transform translateX(-100%)
- *   • Visible: transform translateX(0) — animación 300ms ease
- *   • Ancho 280px (más amplio para touch targets)
+ * Móvil (< 1024 px):
+ *   • Sheet: position fixed, full height, z-40
+ *   • Cerrado  → translateX(-100%) — fuera de pantalla
+ *   • Abierto  → translateX(0)     — animación 300 ms ease
+ *   • Ancho 288 px (w-72) — touch targets amplios
  *   • Botón × para cerrar en la cabecera
+ *   • will-change-transform activa la GPU en móvil
  *
- * Desktop (≥ 1024px):
- *   • position: static (en el flujo normal)
- *   • Siempre visible, w-60
- *   • Botón × oculto
+ * Desktop (≥ 1024 px):
+ *   • lg:static — entra en el flujo flex del DashboardShell
+ *   • Siempre visible, lg:translate-x-0, lg:w-60
+ *   • Botón × oculto (lg:hidden)
  */
 
 import Link from "next/link";
@@ -67,50 +68,47 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <aside
       className={cn(
-        // Base — siempre aplicados
-        "flex flex-col h-full",
-        "bg-[#0c0c0c] border-r border-slate-800/80",
+        // ── Base — siempre ──────────────────────────────────────
+        "flex flex-col bg-[#0a0a0a] border-r border-slate-800/80",
 
-        // ── Móvil: fixed, fuera del flujo, desliza desde la izquierda ──
-        "fixed top-0 left-0 bottom-0 z-30",
-        "w-[280px]",
-        "transition-transform duration-300 ease-in-out",
+        // ── Móvil: Sheet fuera del flujo, desliza desde izquierda ──
+        "fixed inset-y-0 left-0 z-40 w-72",
+        "transition-transform duration-300 ease-in-out will-change-transform",
         isOpen ? "translate-x-0" : "-translate-x-full",
 
-        // ── Desktop: estático, dentro del flujo, siempre visible ──
-        "lg:static lg:z-auto lg:translate-x-0 lg:w-60"
+        // ── Desktop: entra al flujo flex, siempre visible ──────
+        "lg:static lg:inset-y-auto lg:left-auto lg:z-auto",
+        "lg:translate-x-0 lg:w-60 lg:flex-shrink-0",
       )}
       aria-label="Navegación principal"
     >
-      {/* ── Logo + botón cerrar (móvil) ── */}
-      <div className="flex items-center justify-between px-6 py-5 border-b border-slate-800/80 flex-shrink-0">
-        <span className="text-xl font-black text-brand tracking-widest select-none">
-          BODY<span className="text-[#818cf8]">SENSE</span>
+      {/* ── Logo + botón cerrar ── */}
+      <div className="flex items-center justify-between px-5 py-5 border-b border-slate-800/80 flex-shrink-0">
+        <span className="text-lg font-black tracking-[0.15em] select-none">
+          <span className="text-[#818cf8]">BODY</span>
+          <span className="text-slate-100">SENSE</span>
         </span>
 
-        {/* Botón cerrar — sólo visible en móvil */}
+        {/* Botón × — sólo en móvil */}
         <button
           onClick={onClose}
           aria-label="Cerrar menú"
           className={cn(
-            "flex items-center justify-center",
-            "h-8 w-8 rounded-lg",
+            "flex items-center justify-center h-8 w-8 rounded-lg",
             "text-slate-500 hover:text-slate-200",
             "border border-white/[0.07] hover:border-white/[0.15]",
             "bg-white/[0.03] hover:bg-white/[0.06]",
             "transition-all duration-150",
-            "lg:hidden"            // oculto en desktop
+            "lg:hidden",
           )}
         >
-          <X size={16} />
+          <X size={15} />
         </button>
       </div>
 
-      {/* ── Nav items ── */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto" aria-label="Menú">
+      {/* ── Nav ── */}
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto" aria-label="Menú principal">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          // "active" si la ruta comienza con href
-          // Excepción: /dashboard no debe activarse en /athletes/[id] etc.
           const active =
             href === "/dashboard"
               ? pathname === "/dashboard"
@@ -120,22 +118,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <Link
               key={href}
               href={href}
-              // En móvil: cerrar sidebar al navegar (también lo hace el useEffect en DashboardShell)
               onClick={onClose}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium",
                 "transition-all duration-150",
-                // Clase de accesibilidad para lectores de pantalla
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40",
                 active
-                  ? [
-                      "bg-[#818cf8]/15 text-[#818cf8]",
-                      "border border-[#818cf8]/20",
-                    ].join(" ")
-                  : [
-                      "text-slate-400 border border-transparent",
-                      "hover:bg-white/[0.04] hover:text-slate-200",
-                    ].join(" ")
+                  ? "bg-[#818cf8]/12 text-[#818cf8] border border-[#818cf8]/20"
+                  : "text-slate-400 border border-transparent hover:bg-white/[0.04] hover:text-slate-200",
               )}
               aria-current={active ? "page" : undefined}
             >
@@ -147,7 +137,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       </nav>
 
       {/* ── Sign out ── */}
-      <div className="px-3 pb-6 flex-shrink-0 border-t border-slate-800/60 pt-3">
+      <div className="px-3 pb-5 flex-shrink-0 border-t border-slate-800/60 pt-3">
         <button
           onClick={handleSignOut}
           className={cn(
@@ -156,7 +146,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             "text-slate-500 border border-transparent",
             "hover:text-red-400 hover:bg-red-950/30 hover:border-red-900/30",
             "transition-all duration-150",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30",
           )}
         >
           <LogOut size={17} className="shrink-0" />

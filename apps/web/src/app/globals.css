@@ -27,7 +27,16 @@
   --foreground: #F1F5F9;
 }
 
+/* ── Viewport Fix (#5) ───────────────────────────────────────
+   Elimina rebote lateral y scroll horizontal en móvil.
+   max-width: 100% evita que width: 100vw cause overflow con scrollbar. */
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
+  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -128,6 +137,22 @@ body {
   .bs-glow-critical {
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.45),
                 0 0 28px rgba(239, 68, 68, 0.14);
+  }
+}
+
+/* ── Scrollbar utilities (#3) ────────────────────────────────
+   .scrollbar-hide: oculta la barra de scroll visualmente
+   manteniendo la funcionalidad de scroll táctil.
+   Usado en los filtros de deporte/zona para scroll horizontal limpio. */
+@layer utilities {
+  .scrollbar-hide {
+    /* IE y Edge legacy */
+    -ms-overflow-style: none;
+    /* Firefox */
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
