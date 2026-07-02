@@ -58,7 +58,7 @@ export default function PrescriptionCard({
 
   return (
     <div
-      className="rounded-xl border overflow-hidden transition-all"
+      className="w-full rounded-xl border overflow-hidden transition-all"
       style={{ borderColor: cfg.borderColor, backgroundColor: cfg.bgColor }}
     >
       {/* Header */}

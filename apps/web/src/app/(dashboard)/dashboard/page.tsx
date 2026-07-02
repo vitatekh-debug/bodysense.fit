@@ -231,7 +231,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Atletas"         value={athletes.length} />
         <StatCard label="Zona Óptima"     value={optimal.length}    color="text-green-400" />
         <StatCard label="En Riesgo ACWR"  value={atRisk.length}     color="text-amber-400" />
@@ -278,8 +278,9 @@ export default async function DashboardPage() {
         <h2 className="text-slate-300 text-xs font-bold uppercase tracking-widest mb-3">
           Estado del Equipo
         </h2>
+        <div className="overflow-x-auto rounded-xl">
         <div className="bg-surface rounded-xl overflow-hidden border border-slate-700">
-          <table className="w-full text-sm">
+          <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-700">
                 <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
@@ -403,6 +404,7 @@ export default async function DashboardPage() {
               })}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     </div>

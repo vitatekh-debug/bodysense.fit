@@ -158,6 +158,14 @@ export default function DashboardCommandCenter({
 }: DashboardCommandCenterProps) {
   const zone = currentZone ? ZONE_CONFIG[currentZone] : null;
 
+  // Color dinámico de la curva ACWR según zona actual
+  const acwrLineColor =
+    currentAcwr === null ? "#818cf8"
+    : currentAcwr > 1.5  ? "#ef4444"
+    : currentAcwr > 1.3  ? "#f59e0b"
+    : currentAcwr > 0.8  ? "#22c55e"
+    : "#64748b";
+
   return (
     <section
       aria-label="Command Center de Carga Bodysense"
@@ -211,8 +219,8 @@ export default function DashboardCommandCenter({
             >
               <defs>
                 <linearGradient id="bs-acwr-gradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#818cf8" stopOpacity={0.45} />
-                  <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
+                  <stop offset="5%"  stopColor={acwrLineColor} stopOpacity={0.35} />
+                  <stop offset="95%" stopColor={acwrLineColor} stopOpacity={0} />
                 </linearGradient>
               </defs>
 
@@ -224,7 +232,7 @@ export default function DashboardCommandCenter({
 
               <CartesianGrid
                 stroke="rgba(255,255,255,0.04)"
-                strokeDasharray="4 6"
+                strokeDasharray="3 3"
                 vertical={false}
               />
               <XAxis
@@ -249,17 +257,20 @@ export default function DashboardCommandCenter({
               <Area
                 type="monotone"
                 dataKey="acwr"
-                stroke="#818cf8"
-                strokeWidth={2.5}
+                stroke={acwrLineColor}
+                strokeWidth={3}
                 fill="url(#bs-acwr-gradient)"
                 dot={false}
                 activeDot={{
                   r: 5,
-                  fill: "#818cf8",
+                  fill: acwrLineColor,
                   stroke: "#0f0f0f",
                   strokeWidth: 2,
                 }}
                 connectNulls
+                isAnimationActive
+                animationDuration={1200}
+                animationEasing="ease-in-out"
               />
             </AreaChart>
           </ResponsiveContainer>

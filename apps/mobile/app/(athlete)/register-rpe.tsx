@@ -108,7 +108,7 @@ export default function RegisterRpeScreen() {
     const { queued, error } = await writeWithFallback(
       "rpe",
       payload,
-      () =>
+      async () =>
         supabase
           .from("session_rpe")
           .upsert(payload as any, { onConflict: "session_id,athlete_id" })

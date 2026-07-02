@@ -143,7 +143,7 @@ export default function AthleteCheckin() {
     const { queued, error } = await writeWithFallback(
       "wellness",
       payload,
-      () =>
+      async () =>
         supabase
           .from("daily_wellness")
           .upsert(payload, { onConflict: "athlete_id,date" })

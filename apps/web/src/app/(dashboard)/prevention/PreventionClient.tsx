@@ -228,8 +228,9 @@ export default function PreventionClient({
 
       {/* ── Tab: Resumen SMCP ─────────────────────────────────────── */}
       {tab === "overview" && (
+        <div className="overflow-x-auto rounded-xl">
         <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-700">
                 <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
@@ -308,6 +309,7 @@ export default function PreventionClient({
             </tbody>
           </table>
         </div>
+        </div>
       )}
 
       {/* ── Tab: EVA Dolor ────────────────────────────────────────── */}
@@ -333,8 +335,9 @@ export default function PreventionClient({
             })}
           </div>
 
+          <div className="overflow-x-auto rounded-xl">
           <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-slate-700">
                   <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
@@ -372,6 +375,7 @@ export default function PreventionClient({
               </tbody>
             </table>
           </div>
+          </div>
         </div>
       )}
 
@@ -395,8 +399,9 @@ export default function PreventionClient({
             })}
           </div>
 
+          <div className="overflow-x-auto rounded-xl">
           <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-slate-700">
                   <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
@@ -434,6 +439,7 @@ export default function PreventionClient({
                 })}
               </tbody>
             </table>
+          </div>
           </div>
 
           <p className="text-slate-600 text-xs">
@@ -484,8 +490,9 @@ export default function PreventionClient({
             </div>
           </div>
 
+          <div className="overflow-x-auto rounded-xl">
           <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-slate-700">
                   <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
@@ -531,6 +538,7 @@ export default function PreventionClient({
               </tbody>
             </table>
           </div>
+          </div>
         </div>
       )}
 
@@ -546,8 +554,9 @@ export default function PreventionClient({
             </p>
           </div>
 
+          <div className="overflow-x-auto rounded-xl">
           <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-slate-700">
                   <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
@@ -615,6 +624,7 @@ export default function PreventionClient({
                 })}
               </tbody>
             </table>
+          </div>
           </div>
 
           {/* FMS Score Legend */}
