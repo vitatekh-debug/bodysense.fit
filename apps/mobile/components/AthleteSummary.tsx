@@ -328,7 +328,7 @@ export function AthleteSummary({ snapshots, wellness, name }: AthleteSummaryProp
           />
           <RecoveryBar
             label="Sueño"
-            value={wellness.sleep_hours}
+            value={wellness.sleep_hours ?? 0}
             maxValue={9}
             color="#22C55E"
           />
