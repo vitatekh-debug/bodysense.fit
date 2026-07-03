@@ -126,9 +126,10 @@ export interface DailyWellness {
   athlete_id: string;
   date: string;
   fatigue: number;        // 1-10
-  sleep_hours: number;    // 0-12
+  sleep_hours?: number;   // 0-16 (nullable since migration 010)
   sleep_quality: number;  // 1-5
   mood: number;           // 1-5
+  soreness?: number;      // 1-10 muscle soreness / DOMS (migration 010)
   notes?: string;
   // Quick POMS fields (added in migration 004)
   vigor_quick?: number;          // 0-4 quick vigor check

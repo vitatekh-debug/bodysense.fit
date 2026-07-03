@@ -72,6 +72,7 @@ export default function AthleteCheckin() {
   const [sleepHours,   setSleepHours]   = useState(7);
   const [sleepQuality, setSleepQuality] = useState(3);
   const [mood,         setMood]         = useState(3);
+  const [soreness,     setSoreness]     = useState(3);
 
   // ── UI state ────────────────────────────────────────────────────
   const [initializing, setInitializing] = useState(true);
@@ -88,7 +89,7 @@ export default function AthleteCheckin() {
       const [wellnessRes, snapRes, pending] = await Promise.all([
         supabase
           .from("daily_wellness")
-          .select("fatigue, sleep_hours, sleep_quality, mood")
+          .select("fatigue, sleep_hours, sleep_quality, mood, soreness")
           .eq("athlete_id", profile.id)
           .eq("date", today)
           .maybeSingle(),
@@ -110,6 +111,7 @@ export default function AthleteCheckin() {
         setSleepHours(wellnessRes.data.sleep_hours ?? 7);
         setSleepQuality(wellnessRes.data.sleep_quality ?? 3);
         setMood(wellnessRes.data.mood ?? 3);
+        setSoreness(wellnessRes.data.soreness ?? 3);
       }
 
       setLatestSnap(snapRes.data ?? null);
@@ -125,6 +127,7 @@ export default function AthleteCheckin() {
   const setSleepHoursSafe   = (v: number) => setSleepHours(Math.max(0, Math.min(12, Math.round(v * 2) / 2)));
   const setSleepQualitySafe = (v: number) => setSleepQuality(Math.max(1, Math.min(5, Math.round(v))));
   const setMoodSafe         = (v: number) => setMood(Math.max(1, Math.min(5, Math.round(v))));
+  const setSorenessSafe     = (v: number) => setSoreness(Math.max(1, Math.min(10, Math.round(v))));
 
   // ── Submit ──────────────────────────────────────────────────────
   async function handleSubmit() {
@@ -138,6 +141,7 @@ export default function AthleteCheckin() {
       sleep_hours:   Math.max(0, Math.min(12, sleepHours)),
       sleep_quality: Math.max(1, Math.min(5, sleepQuality)),
       mood:          Math.max(1, Math.min(5, mood)),
+      soreness:      Math.max(1, Math.min(10, soreness)),
     };
 
     const { queued, error } = await writeWithFallback(
@@ -370,6 +374,43 @@ export default function AthleteCheckin() {
                 <Text style={styles.emoji}>{emoji}</Text>
               </TouchableOpacity>
             ))}
+          </View>
+        </View>
+
+        {/* ── Muscle soreness card ──────────────────────────────── */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardLabel}>Dolor Muscular</Text>
+            <View
+              style={[
+                styles.valueBadge,
+                { backgroundColor: soreness > 7 ? "rgba(127,29,29,0.8)" : BS.surfaceHigh },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.cardValue,
+                  { color: soreness > 7 ? "#FCA5A5" : BS.textPrimary },
+                ]}
+              >
+                {soreness}/10
+              </Text>
+            </View>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={1}
+            maximumValue={10}
+            step={1}
+            value={soreness}
+            onValueChange={setSorenessSafe}
+            minimumTrackTintColor={soreness > 7 ? BS.error : BS.brandLight}
+            maximumTrackTintColor="rgba(255,255,255,0.08)"
+            thumbTintColor={soreness > 7 ? "#FCA5A5" : BS.brandLight}
+          />
+          <View style={styles.sliderLabels}>
+            <Text style={styles.sliderLabel}>1 — Sin dolor</Text>
+            <Text style={styles.sliderLabel}>10 — Intenso</Text>
           </View>
         </View>
 

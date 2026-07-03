@@ -5,7 +5,6 @@
  *  1. Perfil del usuario actual (nombre, deporte)
  *  2. Primer equipo al que pertenece (para vincular la training_session)
  *  3. Últimas 5 sesiones (para mostrar historial rápido)
- *  4. Último resultado H/Q
  *
  * Pasa los datos al Client Component AthleteQuickLog.
  */
@@ -51,15 +50,6 @@ export default async function AthleteDashboardPage() {
     .eq("athlete_id", user.id)
     .order("date", { ascending: false })
     .limit(5);
-
-  // ── 4. Último H/Q ─────────────────────────────────────────────────────────
-  const { data: latestHq } = await supabase
-    .from("hq_evaluations")
-    .select("date, hq_ratio, ratio_type, side, risk_flag")
-    .eq("athlete_id", user.id)
-    .order("date", { ascending: false })
-    .limit(1)
-    .maybeSingle();
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
@@ -128,35 +118,6 @@ export default async function AthleteDashboardPage() {
                 </div>
               );
             })}
-          </div>
-        </div>
-      )}
-
-      {/* ── Último H/Q ── */}
-      {latestHq && (
-        <div className="bg-[#111] border border-slate-700 rounded-2xl p-5">
-          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">
-            Último test H/Q
-          </h2>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-500 text-xs">
-                {new Date(latestHq.date).toLocaleDateString("es-CO", {
-                  day: "2-digit", month: "short", year: "numeric",
-                })}
-                {" · "}
-                {latestHq.ratio_type === "conventional" ? "Convencional" : "Funcional"}
-                {" · "}
-                {latestHq.side}
-              </p>
-            </div>
-            <span
-              className="text-lg font-black"
-              style={{ color: latestHq.risk_flag ? "#EF4444" : "#22C55E" }}
-            >
-              {Number(latestHq.hq_ratio).toFixed(3)}
-              {latestHq.risk_flag ? " ⚠" : " ✓"}
-            </span>
           </div>
         </div>
       )}

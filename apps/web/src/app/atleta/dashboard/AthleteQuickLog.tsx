@@ -7,10 +7,9 @@
  *   - training_sessions INSERT
  *   - session_rpe INSERT
  *
- * Sección 2: Test Ratio H/Q
- *   - hq_evaluations INSERT
- *   - Calcula ratio = isquio/cuad automáticamente (campo GENERATED en DB)
- *   - Muestra semáforo de riesgo en tiempo real
+ * Sección 2: Check-in de Wellness diario
+ *   - daily_wellness UPSERT (onConflict athlete_id,date)
+ *   - Fatiga (1-10), Ánimo (1-5), Calidad de Sueño (1-5), Dolor Muscular (1-10)
  *
  * Nota sobre RPE:
  *   La UI muestra CR-10 (1-10). La DB guarda Borg (6-20).
@@ -45,24 +44,24 @@ function rpeColor(v: number): string {
   return "#EF4444";
 }
 
-/** Calcula ratio H/Q y semáforo (replicando lógica de la DB) */
-function hqTrafficLight(
-  hamstring: number,
-  quad: number,
-  type: "conventional" | "functional"
-): { ratio: number; isRisk: boolean; color: string; label: string } {
-  if (quad <= 0) return { ratio: 0, isRisk: false, color: "#6B7280", label: "—" };
-  const ratio = hamstring / quad;
-  const isRisk =
-    type === "conventional" ? ratio < 0.6 : ratio < 1.0;
-  const color = isRisk ? "#EF4444" : ratio < (type === "conventional" ? 0.7 : 1.1) ? "#EAB308" : "#22C55E";
-  const label = isRisk
-    ? "⚠ Riesgo"
-    : ratio < (type === "conventional" ? 0.7 : 1.1)
-    ? "Precaución"
-    : "✓ Normal";
-  return { ratio, isRisk, color, label };
+/** Color escala "menos es mejor" (fatiga, dolor 1-10) */
+function loadScaleColor(v: number, max: number): string {
+  const pct = v / max;
+  if (pct <= 0.4) return "#22C55E";
+  if (pct <= 0.7) return "#EAB308";
+  return "#EF4444";
 }
+
+/** Color escala "más es mejor" (ánimo, calidad sueño 1-5) */
+function positiveScaleColor(v: number, max: number): string {
+  const pct = v / max;
+  if (pct >= 0.7) return "#22C55E";
+  if (pct >= 0.4) return "#EAB308";
+  return "#EF4444";
+}
+
+const MOOD_LABELS = ["", "Muy bajo", "Bajo", "Neutral", "Bueno", "Excelente"];
+const SLEEP_LABELS = ["", "Muy mala", "Mala", "Regular", "Buena", "Excelente"];
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -74,6 +73,46 @@ interface Props {
 
 type FormState = "idle" | "loading" | "success" | "error";
 
+// ─── Slider reutilizable ──────────────────────────────────────────────────────
+
+function MetricSlider({
+  label, value, min, max, onChange, color, valueLabel,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  onChange: (v: number) => void;
+  color: string;
+  valueLabel?: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
+          {label}
+        </label>
+        <div className="flex items-center gap-2">
+          <span className="text-2xl font-black" style={{ color }}>
+            {value}
+          </span>
+          {valueLabel && <span className="text-slate-400 text-xs">{valueLabel}</span>}
+        </div>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={1}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-800"
+        style={{ accentColor: color }}
+      />
+    </div>
+  );
+}
+
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
@@ -83,20 +122,17 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
   const [sessionState, setSessionState] = useState<FormState>("idle");
   const [sessionMsg, setSessionMsg] = useState("");
 
-  // ── Estado H/Q ────────────────────────────────────────────────────────────
-  const [hamstring,   setHamstring] = useState("");
-  const [quadriceps,  setQuad]      = useState("");
-  const [side,        setSide]      = useState<"left" | "right" | "bilateral">("bilateral");
-  const [ratioType,   setRatioType] = useState<"conventional" | "functional">("conventional");
-  const [hqState,     setHqState]   = useState<FormState>("idle");
-  const [hqMsg,       setHqMsg]     = useState("");
+  // ── Estado Wellness ────────────────────────────────────────────────────────
+  const [fatigue,      setFatigue]      = useState(5);   // 1-10
+  const [mood,         setMood]         = useState(3);   // 1-5
+  const [sleepQuality, setSleepQuality] = useState(3);   // 1-5
+  const [soreness,     setSoreness]     = useState(3);   // 1-10
+  const [wellnessState, setWellnessState] = useState<FormState>("idle");
+  const [wellnessMsg, setWellnessMsg]     = useState("");
 
-  // ── Derived: sRPE y H/Q preview ───────────────────────────────────────────
-  const borgRpe   = toBorgRpe(cr10Rpe);
-  const srpe      = borgRpe * durationMin;
-  const hamNum    = parseFloat(hamstring) || 0;
-  const quadNum   = parseFloat(quadriceps) || 0;
-  const hqPreview = hqTrafficLight(hamNum, quadNum, ratioType);
+  // ── Derived: sRPE ──────────────────────────────────────────────────────────
+  const borgRpe = toBorgRpe(cr10Rpe);
+  const srpe    = borgRpe * durationMin;
 
   // ── Submit: Sesión ─────────────────────────────────────────────────────────
   async function handleSessionSubmit(e: React.FormEvent) {
@@ -150,39 +186,37 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
     setDuration(60);
   }
 
-  // ── Submit: H/Q ───────────────────────────────────────────────────────────
-  async function handleHqSubmit(e: React.FormEvent) {
+  // ── Submit: Wellness ───────────────────────────────────────────────────────
+  async function handleWellnessSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!hamstring || !quadriceps || quadNum <= 0 || hamNum <= 0) return;
-    setHqState("loading");
-    setHqMsg("");
+    setWellnessState("loading");
+    setWellnessMsg("");
 
     const supabase = createClient();
     const today    = new Date().toISOString().split("T")[0];
 
-    const { error: hqErr } = await supabase.from("hq_evaluations").insert({
-      athlete_id:             userId,
-      evaluated_by:           userId,   // auto-evaluación
-      date:                   today,
-      side,
-      speed_deg_per_sec:      ratioType === "conventional" ? 60 : 180,
-      ratio_type:             ratioType,
-      quadriceps_peak_nm_kg:  quadNum,
-      hamstring_peak_nm_kg:   hamNum,
-    });
+    const { error: wellnessErr } = await supabase
+      .from("daily_wellness")
+      .upsert(
+        {
+          athlete_id:    userId,
+          date:          today,
+          fatigue:       Math.max(1, Math.min(10, fatigue)),
+          mood:          Math.max(1, Math.min(5, mood)),
+          sleep_quality: Math.max(1, Math.min(5, sleepQuality)),
+          soreness:      Math.max(1, Math.min(10, soreness)),
+        },
+        { onConflict: "athlete_id,date" }
+      );
 
-    if (hqErr) {
-      setHqState("error");
-      setHqMsg(hqErr.message);
+    if (wellnessErr) {
+      setWellnessState("error");
+      setWellnessMsg(wellnessErr.message);
       return;
     }
 
-    setHqState("success");
-    setHqMsg(
-      `Ratio H/Q guardado: ${hqPreview.ratio.toFixed(3)} — ${hqPreview.label}`
-    );
-    setHamstring("");
-    setQuad("");
+    setWellnessState("success");
+    setWellnessMsg("Check-in de hoy registrado");
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -300,148 +334,82 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
         </form>
       </div>
 
-      {/* ════════════ SECCIÓN 2: H/Q TEST ════════════ */}
+      {/* ════════════ SECCIÓN 2: WELLNESS ════════════ */}
       <div className="bg-[#111] border border-slate-700 rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🦵</span>
-          <h2 className="text-slate-100 font-bold">Test Ratio H/Q</h2>
+          <span className="text-xl">🌙</span>
+          <h2 className="text-slate-100 font-bold">Check-in de Bienestar</h2>
         </div>
+        <p className="text-slate-500 text-xs -mt-3">
+          Registra cómo te sientes hoy. Alimenta tus tendencias de recuperación.
+        </p>
 
-        <form onSubmit={handleHqSubmit} className="space-y-5">
+        <form onSubmit={handleWellnessSubmit} className="space-y-6">
 
-          {/* Tipo de ratio */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
-              Tipo de ratio
-            </label>
-            <div className="flex gap-2">
-              {(["conventional", "functional"] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setRatioType(t)}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
-                    ratioType === t
-                      ? "bg-indigo-600/20 border-indigo-500 text-indigo-300"
-                      : "border-slate-700 text-slate-500 hover:border-slate-600"
-                  }`}
-                >
-                  {t === "conventional"
-                    ? "Convencional (60°/s)"
-                    : "Funcional (180°/s)"}
-                </button>
-              ))}
-            </div>
-          </div>
+          <MetricSlider
+            label="Fatiga (1-10)"
+            value={fatigue}
+            min={1}
+            max={10}
+            onChange={(v) => setFatigue(Math.max(1, Math.min(10, v)))}
+            color={loadScaleColor(fatigue, 10)}
+            valueLabel={fatigue <= 4 ? "Descansado" : fatigue <= 7 ? "Moderada" : "Agotado"}
+          />
 
-          {/* Lado */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
-              Lado evaluado
-            </label>
-            <div className="flex gap-2">
-              {(["left", "right", "bilateral"] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSide(s)}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
-                    side === s
-                      ? "bg-slate-700 border-slate-500 text-slate-100"
-                      : "border-slate-700/60 text-slate-600 hover:border-slate-600"
-                  }`}
-                >
-                  {s === "left" ? "Izquierdo" : s === "right" ? "Derecho" : "Bilateral"}
-                </button>
-              ))}
-            </div>
-          </div>
+          <MetricSlider
+            label="Ánimo (1-5)"
+            value={mood}
+            min={1}
+            max={5}
+            onChange={(v) => setMood(Math.max(1, Math.min(5, v)))}
+            color={positiveScaleColor(mood, 5)}
+            valueLabel={MOOD_LABELS[mood]}
+          />
 
-          {/* Valores */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                Isquiotibiales (Nm/kg)
-              </label>
-              <input
-                type="number"
-                step="0.001"
-                min="0.001"
-                placeholder="ej. 1.850"
-                value={hamstring}
-                onChange={(e) => setHamstring(e.target.value)}
-                required
-                className="w-full bg-black/40 border border-white/[0.09] rounded-lg px-3 py-3 text-slate-100 text-sm focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                Cuádriceps (Nm/kg)
-              </label>
-              <input
-                type="number"
-                step="0.001"
-                min="0.001"
-                placeholder="ej. 2.100"
-                value={quadriceps}
-                onChange={(e) => setQuad(e.target.value)}
-                required
-                className="w-full bg-black/40 border border-white/[0.09] rounded-lg px-3 py-3 text-slate-100 text-sm focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all"
-              />
-            </div>
-          </div>
+          <MetricSlider
+            label="Calidad de Sueño (1-5)"
+            value={sleepQuality}
+            min={1}
+            max={5}
+            onChange={(v) => setSleepQuality(Math.max(1, Math.min(5, v)))}
+            color={positiveScaleColor(sleepQuality, 5)}
+            valueLabel={SLEEP_LABELS[sleepQuality]}
+          />
 
-          {/* Ratio preview en tiempo real */}
-          {hamNum > 0 && quadNum > 0 && (
-            <div
-              className="flex items-center justify-between rounded-xl border px-4 py-3"
-              style={{
-                borderColor: hqPreview.color + "55",
-                backgroundColor: hqPreview.color + "11",
-              }}
-            >
-              <div className="text-xs text-slate-400 space-y-0.5">
-                <p>
-                  Ratio H/Q ={" "}
-                  <span className="font-mono">{hqNum(hamNum, quadNum)}</span>
-                </p>
-                <p className="text-slate-500">
-                  Umbral {ratioType === "conventional" ? "conv. ≥ 0.60" : "func. ≥ 1.00"}
-                </p>
-              </div>
-              <span
-                className="text-sm font-bold px-3 py-1 rounded-full"
-                style={{ color: hqPreview.color, backgroundColor: hqPreview.color + "22" }}
-              >
-                {hqPreview.label}
-              </span>
-            </div>
-          )}
+          <MetricSlider
+            label="Dolor Muscular (1-10)"
+            value={soreness}
+            min={1}
+            max={10}
+            onChange={(v) => setSoreness(Math.max(1, Math.min(10, v)))}
+            color={loadScaleColor(soreness, 10)}
+            valueLabel={soreness <= 4 ? "Leve" : soreness <= 7 ? "Moderado" : "Intenso"}
+          />
 
           {/* Feedback */}
-          {hqState === "success" && (
+          {wellnessState === "success" && (
             <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
-              <span>✅</span> {hqMsg}
+              <span>✅</span> {wellnessMsg}
             </div>
           )}
-          {hqState === "error" && (
+          {wellnessState === "error" && (
             <div className="flex items-center gap-2 text-red-400 text-sm">
-              <span>⚠</span> {hqMsg}
+              <span>⚠</span> {wellnessMsg}
             </div>
           )}
 
           <button
             type="submit"
-            disabled={hqState === "loading" || hamNum <= 0 || quadNum <= 0}
+            disabled={wellnessState === "loading"}
             className="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {hqState === "loading" ? (
+            {wellnessState === "loading" ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                 Guardando…
               </span>
             ) : (
-              "Guardar Test H/Q"
+              "Guardar Check-in"
             )}
           </button>
         </form>
@@ -449,9 +417,4 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
     </div>
   );
-}
-
-// Tiny helper (evita tener el cálculo inline en el JSX)
-function hqNum(h: number, q: number): string {
-  return q > 0 ? (h / q).toFixed(3) : "—";
 }
