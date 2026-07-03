@@ -15,6 +15,8 @@
  */
 
 import React from "react";
+import { motion } from "framer-motion";
+import { staggerContainer, fadeUpItem } from "../motion/primitives";
 import {
   AreaChart,
   Area,
@@ -167,12 +169,16 @@ export default function DashboardCommandCenter({
     : "#64748b";
 
   return (
-    <section
+    <motion.section
       aria-label="Command Center de Carga Bodysense"
       className="grid grid-cols-1 md:grid-cols-4 gap-6"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
     >
       {/* ── ACWR Chart 2×2 ─────────────────────────────────────────── */}
-      <div
+      <motion.div
+        variants={fadeUpItem}
         className={clsx(
           "md:col-span-2 md:row-span-2",
           "rounded-2xl border border-white/10 p-6 flex flex-col",
@@ -294,9 +300,10 @@ export default function DashboardCommandCenter({
             )
           )}
         </footer>
-      </div>
+      </motion.div>
 
       {/* ── Recovery Card ──────────────────────────────────────────── */}
+      <motion.div variants={fadeUpItem}>
       <BentoCard
         icon={<Moon size={15} aria-hidden="true" />}
         iconBg="bg-indigo-500/10"
@@ -342,8 +349,10 @@ export default function DashboardCommandCenter({
           <EmptyMetric message="Sin check-in de hoy" />
         )}
       </BentoCard>
+      </motion.div>
 
       {/* ── Next Session Card ──────────────────────────────────────── */}
+      <motion.div variants={fadeUpItem}>
       <BentoCard
         icon={<Calendar size={15} aria-hidden="true" />}
         iconBg="bg-cyan-500/10"
@@ -376,8 +385,10 @@ export default function DashboardCommandCenter({
           <EmptyMetric message="Sin sesión programada" />
         )}
       </BentoCard>
+      </motion.div>
 
       {/* ── Mini Stat: Atletas ─────────────────────────────────────── */}
+      <motion.div variants={fadeUpItem}>
       <MiniStat
         icon={<Users size={14} aria-hidden="true" />}
         label="Atletas"
@@ -385,8 +396,10 @@ export default function DashboardCommandCenter({
         accentColor="#818cf8"
         sub={`${optimalCount} en zona óptima`}
       />
+      </motion.div>
 
       {/* ── Mini Stat: En Riesgo ───────────────────────────────────── */}
+      <motion.div variants={fadeUpItem}>
       <MiniStat
         icon={<AlertTriangle size={14} aria-hidden="true" />}
         label="En Riesgo"
@@ -398,7 +411,8 @@ export default function DashboardCommandCenter({
             : "Sin alertas críticas"
         }
       />
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
 

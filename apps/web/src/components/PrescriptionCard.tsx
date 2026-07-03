@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Prescription, PrescriptionAction, AlertLevel } from "@vitatekh/shared";
 import { ALERT_LEVEL_CONFIG } from "@vitatekh/shared";
+import { collapse, springPop } from "./motion/primitives";
 
 // ─── Action Icon ──────────────────────────────────────────────────────────────
 
@@ -57,8 +59,10 @@ export default function PrescriptionCard({
   const cfg = ALERT_LEVEL_CONFIG[p.alert_level];
 
   return (
-    <div
-      className="w-full rounded-xl border overflow-hidden transition-all"
+    <motion.div
+      layout
+      transition={collapse}
+      className="w-full rounded-xl border overflow-hidden"
       style={{ borderColor: cfg.borderColor, backgroundColor: cfg.bgColor }}
     >
       {/* Header */}
@@ -100,13 +104,26 @@ export default function PrescriptionCard({
             ))}
           </div>
         </div>
-        <span className="text-slate-500 flex-shrink-0 mt-1">
-          {expanded ? "▲" : "▼"}
-        </span>
+        <motion.span
+          className="text-slate-500 flex-shrink-0 mt-1"
+          animate={{ rotate: expanded ? 180 : 0 }}
+          transition={springPop}
+        >
+          ▼
+        </motion.span>
       </button>
 
       {/* Expanded content */}
+      <AnimatePresence initial={false}>
       {expanded && (
+        <motion.div
+          key="content"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={collapse}
+          className="overflow-hidden"
+        >
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: cfg.borderColor }}>
 
           {/* Rationale */}
@@ -194,7 +211,9 @@ export default function PrescriptionCard({
             </div>
           )}
         </div>
+        </motion.div>
       )}
-    </div>
+      </AnimatePresence>
+    </motion.div>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import type { Prescription } from "@vitatekh/shared";
 import { ALERT_LEVEL_CONFIG } from "@vitatekh/shared";
 import PrescriptionCard from "./PrescriptionCard";
+import { staggerContainer, fadeUpItem } from "./motion/primitives";
 
 interface Props {
   prescriptions: Prescription[];
@@ -74,16 +76,23 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
       </div>
 
       {/* Prescription cards */}
-      <div className="space-y-3">
+      <motion.div
+        className="space-y-3"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        key={filter}
+      >
         {filtered.map((p) => (
-          <PrescriptionCard
-            key={`${p.rule_id}-${p.athlete_id}`}
-            prescription={p}
-            showAthlete={multiAthlete}
-            compact={prescriptions.length > 4}
-          />
+          <motion.div key={`${p.rule_id}-${p.athlete_id}`} variants={fadeUpItem} layout>
+            <PrescriptionCard
+              prescription={p}
+              showAthlete={multiAthlete}
+              compact={prescriptions.length > 4}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Disclaimer */}
       <p className="text-slate-700 text-xs">

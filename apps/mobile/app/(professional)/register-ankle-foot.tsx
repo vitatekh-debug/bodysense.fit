@@ -21,6 +21,7 @@ import { useState } from "react";
 import { useLocalSearchParams, router } from "expo-router";
 import { supabase } from "../../lib/supabase";
 import { useAuthStore } from "../../store/auth.store";
+import { ActiveScale } from "../../components/ui/Animated";
 import type {
   FootType,
   MyofascialStatus,
@@ -209,15 +210,18 @@ export default function RegisterAnkleFootScreen() {
 
   function renderCheck(label: string, checked: boolean, onToggle: () => void) {
     return (
-      <TouchableOpacity
-        style={[styles.checkRow, checked && styles.checkRowActive]}
-        onPress={onToggle}
-      >
-        <View style={[styles.checkBox, checked && styles.checkBoxActive]}>
-          {checked && <Text style={styles.checkMark}>✓</Text>}
-        </View>
-        <Text style={[styles.checkLabel, checked && styles.checkLabelActive]}>{label}</Text>
-      </TouchableOpacity>
+      <ActiveScale active={checked}>
+        <TouchableOpacity
+          style={[styles.checkRow, checked && styles.checkRowActive]}
+          onPress={onToggle}
+          activeOpacity={0.85}
+        >
+          <View style={[styles.checkBox, checked && styles.checkBoxActive]}>
+            {checked && <Text style={styles.checkMark}>✓</Text>}
+          </View>
+          <Text style={[styles.checkLabel, checked && styles.checkLabelActive]}>{label}</Text>
+        </TouchableOpacity>
+      </ActiveScale>
     );
   }
 
@@ -246,15 +250,17 @@ export default function RegisterAnkleFootScreen() {
             </Text>
             <View style={styles.chipRow}>
               {FOOT_TYPES.map((ft) => (
-                <TouchableOpacity
-                  key={ft.value}
-                  style={[styles.chip, value === ft.value && styles.chipActive]}
-                  onPress={() => setter(value === ft.value ? null : ft.value)}
-                >
-                  <Text style={[styles.chipText, value === ft.value && styles.chipTextActive]}>
-                    {ft.label}
-                  </Text>
-                </TouchableOpacity>
+                <ActiveScale key={ft.value} active={value === ft.value}>
+                  <TouchableOpacity
+                    style={[styles.chip, value === ft.value && styles.chipActive]}
+                    onPress={() => setter(value === ft.value ? null : ft.value)}
+                    activeOpacity={0.85}
+                  >
+                    <Text style={[styles.chipText, value === ft.value && styles.chipTextActive]}>
+                      {ft.label}
+                    </Text>
+                  </TouchableOpacity>
+                </ActiveScale>
               ))}
             </View>
           </View>
