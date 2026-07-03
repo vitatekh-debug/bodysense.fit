@@ -1,13 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
 
-  "_comment_dashboard": [
-    "⚠️  PASO OBLIGATORIO EN VERCEL DASHBOARD (no configurable aquí):",
-    "   Project Settings → General → Root Directory = apps/web",
-    "   Sin esto el adaptador Next.js de Vercel no detecta el framework.",
-    "   Después de cambiarlo, Vercel re-hace el build automáticamente."
-  ],
-
   "framework": "nextjs",
 
   "installCommand": "pnpm install --frozen-lockfile",
@@ -20,7 +13,6 @@
 
   "headers": [
     {
-      "_comment": "HTML y rutas: nunca servir stale desde CDN o browser",
       "source": "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml)$).*)",
       "headers": [
         { "key": "Cache-Control",           "value": "public, max-age=0, must-revalidate" },
@@ -31,21 +23,18 @@
       ]
     },
     {
-      "_comment": "Chunks JS/CSS: nombre lleva hash de contenido → immutable 1 año",
       "source": "/_next/static/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "_comment": "Imágenes optimizadas por next/image",
       "source": "/_next/image(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
       ]
     },
     {
-      "_comment": "Assets públicos estáticos (fuentes, logos, etc.)",
       "source": "/fonts/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
@@ -55,7 +44,6 @@
 
   "rewrites": [
     {
-      "_comment": "Permite que el middleware de Next.js maneje todas las rutas internamente",
       "source": "/(.*)",
       "destination": "/$1"
     }
