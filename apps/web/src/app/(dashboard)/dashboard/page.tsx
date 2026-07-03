@@ -94,6 +94,7 @@ export default async function DashboardPage() {
     wellnessRes,
     notifRes,
     profilesRes,
+    ankleFootRes,
   ] = await Promise.all([
     // ACWR — one row per athlete (latest). Explicit limit = MAX.
     supabase
@@ -161,6 +162,19 @@ export default async function DashboardPage() {
       .from("profiles")
       .select("id, full_name, sport")
       .in("id", athleteIds),
+
+    // Tobillo/pie/rendimiento — one per athlete (migración 009)
+    supabase
+      .from("ankle_foot_assessments")
+      .select(
+        "athlete_id, assessment_date, wblt_cm_left, wblt_cm_right, " +
+        "dorsiflexion_rom_left, dorsiflexion_rom_right, " +
+        "single_leg_squat_left, single_leg_squat_right, " +
+        "agility_t_test_seconds, bosco_protocol"
+      )
+      .in("athlete_id", athleteIds)
+      .order("assessment_date", { ascending: false })
+      .limit(MAX),
   ]);
 
   // ── 4. Index latest record per athlete (O(n) once each) ────────
@@ -170,6 +184,7 @@ export default async function DashboardPage() {
   const latestHq       = latestByAthlete(hqRes.data      ?? []);
   const latestBiomech  = latestByAthlete(biomechRes.data ?? []);
   const latestWellness = latestByAthlete(wellnessRes.data ?? []);
+  const latestAnkleFoot = latestByAthlete(ankleFootRes.data ?? []);
   const unreadCount    = notifRes.count ?? 0;
 
   // ── 5. Build athlete objects ────────────────────────────────────
@@ -181,6 +196,7 @@ export default async function DashboardPage() {
     latest_hq:       latestHq.get(p.id)       ?? null,
     latest_biomech:  latestBiomech.get(p.id)  ?? null,
     latest_wellness: latestWellness.get(p.id) ?? null,
+    latest_ankle_foot: latestAnkleFoot.get(p.id) ?? null,
   }));
 
   // ── 6. Prescription engine (server-side, pure function) ────────
