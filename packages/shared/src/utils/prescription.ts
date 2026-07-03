@@ -87,7 +87,31 @@ export interface AthleteRuleInput {
   surface_type?: string;
   footwear_type?: string;
   biomech_date?: string;
+  // Tobillo / Pie / Rendimiento funcional (ankle_foot_assessments)
+  wblt_cm_left?: number;             // Weight-Bearing Lunge Test, cm
+  wblt_cm_right?: number;
+  dorsiflexion_rom_left?: number;    // grados
+  dorsiflexion_rom_right?: number;
+  sls_knee_valgus?: boolean;         // valgo de rodilla en cualquier pierna (SLS)
+  sls_overall_status?: string;       // optimal | compensated | deficient
+  agility_t_test_seconds?: number;
+  bosco_cmj_cm?: number;
+  bosco_drop_jump_rsi?: number;
+  ankle_foot_date?: string;
 }
+
+// ─── Baremos tobillo/pie/rendimiento ─────────────────────────────────────────
+
+/** WBLT < 10 cm = restricción de dorsiflexión con carga (Bennell 1998) */
+export const WBLT_RISK_CM = 10;
+/** Dorsiflexión pasiva < 15° = déficit de movilidad de tobillo */
+export const DORSIFLEXION_RISK_DEG = 15;
+/** T-Test: > 11.5 s queda fuera del rango deportivo recomendado (Pauole 2000) */
+export const T_TEST_RISK_SECONDS = 11.5;
+/** CMJ < 30 cm = potencia de tren inferior por debajo del baremo de equipo */
+export const BOSCO_CMJ_RISK_CM = 30;
+/** Drop Jump RSI < 1.0 = fuerza reactiva deficiente */
+export const BOSCO_RSI_RISK = 1.0;
 
 // ─── Helpers internos ─────────────────────────────────────────────────────────
 
@@ -613,6 +637,227 @@ export function runPrescriptionRules(input: AthleteRuleInput): Prescription[] {
     });
   }
 
+  // ════════════════════════════════════════════════════════════════
+  // REGLA R9 — NARANJA/AMARILLO: Movilidad de tobillo deficiente
+  // WBLT < 10 cm o dorsiflexión < 15° en cualquier pierna
+  // ════════════════════════════════════════════════════════════════
+  const wbltDeficit =
+    (input.wblt_cm_left  !== undefined && input.wblt_cm_left  < WBLT_RISK_CM) ||
+    (input.wblt_cm_right !== undefined && input.wblt_cm_right < WBLT_RISK_CM);
+  const dorsiDeficit =
+    (input.dorsiflexion_rom_left  !== undefined && input.dorsiflexion_rom_left  < DORSIFLEXION_RISK_DEG) ||
+    (input.dorsiflexion_rom_right !== undefined && input.dorsiflexion_rom_right < DORSIFLEXION_RISK_DEG);
+
+  if (wbltDeficit || dorsiDeficit) {
+    const triggers: string[] = [];
+    if (input.wblt_cm_left !== undefined && input.wblt_cm_left < WBLT_RISK_CM)
+      triggers.push(`WBLT izq ${input.wblt_cm_left} cm (< ${WBLT_RISK_CM})`);
+    if (input.wblt_cm_right !== undefined && input.wblt_cm_right < WBLT_RISK_CM)
+      triggers.push(`WBLT der ${input.wblt_cm_right} cm (< ${WBLT_RISK_CM})`);
+    if (input.dorsiflexion_rom_left !== undefined && input.dorsiflexion_rom_left < DORSIFLEXION_RISK_DEG)
+      triggers.push(`Dorsiflexión izq ${input.dorsiflexion_rom_left}° (< ${DORSIFLEXION_RISK_DEG}°)`);
+    if (input.dorsiflexion_rom_right !== undefined && input.dorsiflexion_rom_right < DORSIFLEXION_RISK_DEG)
+      triggers.push(`Dorsiflexión der ${input.dorsiflexion_rom_right}° (< ${DORSIFLEXION_RISK_DEG}°)`);
+
+    // Asimetría WBLT > 2 cm también es predictor — eleva a naranja
+    const asymmetry =
+      input.wblt_cm_left !== undefined && input.wblt_cm_right !== undefined
+        ? Math.abs(input.wblt_cm_left - input.wblt_cm_right)
+        : 0;
+    if (asymmetry > 2) triggers.push(`Asimetría WBLT ${asymmetry.toFixed(1)} cm (> 2)`);
+
+    prescriptions.push({
+      rule_id: "R9_ankle_mobility_deficit",
+      athlete_id: input.athlete_id,
+      athlete_name: input.athlete_name,
+      alert_level: wbltDeficit && dorsiDeficit ? "orange" : "yellow",
+      protocol_name: "Movilidad de Tobillo + Tríceps Sural",
+      short_message:
+        "Restricción de dorsiflexión detectada. Inyectar bloques de movilidad de tobillo y estiramiento del tríceps sural.",
+      rationale:
+        `${triggers.join(" + ")}. ` +
+        "La restricción de dorsiflexión con carga (WBLT < 10 cm) se asocia con mayor riesgo de esguince de tobillo, " +
+        "tendinopatía rotuliana y valgo dinámico de rodilla (Bennell 1998, Backman & Danielson 2011). " +
+        "La asimetría > 2 cm entre piernas es predictor independiente de lesión de tobillo.",
+      triggered_by: triggers,
+      actions: [
+        {
+          label: "Movilización de tobillo con banda (Mulligan)",
+          type: "exercise",
+          protocol: "Auto-movilización talocrural",
+          description:
+            "Banda rígida en mortaja, deslizamiento posterior del astrágalo. 3×15 por pierna, " +
+            "antes de cada sesión. Progresar rango sin dolor.",
+          sets: 3,
+          reps: 15,
+        },
+        {
+          label: "Estiramiento excéntrico del tríceps sural",
+          type: "exercise",
+          description:
+            "Descenso de talón en escalón, rodilla extendida (gastrocnemio) y flexionada (sóleo). " +
+            "3×12 lentos por variante, 2 veces/día.",
+          sets: 3,
+          reps: 12,
+        },
+        {
+          label: "Foam rolling gastro-sóleo",
+          type: "exercise",
+          description: "90 s por pierna antes de la movilización. Enfatizar zona miotendinosa.",
+          duration_min: 5,
+        },
+        {
+          label: "Reevaluar WBLT en 4 semanas",
+          type: "exercise",
+          description: "Objetivo: WBLT ≥ 10 cm y asimetría ≤ 2 cm entre piernas.",
+        },
+      ],
+      biomech_context: biomechContext ?? undefined,
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // REGLA R10 — NARANJA: Valgo de rodilla en Single-Leg Squat
+  // Estado Compensado/Deficiente → glúteo medio + control lumbopélvico
+  // ════════════════════════════════════════════════════════════════
+  const slsCompromised =
+    input.sls_knee_valgus === true ||
+    input.sls_overall_status === "compensated" ||
+    input.sls_overall_status === "deficient";
+
+  if (slsCompromised) {
+    const triggers: string[] = [];
+    if (input.sls_knee_valgus) triggers.push("Valgo de rodilla en SLS");
+    if (input.sls_overall_status && input.sls_overall_status !== "optimal")
+      triggers.push(`SLS ${input.sls_overall_status === "deficient" ? "Deficiente" : "Compensado"}`);
+
+    prescriptions.push({
+      rule_id: "R10_sls_knee_valgus",
+      athlete_id: input.athlete_id,
+      athlete_name: input.athlete_name,
+      alert_level: input.sls_overall_status === "deficient" ? "orange" : "yellow",
+      protocol_name: "Activación Glúteo Medio + Control Lumbopélvico",
+      short_message:
+        "Valgo dinámico en sentadilla unipodal. Incluir activación de glúteo medio y control motor lumbopélvico.",
+      rationale:
+        `${triggers.join(" + ")}. ` +
+        "El valgo dinámico de rodilla en tareas unipodales refleja déficit de control de cadera " +
+        "(abductores/rotadores externos) y es el principal factor de riesgo modificable de lesión de LCA " +
+        "y síndrome femoropatelar (Hewett 2005, Powers 2010).",
+      triggered_by: triggers,
+      actions: [
+        {
+          label: "Activación glúteo medio",
+          type: "exercise",
+          protocol: "Pre-activación en calentamiento",
+          description:
+            "Monster walks con minibanda (3×12 pasos por lado) + clamshells con banda (3×15) " +
+            "antes de cada sesión de fuerza o campo.",
+          sets: 3,
+          reps: 15,
+        },
+        {
+          label: "Sentadilla unipodal asistida con control de rodilla",
+          type: "exercise",
+          description:
+            "SLS a cajón con feedback visual (espejo o video). Alinear rótula con 2º dedo del pie. " +
+            "3×8 por pierna, tempo 3-1-1.",
+          sets: 3,
+          reps: 8,
+        },
+        {
+          label: "Control motor lumbopélvico",
+          type: "exercise",
+          description:
+            "Dead bug (3×10) + side plank con abducción (3×20 s por lado). " +
+            "Progresar a pallof press y single-leg RDL con control pélvico.",
+          sets: 3,
+          reps: 10,
+        },
+        {
+          label: "Reevaluar SLS en 4-6 semanas",
+          type: "exercise",
+          description: "Objetivo: SLS sin valgo ni caída pélvica en 8 repeticiones consecutivas.",
+        },
+      ],
+      biomech_context: biomechContext ?? undefined,
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // REGLA R11 — AMARILLO/INFO: Rendimiento bajo baremo (T-Test / Bosco)
+  // ════════════════════════════════════════════════════════════════
+  const tTestSlow =
+    input.agility_t_test_seconds !== undefined &&
+    input.agility_t_test_seconds > T_TEST_RISK_SECONDS;
+  const cmjLow =
+    input.bosco_cmj_cm !== undefined && input.bosco_cmj_cm < BOSCO_CMJ_RISK_CM;
+  const rsiLow =
+    input.bosco_drop_jump_rsi !== undefined && input.bosco_drop_jump_rsi < BOSCO_RSI_RISK;
+
+  if (tTestSlow || cmjLow || rsiLow) {
+    const triggers: string[] = [];
+    if (tTestSlow) triggers.push(`T-Test ${input.agility_t_test_seconds!.toFixed(2)} s (> ${T_TEST_RISK_SECONDS})`);
+    if (cmjLow)    triggers.push(`CMJ ${input.bosco_cmj_cm} cm (< ${BOSCO_CMJ_RISK_CM})`);
+    if (rsiLow)    triggers.push(`RSI ${input.bosco_drop_jump_rsi!.toFixed(2)} (< ${BOSCO_RSI_RISK.toFixed(1)})`);
+
+    prescriptions.push({
+      rule_id: "R11_performance_below_benchmark",
+      athlete_id: input.athlete_id,
+      athlete_name: input.athlete_name,
+      alert_level: triggers.length >= 2 ? "yellow" : "info",
+      protocol_name: "Ajuste de Agilidad y Pliometría Reactiva",
+      short_message:
+        "Métricas de rendimiento bajo el baremo. Ajustar bloques de agilidad y pliometría reactiva.",
+      rationale:
+        `${triggers.join(" + ")}. ` +
+        "Baremos de referencia: T-Test ≤ 11.5 s (Pauole 2000), CMJ ≥ 30 cm en deportes de equipo, " +
+        "RSI ≥ 1.0 en drop jump. Valores inferiores indican déficit de potencia o de fuerza reactiva " +
+        "que limita cambios de dirección y aumenta el costo mecánico por contacto.",
+      triggered_by: triggers,
+      actions: [
+        ...(tTestSlow
+          ? [{
+              label: "Bloque de agilidad programada",
+              type: "exercise" as const,
+              description:
+                "2 sesiones/semana: T-Test fraccionado por segmentos (sprint frontal, desplazamiento lateral, " +
+                "carrera atrás) con trabajo técnico de frenado y reaceleración. 6-8 repeticiones al 90-95%.",
+              duration_min: 20,
+            }]
+          : []),
+        ...(cmjLow
+          ? [{
+              label: "Fuerza-potencia de tren inferior",
+              type: "exercise" as const,
+              description:
+                "Trap bar jump o squat jump con carga 20-40% 1RM, 4×4 con intención máxima. " +
+                "2 veces/semana, 48h de separación.",
+              sets: 4,
+              reps: 4,
+            }]
+          : []),
+        ...(rsiLow
+          ? [{
+              label: "Pliometría reactiva progresiva",
+              type: "exercise" as const,
+              description:
+                "Fase 1: saltos a cajón + aterrizajes controlados. Fase 2: drop jumps desde 20-30 cm " +
+                "priorizando tiempo de contacto < 250 ms. Progresar altura solo si RSI mejora.",
+              sets: 3,
+              reps: 6,
+            }]
+          : []),
+        {
+          label: "Retest en 6 semanas",
+          type: "exercise",
+          description: "Repetir T-Test y protocolo Bosco en condiciones estandarizadas (misma superficie y calzado).",
+        },
+      ],
+      biomech_context: biomechContext ?? undefined,
+    });
+  }
+
   // Ordenar: rojo → naranja → amarillo → info
   const ORDER: Record<AlertLevel, number> = {
     red: 0, orange: 1, yellow: 2, info: 3,
@@ -653,7 +898,17 @@ export function buildRuleInput(athlete: {
   latest_pain?: any;
   latest_wellness?: any;
   latest_biomech?: any;
+  latest_ankle_foot?: any;
 }): AthleteRuleInput {
+  const af = athlete.latest_ankle_foot;
+  const slsLeft  = af?.single_leg_squat_left;
+  const slsRight = af?.single_leg_squat_right;
+  // Peor estado entre ambas piernas: deficient > compensated > optimal
+  const slsStatusRank: Record<string, number> = { optimal: 0, compensated: 1, deficient: 2 };
+  const worstSls = [slsLeft?.overall_status, slsRight?.overall_status]
+    .filter(Boolean)
+    .sort((a, b) => (slsStatusRank[b] ?? 0) - (slsStatusRank[a] ?? 0))[0];
+
   const b = athlete.latest_biomech;
   const fmsPainPattern = b
     ? [
@@ -696,6 +951,17 @@ export function buildRuleInput(athlete: {
     surface_type:        b?.surface_type,
     footwear_type:       b?.footwear_type,
     biomech_date:        b?.date,
+    // Tobillo / Pie / Rendimiento funcional
+    wblt_cm_left:           af?.wblt_cm_left ?? undefined,
+    wblt_cm_right:          af?.wblt_cm_right ?? undefined,
+    dorsiflexion_rom_left:  af?.dorsiflexion_rom_left ?? undefined,
+    dorsiflexion_rom_right: af?.dorsiflexion_rom_right ?? undefined,
+    sls_knee_valgus:        (slsLeft?.knee_valgus === true) || (slsRight?.knee_valgus === true) || undefined,
+    sls_overall_status:     worstSls,
+    agility_t_test_seconds: af?.agility_t_test_seconds ?? undefined,
+    bosco_cmj_cm:           af?.bosco_protocol?.cmj_cm ?? undefined,
+    bosco_drop_jump_rsi:    af?.bosco_protocol?.drop_jump_rsi ?? undefined,
+    ankle_foot_date:        af?.assessment_date,
   };
 }
 

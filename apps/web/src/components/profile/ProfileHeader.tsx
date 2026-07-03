@@ -167,6 +167,21 @@ export default function ProfileHeader({
             Planificar
           </Link>
 
+          {/* Ankle / foot / functional assessment */}
+          <Link
+            href={`/athletes/${athleteId}/ankle-foot`}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-lg px-4 py-2",
+              "border border-[#818cf8]/30 bg-[#818cf8]/8",
+              "text-[13px] font-semibold text-[#818cf8]",
+              "transition-all duration-200",
+              "hover:border-[#818cf8]/60 hover:bg-[#818cf8]/15",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
+            )}
+          >
+            🦶 Tobillo/Pie
+          </Link>
+
           {/* Edit profile */}
           <Link
             href={`/athletes/${athleteId}/edit`}
