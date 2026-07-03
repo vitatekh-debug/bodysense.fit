@@ -17,6 +17,8 @@
  */
 
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { springPop } from "@/components/motion/primitives";
 import { createClient } from "@/lib/supabase/client";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -93,9 +95,16 @@ function MetricSlider({
           {label}
         </label>
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-black" style={{ color }}>
+          <motion.span
+            key={value}
+            initial={{ scale: 1.25 }}
+            animate={{ scale: 1 }}
+            transition={springPop}
+            className="text-2xl font-black inline-block"
+            style={{ color }}
+          >
             {value}
-          </span>
+          </motion.span>
           {valueLabel && <span className="text-slate-400 text-xs">{valueLabel}</span>}
         </div>
       </div>
@@ -247,12 +256,16 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
                 RPE — Esfuerzo Percibido (1-10)
               </label>
               <div className="flex items-center gap-2">
-                <span
-                  className="text-2xl font-black"
+                <motion.span
+                  key={cr10Rpe}
+                  initial={{ scale: 1.25 }}
+                  animate={{ scale: 1 }}
+                  transition={springPop}
+                  className="text-2xl font-black inline-block"
                   style={{ color: rpeColor(cr10Rpe) }}
                 >
                   {cr10Rpe}
-                </span>
+                </motion.span>
                 <span className="text-slate-400 text-xs">{rpeLabel(cr10Rpe)}</span>
               </div>
             </div>

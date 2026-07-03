@@ -11,6 +11,8 @@
  */
 
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { springPop } from "@/components/motion/primitives";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type {
@@ -98,22 +100,25 @@ function Toggle({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border text-sm transition-all
+      animate={{ scale: checked ? 1.03 : 1 }}
+      whileTap={{ scale: 0.97 }}
+      transition={springPop}
+      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border text-sm transition-colors duration-200
         ${checked
           ? "border-indigo-500 bg-indigo-500/15 text-indigo-300"
           : "border-white/[0.09] bg-black/30 text-slate-500 hover:border-white/20"}`}
     >
       <span
-        className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] font-bold
+        className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] font-bold transition-colors
           ${checked ? "bg-indigo-500 border-indigo-500 text-white" : "border-slate-600"}`}
       >
         {checked ? "✓" : ""}
       </span>
       {label}
-    </button>
+    </motion.button>
   );
 }
 
@@ -270,17 +275,20 @@ export default function AnkleFootForm({
                 </p>
                 <div className="flex gap-2">
                   {FOOT_TYPES.map((ft) => (
-                    <button
+                    <motion.button
                       key={ft.value}
                       type="button"
                       onClick={() => setter(value === ft.value ? "" : ft.value)}
-                      className={`flex-1 px-2 py-2 rounded-lg border text-xs font-medium transition-all
+                      animate={{ scale: value === ft.value ? 1.03 : 1 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={springPop}
+                      className={`flex-1 px-2 py-2 rounded-lg border text-xs font-medium transition-colors duration-200
                         ${value === ft.value
                           ? "border-indigo-500 bg-indigo-500/15 text-indigo-300"
                           : "border-white/[0.09] bg-black/30 text-slate-500 hover:border-white/20"}`}
                     >
                       {ft.label}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               </div>

@@ -32,6 +32,7 @@ import { writeWithFallback, getPendingCount } from "../../../lib/offline-queue";
 import { ACWR_ZONES } from "@vitatekh/shared";
 import type { AcwrSnapshot } from "@vitatekh/shared";
 import AthleteHeader from "../../../components/ui/AthleteHeader";
+import { PulseScale } from "../../../components/ui/Animated";
 import { BS, BRAND_GLOW, ZONE_GLOW } from "../../../lib/theme";
 
 // ─── Quick actions ─────────────────────────────────────────────────────────
@@ -258,7 +259,8 @@ export default function AthleteCheckin() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardLabel}>Nivel de Fatiga</Text>
-            <View
+            <PulseScale
+              pulseKey={fatigue}
               style={[
                 styles.valueBadge,
                 { backgroundColor: fatigue > 7 ? "rgba(127,29,29,0.8)" : BS.surfaceHigh },
@@ -272,7 +274,7 @@ export default function AthleteCheckin() {
               >
                 {fatigue}/10
               </Text>
-            </View>
+            </PulseScale>
           </View>
           <Slider
             style={styles.slider}
@@ -295,7 +297,8 @@ export default function AthleteCheckin() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardLabel}>Horas de Sueño</Text>
-            <View
+            <PulseScale
+              pulseKey={sleepHours}
               style={[
                 styles.valueBadge,
                 { backgroundColor: sleepHours < 6 ? "rgba(69,26,3,0.8)" : BS.surfaceHigh },
@@ -309,7 +312,7 @@ export default function AthleteCheckin() {
               >
                 {sleepHours}h
               </Text>
-            </View>
+            </PulseScale>
           </View>
           <Slider
             style={styles.slider}
@@ -381,7 +384,8 @@ export default function AthleteCheckin() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardLabel}>Dolor Muscular</Text>
-            <View
+            <PulseScale
+              pulseKey={soreness}
               style={[
                 styles.valueBadge,
                 { backgroundColor: soreness > 7 ? "rgba(127,29,29,0.8)" : BS.surfaceHigh },
@@ -395,7 +399,7 @@ export default function AthleteCheckin() {
               >
                 {soreness}/10
               </Text>
-            </View>
+            </PulseScale>
           </View>
           <Slider
             style={styles.slider}
