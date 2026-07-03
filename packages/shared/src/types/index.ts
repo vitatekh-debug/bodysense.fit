@@ -346,6 +346,71 @@ export interface BiomechanicalEvaluation {
   created_at: string;
 }
 
+// ─── Ankle / Foot / Functional Performance (migration 009) ───────────────────
+
+/** Foot arch classification — Feiss Line Test (matches DB enum foot_type) */
+export type FootType = "normal" | "flat" | "cavus";
+
+/** Gastro-soleus-calcaneus-plantar fascia complex status (matches DB enum myofascial_status) */
+export type MyofascialStatus = "hypertonic" | "phasic" | "optimal";
+
+/** Single-Leg Squat overall quality (matches DB enum sls_overall_status) */
+export type SlsOverallStatus = "optimal" | "compensated" | "deficient";
+
+/** Single-Leg Squat compensations — stored as JSONB per side */
+export interface SingleLegSquatResult {
+  knee_valgus: boolean;
+  pelvic_drop: boolean;
+  trunk_rotation: boolean;
+  overall_status: SlsOverallStatus;
+}
+
+/** Bosco jump protocol metrics — stored as JSONB */
+export interface BoscoProtocol {
+  /** Squat Jump height (cm) — concentric-only power */
+  squat_jump_cm: number;
+  /** Countermovement Jump height (cm) — elastic contribution */
+  cmj_cm: number;
+  /** Drop Jump Reactive Strength Index (height/contact-time) */
+  drop_jump_rsi: number;
+}
+
+/**
+ * Advanced ankle, foot and functional performance assessment.
+ * Clinical tests: Feiss Line, ROM goniometry, WBLT, Windlass,
+ * anterior impingement, Daniels MMT, Single-Leg Squat, T-Test, Bosco.
+ */
+export interface AnkleFootAssessment {
+  id: string;
+  athlete_id: string;
+  evaluated_by: string;
+  assessment_date: string;
+  // Biomechanics (symmetric L/R)
+  foot_type_left?: FootType;
+  foot_type_right?: FootType;
+  dorsiflexion_rom_left?: number;     // degrees 0-60
+  dorsiflexion_rom_right?: number;
+  plantiflexion_rom_left?: number;    // degrees 0-90
+  plantiflexion_rom_right?: number;
+  wblt_cm_left?: number;              // Weight-Bearing Lunge Test, cm (< 9-10 cm = restricted)
+  wblt_cm_right?: number;
+  windlass_test_left?: boolean;       // plantar fascia reactivity
+  windlass_test_right?: boolean;
+  anterior_impingement_left?: boolean;
+  anterior_impingement_right?: boolean;
+  myofascial_status?: MyofascialStatus;
+  // Strength & motor control
+  daniels_muscle_grade_left?: number;  // MMT 0-5
+  daniels_muscle_grade_right?: number;
+  single_leg_squat_left?: SingleLegSquatResult;
+  single_leg_squat_right?: SingleLegSquatResult;
+  // Agility & plyometrics
+  agility_t_test_seconds?: number;
+  bosco_protocol?: BoscoProtocol;
+  notes?: string;
+  created_at: string;
+}
+
 // ─── View / Composite Types ───────────────────────────────────────────────────
 
 export interface AthleteWithAcwr extends Profile {
@@ -422,6 +487,8 @@ export interface Database {
       hq_evaluations:            { Row: HqEvaluation };
       pain_records:              { Row: PainRecord };
       biomechanical_evaluations: { Row: BiomechanicalEvaluation };
+      // Ankle / Foot / Functional (migration 009)
+      ankle_foot_assessments:    { Row: AnkleFootAssessment };
     };
   };
 }

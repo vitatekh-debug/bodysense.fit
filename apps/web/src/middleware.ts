@@ -42,14 +42,16 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/register");
+  // Nota: usamos === y no startsWith("/register") para no bloquear /register-athlete
+  const isAuthRoute = pathname === "/login" || pathname === "/register";
   const isProtectedRoute =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/athletes") ||
     pathname.startsWith("/load-analysis") ||
     pathname.startsWith("/prevention") ||
     pathname.startsWith("/periodization") ||
-    pathname.startsWith("/reports");
+    pathname.startsWith("/reports") ||
+    pathname.startsWith("/atleta");   // ← vista atleta protegida
 
   // Sin sesión intentando acceder a ruta protegida → login
   if (!user && isProtectedRoute) {

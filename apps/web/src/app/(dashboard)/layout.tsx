@@ -10,8 +10,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/login");
   }
 
+  const dualMode = user.user_metadata?.dual_mode === true;
+
   return (
-    <DashboardShell coachId={user.id}>
+    <DashboardShell coachId={user.id} userEmail={user.email ?? ""} dualMode={dualMode}>
       {children}
     </DashboardShell>
   );

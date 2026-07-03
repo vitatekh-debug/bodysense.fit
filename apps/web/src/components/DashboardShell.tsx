@@ -28,19 +28,26 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { Menu } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import NotificationBell from "@/components/NotificationBell";
 
+// Solo visible para el dueño del sistema (modo dual coach ↔ atleta)
+const OWNER_EMAIL = "vitawell25@gmail.com";
+
 interface DashboardShellProps {
-  children: React.ReactNode;
-  coachId:  string;
+  children:   React.ReactNode;
+  coachId:    string;
+  userEmail?: string;
+  dualMode?:  boolean;
 }
 
-export default function DashboardShell({ children, coachId }: DashboardShellProps) {
+export default function DashboardShell({ children, coachId, userEmail, dualMode }: DashboardShellProps) {
   const [mounted,     setMounted]     = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router   = useRouter();
+  const showAthleteSwitch = dualMode === true || userEmail === OWNER_EMAIL;
 
   // Marcar montado (solo cliente — jamás SSR)
   useEffect(() => { setMounted(true); }, []);
@@ -108,8 +115,20 @@ export default function DashboardShell({ children, coachId }: DashboardShellProp
             <span className="text-slate-100">SENSE</span>
           </span>
 
-          {/* Campana — siempre, empujada a la derecha */}
-          <div className="ml-auto">
+          {/* Botón dual-mode — para cuentas con modo dual o el dueño */}
+          {showAthleteSwitch && (
+            <button
+              onClick={() => router.push("/atleta/dashboard")}
+              title="Cambiar a vista de atleta"
+              className="ml-auto flex items-center gap-1.5 h-8 px-3 shrink-0 rounded-lg border border-emerald-800/60 bg-emerald-950/40 text-emerald-400 text-xs font-semibold hover:bg-emerald-900/50 hover:border-emerald-700 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40"
+            >
+              <span>🏃</span>
+              <span className="hidden sm:inline">Vista Atleta</span>
+            </button>
+          )}
+
+          {/* Campana — siempre, empujada a la derecha si no hay botón dual */}
+          <div className={showAthleteSwitch ? "" : "ml-auto"}>
             <NotificationBell coachId={coachId} />
           </div>
         </header>

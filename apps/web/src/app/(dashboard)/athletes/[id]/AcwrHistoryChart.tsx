@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -51,13 +51,27 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function AcwrHistoryChart({ data }: Props) {
+  // Color dinámico del área basado en la zona del último punto
+  const lastRatio = data.at(-1)?.acwr_ratio ?? 0;
+  const areaColor =
+    lastRatio > 1.5 ? "#ef4444"
+    : lastRatio > 1.3 ? "#f59e0b"
+    : lastRatio > 0.8 ? "#6366f1"
+    : "#64748b";
+
   return (
     <ResponsiveContainer width="100%" height={240}>
-      <LineChart data={data} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+      <AreaChart data={data} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}>
+        <defs>
+          <linearGradient id="acwrh-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%"  stopColor={areaColor} stopOpacity={0.3} />
+            <stop offset="95%" stopColor={areaColor} stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
         <XAxis
           dataKey="date"
-          tick={{ fill: "#64748b", fontSize: 11 }}
+          tick={{ fill: "#64748b", fontSize: 10 }}
           tickFormatter={(v) => {
             const d = new Date(v);
             return `${d.getDate()}/${d.getMonth() + 1}`;
@@ -67,7 +81,7 @@ export default function AcwrHistoryChart({ data }: Props) {
         />
         <YAxis
           domain={[0, 2.2]}
-          tick={{ fill: "#64748b", fontSize: 11 }}
+          tick={{ fill: "#64748b", fontSize: 10 }}
           axisLine={false}
           tickLine={false}
           tickCount={6}
@@ -79,15 +93,19 @@ export default function AcwrHistoryChart({ data }: Props) {
         <ReferenceLine y={1.3} stroke="#22c55e" strokeDasharray="4 4" label={{ value: "1.3", fill: "#22c55e", fontSize: 10 }} />
         <ReferenceLine y={1.5} stroke="#f59e0b" strokeDasharray="4 4" label={{ value: "1.5", fill: "#f59e0b", fontSize: 10 }} />
 
-        <Line
+        <Area
           type="monotone"
           dataKey="acwr_ratio"
-          stroke="#6366f1"
-          strokeWidth={2.5}
+          stroke={areaColor}
+          strokeWidth={3}
+          fill="url(#acwrh-grad)"
           dot={<CustomDot />}
-          activeDot={{ r: 6, fill: "#818cf8" }}
+          activeDot={{ r: 6, fill: areaColor, stroke: "#0a0a0a", strokeWidth: 2 }}
+          isAnimationActive
+          animationDuration={1200}
+          animationEasing="ease-in-out"
         />
-      </LineChart>
+      </AreaChart>
     </ResponsiveContainer>
   );
 }

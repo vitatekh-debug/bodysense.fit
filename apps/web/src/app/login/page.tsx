@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: loginData, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
       setError(
@@ -25,7 +25,19 @@ export default function LoginPage() {
           : error.message
       );
     } else {
-      router.push("/dashboard");
+      // Leer el rol del perfil para redirigir a la vista correcta
+      let destination = "/dashboard"; // default: profesional
+      if (loginData.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", loginData.user.id)
+          .single();
+        if (profile?.role === "athlete") {
+          destination = "/atleta/dashboard";
+        }
+      }
+      router.push(destination);
       router.refresh();
     }
   }
@@ -152,7 +164,7 @@ export default function LoginPage() {
             href="/register"
             className="text-[#818cf8] hover:text-[#6366F1] transition-colors duration-150 font-medium"
           >
-            Crear cuenta de profesional
+            Crear cuenta
           </Link>
         </p>
       </div>
