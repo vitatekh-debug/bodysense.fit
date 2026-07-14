@@ -38,6 +38,7 @@ const SESSION_TYPE_LABELS: Record<SessionType, string> = {
   match:      "Partido",
   recovery:   "Recuperación",
   prevention: "Prevención",
+  rehabilitation: "Rehabilitación",
 };
 
 const SESSION_TYPE_COLORS: Record<SessionType, string> = {
@@ -47,6 +48,7 @@ const SESSION_TYPE_COLORS: Record<SessionType, string> = {
   match:      "#ef4444",
   recovery:   "#22d3ee",
   prevention: "#a78bfa",
+  rehabilitation: "#2dd4bf",
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────

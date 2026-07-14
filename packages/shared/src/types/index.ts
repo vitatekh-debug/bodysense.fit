@@ -12,7 +12,8 @@ export type SessionType =
   | "physical"
   | "match"
   | "recovery"
-  | "prevention";
+  | "prevention"
+  | "rehabilitation";
 
 export type PeriodizationModel = "classic" | "tactical";
 
