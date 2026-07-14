@@ -33,15 +33,15 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
       {/* Section header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-[#3a2c1e] font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+          <h2 className="text-ink font-bold text-sm uppercase tracking-widest flex items-center gap-2">
             🧠 Prescripciones Automáticas
-            <span className="text-xs font-normal text-[#8a7660] normal-case tracking-normal">
+            <span className="text-xs font-normal text-ink-soft normal-case tracking-normal">
               Motor de Reglas v1
             </span>
           </h2>
-          <p className="text-[#8a7660] text-xs mt-0.5">
+          <p className="text-ink-soft text-xs mt-0.5">
             {prescriptions.length} alerta{prescriptions.length > 1 ? "s" : ""} detectada{prescriptions.length > 1 ? "s" : ""}
-            {redCount > 0 && <span className="text-[#c0492f] font-bold"> · {redCount} crítica{redCount > 1 ? "s" : ""}</span>}
+            {redCount > 0 && <span className="text-danger font-bold"> · {redCount} crítica{redCount > 1 ? "s" : ""}</span>}
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
       </motion.div>
 
       {/* Disclaimer */}
-      <p className="text-[#b0a08c] text-xs">
+      <p className="text-ink-muted text-xs">
         * Las prescripciones son generadas automáticamente por el Motor de Reglas de Bodysense
         basado en evidencia científica. No sustituyen el criterio clínico del profesional.
       </p>

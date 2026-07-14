@@ -82,7 +82,7 @@ function NewEvalButton({ athleteId }: { athleteId: string }) {
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
         transition={springPop}
-        className="inline-flex items-center gap-1.5 rounded-lg bg-[#c65f3f] px-3 py-1.5 text-xs font-bold text-[#fdf3ea]"
+        className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-bold text-on-brand"
       >
         <ClipboardPlus size={13} />
         Nueva Evaluación
@@ -102,7 +102,7 @@ function AthleteCard({ athlete, zone, sportLabels }: {
 
   return (
     <motion.div variants={fadeUpItem}>
-      <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] backdrop-blur-md p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]">
+      <div className="rounded-2xl border border-line bg-surface backdrop-blur-md p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]">
         <Link href={`/athletes/${athlete.id}`} className="flex items-center gap-3">
           <div
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold"
@@ -111,8 +111,8 @@ function AthleteCard({ athlete, zone, sportLabels }: {
             <Initials name={athlete.full_name} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[#3a2c1e] font-semibold text-sm leading-tight truncate">{athlete.full_name}</p>
-            <p className="text-[#8a7660] text-xs truncate mt-0.5">
+            <p className="text-ink font-semibold text-sm leading-tight truncate">{athlete.full_name}</p>
+            <p className="text-ink-soft text-xs truncate mt-0.5">
               {[athlete.team_name, sport].filter(Boolean).join(" · ") || athlete.email}
             </p>
           </div>
@@ -121,24 +121,24 @@ function AthleteCard({ athlete, zone, sportLabels }: {
               <span className="text-xl font-black leading-none tabular-nums" style={{ color: zone.color }}>
                 {acwr.acwr_ratio.toFixed(2)}
               </span>
-              <span className="text-[10px] text-[#8a7660]">ACWR</span>
+              <span className="text-[10px] text-ink-soft">ACWR</span>
             </div>
           ) : (
-            <span className="text-xs text-[#b0a08c]">Sin datos</span>
+            <span className="text-xs text-ink-muted">Sin datos</span>
           )}
         </Link>
 
         {/* Health strip */}
-        <div className="mt-3 flex items-center justify-between gap-2 border-t border-[#e4d8c4] pt-3">
+        <div className="mt-3 flex items-center justify-between gap-2 border-t border-line pt-3">
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="inline-flex items-center gap-1 text-xs text-[#8a7660]">
-              <Activity size={12} className="text-[#b0a08c]" />
+            <span className="inline-flex items-center gap-1 text-xs text-ink-soft">
+              <Activity size={12} className="text-ink-muted" />
               <span className="tabular-nums font-medium">{athlete.latest_srpe ?? "—"}</span>
-              <span className="text-[#b0a08c]">sRPE</span>
+              <span className="text-ink-muted">sRPE</span>
             </span>
             <WellnessDot fatigue={athlete.wellness_fatigue} soreness={athlete.wellness_soreness} />
             {athlete.alert_count > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#c0492f]/15 px-2 py-0.5 text-[11px] font-bold text-[#c0492f]">
+              <span className="inline-flex items-center gap-1 rounded-full bg-danger/15 px-2 py-0.5 text-[11px] font-bold text-danger">
                 <AlertTriangle size={11} />
                 {athlete.alert_count}
               </span>
@@ -155,7 +155,7 @@ function AthleteCard({ athlete, zone, sportLabels }: {
 
 function EmptyState({ hasAthletes }: { hasAthletes: boolean }) {
   return (
-    <div className="py-16 text-center text-[#8a7660] text-sm">
+    <div className="py-16 text-center text-ink-soft text-sm">
       {hasAthletes
         ? "No hay atletas que coincidan con los filtros."
         : "No tienes atletas registrados. Crea un equipo e invita atletas."}
@@ -186,25 +186,25 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#3a2c1e] tracking-tight">Atletas</h1>
-          <p className="text-[#8a7660] text-sm mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-ink tracking-tight">Atletas</h1>
+          <p className="text-ink-soft text-sm mt-1">
             {athletes.length} atleta{athletes.length !== 1 ? "s" : ""} en tus equipos
-            {atRiskCount > 0 && <span className="ml-2 text-[#c0492f] font-semibold">· {atRiskCount} en riesgo</span>}
+            {atRiskCount > 0 && <span className="ml-2 text-danger font-semibold">· {atRiskCount} en riesgo</span>}
           </p>
         </div>
-        <Users size={20} className="shrink-0 text-[#b0a08c] mt-1" />
+        <Users size={20} className="shrink-0 text-ink-muted mt-1" />
       </div>
 
       {/* Filters */}
       <div className="space-y-3">
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a7660] pointer-events-none" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft pointer-events-none" />
           <input
             type="text"
             placeholder="Buscar atleta..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 bg-[#fdf9f2] border border-[#e4d8c4] rounded-xl text-sm text-[#3a2c1e] placeholder-[#b0a08c] focus:outline-none focus:border-[#c65f3f]/60 focus:bg-[#f7efe2] transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-surface border border-line rounded-xl text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-brand/60 focus:bg-surface-high transition-all"
           />
         </div>
 
@@ -217,8 +217,8 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
                 className={[
                   "shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 whitespace-nowrap",
                   sportFilter === f.key
-                    ? "bg-[#c65f3f]/15 text-[#c65f3f] border border-[#c65f3f]/35"
-                    : "bg-[#fdf9f2] text-[#8a7660] border border-[#e4d8c4] hover:text-[#3a2c1e] hover:border-[#d6c6ac]",
+                    ? "bg-brand/15 text-brand border border-brand/35"
+                    : "bg-surface text-ink-soft border border-line hover:text-ink hover:border-line-strong",
                 ].join(" ")}
               >
                 {f.label}
@@ -236,8 +236,8 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
                 className={[
                   "shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 whitespace-nowrap",
                   zoneFilter === f.key
-                    ? "bg-[#efe4d2] text-[#3a2c1e] border border-[#d6c6ac]"
-                    : "bg-[#fdf9f2] text-[#8a7660] border border-[#e4d8c4] hover:text-[#5d4c3a] hover:border-[#d6c6ac]",
+                    ? "bg-surface-top text-ink border border-line-strong"
+                    : "bg-surface text-ink-soft border border-line hover:text-ink-body hover:border-line-strong",
                 ].join(" ")}
               >
                 {f.label}
@@ -265,15 +265,15 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
       </motion.div>
 
       {/* Desktop: scannable table */}
-      <div className="hidden md:block rounded-2xl overflow-hidden border border-[#e4d8c4] bg-[#fdf9f2] backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+      <div className="hidden md:block rounded-2xl overflow-hidden border border-line bg-surface backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#e4d8c4]">
-              <th className="text-left px-4 py-3 text-[#8a7660] font-semibold text-xs uppercase tracking-wider">Atleta</th>
-              <th className="text-center px-4 py-3 text-[#8a7660] font-semibold text-xs uppercase tracking-wider">ACWR</th>
-              <th className="text-center px-4 py-3 text-[#8a7660] font-semibold text-xs uppercase tracking-wider">Último sRPE</th>
-              <th className="text-center px-4 py-3 text-[#8a7660] font-semibold text-xs uppercase tracking-wider">Wellness</th>
-              <th className="text-center px-4 py-3 text-[#8a7660] font-semibold text-xs uppercase tracking-wider">Alertas</th>
+            <tr className="border-b border-line">
+              <th className="text-left px-4 py-3 text-ink-soft font-semibold text-xs uppercase tracking-wider">Atleta</th>
+              <th className="text-center px-4 py-3 text-ink-soft font-semibold text-xs uppercase tracking-wider">ACWR</th>
+              <th className="text-center px-4 py-3 text-ink-soft font-semibold text-xs uppercase tracking-wider">Último sRPE</th>
+              <th className="text-center px-4 py-3 text-ink-soft font-semibold text-xs uppercase tracking-wider">Wellness</th>
+              <th className="text-center px-4 py-3 text-ink-soft font-semibold text-xs uppercase tracking-wider">Alertas</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -284,7 +284,7 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
               filtered.map((athlete) => {
                 const zone = athlete.latest_acwr ? acwrZones[athlete.latest_acwr.risk_zone] : null;
                 return (
-                  <tr key={athlete.id} className="border-b border-[#e4d8c4] hover:bg-[#fdf9f2] transition group">
+                  <tr key={athlete.id} className="border-b border-line hover:bg-surface transition group">
                     <td className="px-4 py-3">
                       <Link href={`/athletes/${athlete.id}`} className="flex items-center gap-3">
                         <div
@@ -294,8 +294,8 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
                           <Initials name={athlete.full_name} />
                         </div>
                         <div>
-                          <p className="text-[#3a2c1e] font-medium leading-tight">{athlete.full_name}</p>
-                          <p className="text-[#8a7660] text-xs">
+                          <p className="text-ink font-medium leading-tight">{athlete.full_name}</p>
+                          <p className="text-ink-soft text-xs">
                             {[athlete.team_name, athlete.sport ? sportLabels[athlete.sport] ?? athlete.sport : null].filter(Boolean).join(" · ") || athlete.email}
                           </p>
                         </div>
@@ -304,7 +304,7 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
                     <td className="px-4 py-3 text-center font-bold tabular-nums" style={{ color: zone?.color }}>
                       {athlete.latest_acwr?.acwr_ratio.toFixed(2) ?? "—"}
                     </td>
-                    <td className="px-4 py-3 text-center text-[#5d4c3a] tabular-nums">
+                    <td className="px-4 py-3 text-center text-ink-body tabular-nums">
                       {athlete.latest_srpe ?? "—"}
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -312,17 +312,17 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
                     </td>
                     <td className="px-4 py-3 text-center">
                       {athlete.alert_count > 0 ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#c0492f]/15 px-2 py-0.5 text-xs font-bold text-[#c0492f]">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-danger/15 px-2 py-0.5 text-xs font-bold text-danger">
                           <AlertTriangle size={11} /> {athlete.alert_count}
                         </span>
                       ) : (
-                        <span className="text-[#b0a08c] text-xs">—</span>
+                        <span className="text-ink-muted text-xs">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-3">
                         <NewEvalButton athleteId={athlete.id} />
-                        <Link href={`/athletes/${athlete.id}`} className="text-[#b0a08c] group-hover:text-[#c65f3f] transition-colors">
+                        <Link href={`/athletes/${athlete.id}`} className="text-ink-muted group-hover:text-brand transition-colors">
                           <ChevronRight size={17} />
                         </Link>
                       </div>

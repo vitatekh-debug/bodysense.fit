@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useThemeColors } from "@/components/theme/useThemeColors";
 import {
   AreaChart, Area,
   LineChart, Line,
@@ -49,8 +50,8 @@ const AcwrTooltip = ({ active, payload }: any) => {
     : (ratio ?? 0) > 1.3 ? "#d9902a"
     : "#4a86b0";
   return (
-    <div className="rounded-xl border border-[#e4d8c4] bg-[#fdf9f2] p-3 text-xs shadow-2xl">
-      <p className="text-[#8a7660] mb-2 font-medium">
+    <div className="rounded-xl border border-line bg-surface p-3 text-xs shadow-2xl">
+      <p className="text-ink-soft mb-2 font-medium">
         {new Date(String(d.date)).toLocaleDateString("es-CO", { day: "2-digit", month: "short" })}
       </p>
       {ratio != null && (
@@ -59,12 +60,12 @@ const AcwrTooltip = ({ active, payload }: any) => {
         </p>
       )}
       {acute != null && (
-        <p className="text-[#8a7660] mt-0.5">
+        <p className="text-ink-soft mt-0.5">
           Aguda <span style={{ color: loadColor }}>{acute.toFixed(0)} UA</span>
         </p>
       )}
       {chronic != null && (
-        <p className="text-[#8a7660]">
+        <p className="text-ink-soft">
           Crónica <span className="text-teal-400">{chronic.toFixed(0)} UA</span>
         </p>
       )}
@@ -75,8 +76,8 @@ const AcwrTooltip = ({ active, payload }: any) => {
 const WeeklyTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#f7efe2] border border-[#d6c6ac] rounded-lg p-3 text-xs shadow-xl">
-      <p className="text-[#5d4c3a] font-semibold mb-1">Semana del {label}</p>
+    <div className="bg-surface-high border border-line-strong rounded-lg p-3 text-xs shadow-xl">
+      <p className="text-ink-body font-semibold mb-1">Semana del {label}</p>
       {payload.map((p: any) => (
         <p key={p.dataKey} style={{ color: p.fill || p.color }}>
           {p.name}: {typeof p.value === "number" ? p.value.toFixed(0) : p.value}
@@ -100,6 +101,7 @@ export default function LoadAnalysisClient({
   sportLabels,
 }: Props) {
   const router = useRouter();
+  const c = useThemeColors();
 
   function selectAthlete(id: string) {
     router.push(`/load-analysis?athlete=${id}`);
@@ -130,15 +132,15 @@ export default function LoadAnalysisClient({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black text-[#3a2c1e]">Análisis de Carga</h1>
-        <p className="text-[#8a7660] text-sm mt-1">
+        <h1 className="text-3xl font-black text-ink">Análisis de Carga</h1>
+        <p className="text-ink-soft text-sm mt-1">
           ACWR, volumen e intensidad · últimos 60 días
         </p>
       </div>
 
       {/* Athlete selector */}
       {athletes.length === 0 ? (
-        <div className="bg-surface border border-[#e4d8c4] rounded-xl p-8 text-center text-[#8a7660]">
+        <div className="bg-surface border border-line rounded-xl p-8 text-center text-ink-soft">
           No tienes atletas registrados en tus equipos.
         </div>
       ) : (
@@ -151,7 +153,7 @@ export default function LoadAnalysisClient({
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition border ${
                   selectedId === a.id
                     ? "bg-brand/20 border-brand/40 text-brand-light"
-                    : "bg-[#f7efe2] border-[#e4d8c4] text-[#8a7660] hover:text-[#3a2c1e]"
+                    : "bg-surface-high border-line text-ink-soft hover:text-ink"
                 }`}
               >
                 {a.full_name}
@@ -165,15 +167,15 @@ export default function LoadAnalysisClient({
           </div>
 
           {!hasData && selectedId ? (
-            <div className="bg-surface border border-[#e4d8c4] rounded-xl p-8 text-center text-[#8a7660]">
+            <div className="bg-surface border border-line rounded-xl p-8 text-center text-ink-soft">
               Sin datos para este atleta en los últimos 60 días. Registra sesiones y sRPE.
             </div>
           ) : hasData ? (
             <div className="space-y-6">
               {/* ACWR trend */}
               {acwrHistory.length > 0 && (
-                <div className="bg-surface border border-[#e4d8c4] rounded-xl p-6">
-                  <h2 className="text-xs font-bold text-[#8a7660] uppercase tracking-widest mb-4">
+                <div className="bg-surface border border-line rounded-xl p-6">
+                  <h2 className="text-xs font-bold text-ink-soft uppercase tracking-widest mb-4">
                     Evolución ACWR
                   </h2>
                   <ResponsiveContainer width="100%" height={220}>
@@ -188,10 +190,10 @@ export default function LoadAnalysisClient({
                           <stop offset="95%" stopColor={acuteColor} stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke={c.line} vertical={false} />
                       <XAxis
                         dataKey="date"
-                        tick={{ fill: "#8a7660", fontSize: 10 }}
+                        tick={{ fill: c.inkSoft, fontSize: 10 }}
                         tickFormatter={(v) => {
                           const d = new Date(v);
                           return `${d.getDate()}/${d.getMonth() + 1}`;
@@ -206,7 +208,7 @@ export default function LoadAnalysisClient({
                         orientation="left"
                         domain={[0, 3]}
                         ticks={[0, 0.8, 1.3, 1.5, 2.0, 3.0]}
-                        tick={{ fill: "#c65f3f", fontSize: 9 }}
+                        tick={{ fill: c.brand, fontSize: 9 }}
                         axisLine={false}
                         tickLine={false}
                         tickFormatter={(v) => v.toFixed(1)}
@@ -229,9 +231,9 @@ export default function LoadAnalysisClient({
                       <Tooltip content={<AcwrTooltip />} />
 
                       {/* Líneas de referencia ligadas al eje izquierdo (ACWR) */}
-                      <ReferenceLine yAxisId="left" y={0.8} stroke="#b0a08c" strokeDasharray="3 3" />
-                      <ReferenceLine yAxisId="left" y={1.3} stroke="#6f9c4a" strokeDasharray="3 3" />
-                      <ReferenceLine yAxisId="left" y={1.5} stroke="#d9902a" strokeDasharray="3 3" />
+                      <ReferenceLine yAxisId="left" y={0.8} stroke={c.inkMuted} strokeDasharray="3 3" />
+                      <ReferenceLine yAxisId="left" y={1.3} stroke={c.success} strokeDasharray="3 3" />
+                      <ReferenceLine yAxisId="left" y={1.5} stroke={c.warning} strokeDasharray="3 3" />
 
                       {/* Ratio ACWR → eje izquierdo */}
                       <Area
@@ -239,11 +241,11 @@ export default function LoadAnalysisClient({
                         type="monotone"
                         dataKey="acwr_ratio"
                         name="ACWR"
-                        stroke="#c65f3f"
+                        stroke={c.brand}
                         strokeWidth={3}
                         fill="url(#la-acwr-grad)"
                         dot={false}
-                        activeDot={{ r: 5, fill: "#c65f3f", stroke: "#fdf9f2", strokeWidth: 2 }}
+                        activeDot={{ r: 5, fill: c.brand, stroke: c.surface, strokeWidth: 2 }}
                         connectNulls
                         isAnimationActive
                         animationDuration={1200}
@@ -269,11 +271,11 @@ export default function LoadAnalysisClient({
                     </AreaChart>
                   </ResponsiveContainer>
                   {/* Zone legend */}
-                  <div className="mt-3 flex gap-4 text-xs text-[#8a7660] justify-end">
-                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-[#efe4d2] inline-block"/>&lt;0.8 Bajo</span>
-                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-[#6f9c4a] inline-block"/>0.8–1.3 Óptimo</span>
-                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-[#d9902a] inline-block"/>1.3–1.5 Alto</span>
-                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-[#c0492f] inline-block"/>&gt;1.5 Muy Alto</span>
+                  <div className="mt-3 flex gap-4 text-xs text-ink-soft justify-end">
+                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-surface-top inline-block"/>&lt;0.8 Bajo</span>
+                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-success inline-block"/>0.8–1.3 Óptimo</span>
+                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-warning inline-block"/>1.3–1.5 Alto</span>
+                    <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-danger inline-block"/>&gt;1.5 Muy Alto</span>
                   </div>
                 </div>
               )}
@@ -282,8 +284,8 @@ export default function LoadAnalysisClient({
               {weeklyLoads.length > 0 && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Volume (duration minutes) */}
-                  <div className="bg-surface border border-[#e4d8c4] rounded-xl p-6">
-                    <h2 className="text-xs font-bold text-[#8a7660] uppercase tracking-widest mb-4">
+                  <div className="bg-surface border border-line rounded-xl p-6">
+                    <h2 className="text-xs font-bold text-ink-soft uppercase tracking-widest mb-4">
                       Volumen Semanal (min)
                     </h2>
                     <ResponsiveContainer width="100%" height={180}>
@@ -294,9 +296,9 @@ export default function LoadAnalysisClient({
                             <stop offset="100%" stopColor="#c65f3f" stopOpacity={0.3} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                        <XAxis dataKey="week" tickFormatter={formatWeek} tick={{ fill: "#8a7660", fontSize: 10 }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fill: "#8a7660", fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={c.line} vertical={false} />
+                        <XAxis dataKey="week" tickFormatter={formatWeek} tick={{ fill: c.inkSoft, fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fill: c.inkSoft, fontSize: 10 }} axisLine={false} tickLine={false} />
                         <Tooltip content={<WeeklyTooltip />} />
                         <Bar
                           dataKey="volume"
@@ -312,8 +314,8 @@ export default function LoadAnalysisClient({
                   </div>
 
                   {/* sRPE (internal load) */}
-                  <div className="bg-surface border border-[#e4d8c4] rounded-xl p-6">
-                    <h2 className="text-xs font-bold text-[#8a7660] uppercase tracking-widest mb-4">
+                  <div className="bg-surface border border-line rounded-xl p-6">
+                    <h2 className="text-xs font-bold text-ink-soft uppercase tracking-widest mb-4">
                       Carga Interna Semanal (sRPE)
                     </h2>
                     <ResponsiveContainer width="100%" height={180}>
@@ -324,9 +326,9 @@ export default function LoadAnalysisClient({
                             <stop offset="100%" stopColor="#06b6d4" stopOpacity={0.3} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                        <XAxis dataKey="week" tickFormatter={formatWeek} tick={{ fill: "#8a7660", fontSize: 10 }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fill: "#8a7660", fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={c.line} vertical={false} />
+                        <XAxis dataKey="week" tickFormatter={formatWeek} tick={{ fill: c.inkSoft, fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fill: c.inkSoft, fontSize: 10 }} axisLine={false} tickLine={false} />
                         <Tooltip content={<WeeklyTooltip />} />
                         <Bar
                           dataKey="srpe"
@@ -345,8 +347,8 @@ export default function LoadAnalysisClient({
 
               {/* Wellness trend */}
               {wellnessTrend.length > 0 && (
-                <div className="bg-surface border border-[#e4d8c4] rounded-xl p-6">
-                  <h2 className="text-xs font-bold text-[#8a7660] uppercase tracking-widest mb-4">
+                <div className="bg-surface border border-line rounded-xl p-6">
+                  <h2 className="text-xs font-bold text-ink-soft uppercase tracking-widest mb-4">
                     Tendencia Wellness
                   </h2>
                   <ResponsiveContainer width="100%" height={180}>
@@ -361,10 +363,10 @@ export default function LoadAnalysisClient({
                           <stop offset="95%" stopColor="#6f9c4a" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke={c.line} vertical={false} />
                       <XAxis
                         dataKey="date"
-                        tick={{ fill: "#8a7660", fontSize: 10 }}
+                        tick={{ fill: c.inkSoft, fontSize: 10 }}
                         tickFormatter={(v) => {
                           const d = new Date(v);
                           return `${d.getDate()}/${d.getMonth() + 1}`;
@@ -372,9 +374,9 @@ export default function LoadAnalysisClient({
                         axisLine={false}
                         tickLine={false}
                       />
-                      <YAxis domain={[0, 10]} tick={{ fill: "#8a7660", fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[0, 10]} tick={{ fill: c.inkSoft, fontSize: 10 }} axisLine={false} tickLine={false} />
                       <Tooltip
-                        contentStyle={{ background: "#fdf9f2", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, fontSize: 11 }}
+                        contentStyle={{ background: c.surfaceHigh, border: `1px solid ${c.line}`, borderRadius: 12, fontSize: 11 }}
                         labelStyle={{ color: "#8a7660" }}
                       />
                       <Legend wrapperStyle={{ fontSize: 10, color: "#8a7660" }} />
@@ -394,7 +396,7 @@ export default function LoadAnalysisClient({
                         type="monotone"
                         dataKey="mood"
                         name="Ánimo"
-                        stroke="#6f9c4a"
+                        stroke={c.success}
                         strokeWidth={3}
                         fill="url(#la-mood-grad)"
                         dot={false}

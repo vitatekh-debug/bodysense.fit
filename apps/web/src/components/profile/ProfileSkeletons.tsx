@@ -21,7 +21,7 @@ function Bone({
   return (
     <div
       className={cn(
-        "rounded-lg bs-skeleton bg-[#fdf9f2]",
+        "rounded-lg bs-skeleton bg-surface",
         className
       )}
       style={style}
@@ -34,8 +34,8 @@ function Bone({
 
 export function ProfileHeaderSkeleton() {
   return (
-    <div className="auth-grid-bg relative -mx-6 -mt-6 mb-8 overflow-hidden bg-[#f1e6d4] px-6 pb-10 pt-6">
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[#f1e6d4]" />
+    <div className="auth-grid-bg relative -mx-6 -mt-6 mb-8 overflow-hidden bg-void px-6 pb-10 pt-6">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-void" />
 
       {/* Back link placeholder */}
       <Bone className="mb-6 h-4 w-24" />
@@ -73,7 +73,7 @@ export function MetricCardsSkeleton() {
       <div
         className={cn(
           "col-span-2 sm:col-span-1",
-          "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-5 backdrop-blur-md",
+          "rounded-2xl border border-line bg-surface p-5 backdrop-blur-md",
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
         )}
       >
@@ -92,7 +92,7 @@ export function MetricCardsSkeleton() {
         <div
           key={i}
           className={cn(
-            "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-5 backdrop-blur-md",
+            "rounded-2xl border border-line bg-surface p-5 backdrop-blur-md",
             "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
           )}
         >
@@ -111,7 +111,7 @@ export function AcwrChartSkeleton() {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-6 backdrop-blur-md",
+        "rounded-2xl border border-line bg-surface p-6 backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
       )}
     >
@@ -152,18 +152,18 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] overflow-hidden backdrop-blur-md",
+        "rounded-2xl border border-line bg-surface overflow-hidden backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
       )}
     >
       {/* Card header */}
-      <div className="flex items-center justify-between border-b border-[#e4d8c4] px-5 py-4">
+      <div className="flex items-center justify-between border-b border-line px-5 py-4">
         <Bone className="h-2.5 w-32" />
         <Bone className="h-2.5 w-16" />
       </div>
 
       {/* Column headers */}
-      <div className="flex gap-6 border-b border-[#e4d8c4] px-4 py-2.5">
+      <div className="flex gap-6 border-b border-line px-4 py-2.5">
         {[...Array(5)].map((_, i) => (
           <Bone key={i} className="h-2 w-12 flex-1" />
         ))}
@@ -173,7 +173,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
       {[...Array(rows)].map((_, i) => (
         <div
           key={i}
-          className="flex gap-6 border-b border-[#e4d8c4] px-4 py-3"
+          className="flex gap-6 border-b border-line px-4 py-3"
         >
           <Bone className="h-3 w-16 flex-1" />
           <Bone className="h-3 w-20 flex-1" />

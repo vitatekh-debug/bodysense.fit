@@ -30,17 +30,17 @@ export default async function FmsPage({ params }: { params: { id: string } }) {
     <div className="max-w-3xl mx-auto px-4 py-6">
       <Link
         href={`/athletes/${params.id}?tab=evaluacion`}
-        className="text-sm text-[#c65f3f] hover:text-[#c65f3f] transition-colors"
+        className="text-sm text-brand hover:text-brand transition-colors"
       >
         ← Volver al centro de evaluación
       </Link>
 
       <div className="mt-4 mb-8">
-        <h1 className="text-2xl font-bold text-[#3a2c1e]">Evaluación Funcional FMS</h1>
-        <p className="text-sm text-[#8a7660] mt-1">
+        <h1 className="text-2xl font-bold text-ink">Evaluación Funcional FMS</h1>
+        <p className="text-sm text-ink-soft mt-1">
           {athlete.full_name}
           {last && (
-            <span className="ml-2 text-[#b0a08c]">
+            <span className="ml-2 text-ink-muted">
               · Último: {new Date(last.date).toLocaleDateString("es-CO")}
               {last.fms_total != null && ` (${last.fms_total}/21)`}
             </span>

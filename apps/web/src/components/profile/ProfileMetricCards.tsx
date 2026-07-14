@@ -60,7 +60,7 @@ function BentoCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2]",
+        "rounded-2xl border border-line bg-surface",
         "p-5 backdrop-blur-md",
         // Inset top highlight → subtle gradient-border feel
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
@@ -89,13 +89,13 @@ function MetricCard({
 }) {
   return (
     <BentoCard className={className}>
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-black text-[#3a2c1e] tabular-nums">
+      <p className="mt-2 text-2xl font-black text-ink tabular-nums">
         {value}
       </p>
-      <p className="mt-0.5 text-[11px] font-medium text-[#b0a08c]">{unit}</p>
+      <p className="mt-0.5 text-[11px] font-medium text-ink-muted">{unit}</p>
     </BentoCard>
   );
 }
@@ -112,8 +112,8 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
         "col-span-2 sm:col-span-1",
         // Brand-tinted border when data is present
         acwr
-          ? "border-[#d6c6ac] hover:border-[#d6c6ac]"
-          : "border-[#e4d8c4]"
+          ? "border-line-strong hover:border-line-strong"
+          : "border-line"
       )}
       style={{
         boxShadow: [
@@ -125,7 +125,7 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
           .join(", "),
       }}
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
         ACWR
       </p>
 
@@ -158,7 +158,7 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
           {zone.label}
         </span>
       ) : (
-        <span className="mt-3 inline-block text-[11px] text-[#b0a08c]">
+        <span className="mt-3 inline-block text-[11px] text-ink-muted">
           Sin datos
         </span>
       )}

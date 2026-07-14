@@ -81,19 +81,19 @@ function StatTile({ label, value, unit, color }: {
   label: string; value: string; unit?: string; color?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-4 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">{label}</p>
+    <div className="rounded-2xl border border-line bg-surface p-4 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">{label}</p>
       <p className="mt-2 text-2xl font-black tabular-nums" style={{ color: color ?? "rgba(255,255,255,0.9)" }}>
         {value}
       </p>
-      {unit && <p className="mt-0.5 text-[11px] font-medium text-[#b0a08c]">{unit}</p>}
+      {unit && <p className="mt-0.5 text-[11px] font-medium text-ink-muted">{unit}</p>}
     </div>
   );
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+    <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
       {children}
     </h2>
   );
@@ -139,9 +139,9 @@ function ResumenTab(p: ProfileTabsProps) {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <SectionHeading>Debilidades principales</SectionHeading>
-          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-4 backdrop-blur-md space-y-2 min-h-[120px]">
+          <div className="rounded-2xl border border-line bg-surface p-4 backdrop-blur-md space-y-2 min-h-[120px]">
             {p.weaknesses.length === 0 ? (
-              <p className="text-[#b0a08c] text-xs py-6 text-center">
+              <p className="text-ink-muted text-xs py-6 text-center">
                 Sin debilidades detectadas en las últimas evaluaciones.
               </p>
             ) : (
@@ -155,7 +155,7 @@ function ResumenTab(p: ProfileTabsProps) {
                   }}
                 >
                   <AlertTriangle size={14} style={{ color: SEVERITY_COLOR[w.severity] }} />
-                  <span className="text-[#3a2c1e] text-sm">{w.label}</span>
+                  <span className="text-ink text-sm">{w.label}</span>
                 </div>
               ))
             )}
@@ -164,18 +164,18 @@ function ResumenTab(p: ProfileTabsProps) {
 
         <div>
           <SectionHeading>Historial de lesiones activo</SectionHeading>
-          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-4 backdrop-blur-md space-y-2 min-h-[120px]">
+          <div className="rounded-2xl border border-line bg-surface p-4 backdrop-blur-md space-y-2 min-h-[120px]">
             {p.injuries.length === 0 ? (
-              <p className="text-[#b0a08c] text-xs py-6 text-center">
+              <p className="text-ink-muted text-xs py-6 text-center">
                 Sin dolor activo registrado.
               </p>
             ) : (
               p.injuries.map((inj, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between rounded-lg border border-[#e4d8c4] bg-[#f7efe2] px-3 py-2"
+                  className="flex items-center justify-between rounded-lg border border-line bg-surface-high px-3 py-2"
                 >
-                  <span className="text-[#3a2c1e] text-sm">{inj.region}</span>
+                  <span className="text-ink text-sm">{inj.region}</span>
                   <div className="flex items-center gap-2">
                     <span
                       className="text-xs font-bold px-2 py-0.5 rounded-full tabular-nums"
@@ -186,7 +186,7 @@ function ResumenTab(p: ProfileTabsProps) {
                     >
                       EVA {inj.eva}
                     </span>
-                    <span className="text-[#b0a08c] text-xs">
+                    <span className="text-ink-muted text-xs">
                       {new Date(inj.date).toLocaleDateString("es-CO", { day: "2-digit", month: "short" })}
                     </span>
                   </div>
@@ -201,12 +201,12 @@ function ResumenTab(p: ProfileTabsProps) {
       <section>
         <SectionHeading>Evolución ACWR — últimos 30 días</SectionHeading>
         {p.acwrHistory.length > 0 ? (
-          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-6 backdrop-blur-md">
+          <div className="rounded-2xl border border-line bg-surface p-6 backdrop-blur-md">
             <AcwrHistoryChart data={p.acwrHistory} />
           </div>
         ) : (
-          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-10 text-center backdrop-blur-md">
-            <p className="text-[#b0a08c] text-[13px]">
+          <div className="rounded-2xl border border-line bg-surface p-10 text-center backdrop-blur-md">
+            <p className="text-ink-muted text-[13px]">
               Sin datos de ACWR todavía. Registra sesiones y sRPE para calcular.
             </p>
           </div>
@@ -289,7 +289,7 @@ export default function ProfileTabs(props: ProfileTabsProps) {
       />
 
       {/* Tab bar */}
-      <div className="flex gap-1 rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-1">
+      <div className="flex gap-1 rounded-2xl border border-line bg-surface p-1">
         {TABS.map((t) => {
           const active = tab === t.key;
           const Icon = t.icon;
@@ -303,7 +303,7 @@ export default function ProfileTabs(props: ProfileTabsProps) {
               {active && (
                 <motion.div
                   layoutId="tab-pill"
-                  className="absolute inset-0 rounded-xl bg-[#c65f3f]"
+                  className="absolute inset-0 rounded-xl bg-brand"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}

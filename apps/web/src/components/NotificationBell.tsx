@@ -106,7 +106,7 @@ export default function NotificationBell({ coachId }: { coachId: string }) {
       {/* Bell button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative p-2 text-[#8a7660] hover:text-[#3a2c1e] transition rounded-lg hover:bg-[#efe4d2]/50"
+        className="relative p-2 text-ink-soft hover:text-ink transition rounded-lg hover:bg-surface-top/50"
         title="Notificaciones"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +115,7 @@ export default function NotificationBell({ coachId }: { coachId: string }) {
         </svg>
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center
-                           w-4 h-4 text-xs font-black bg-[#c0492f] text-[#3a2c1e] rounded-full">
+                           w-4 h-4 text-xs font-black bg-danger text-ink rounded-full">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -127,14 +127,14 @@ export default function NotificationBell({ coachId }: { coachId: string }) {
           {/* Backdrop */}
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
 
-          <div className="absolute right-0 top-full mt-2 w-96 bg-[#f7efe2] border border-[#e4d8c4]
+          <div className="absolute right-0 top-full mt-2 w-96 bg-surface-high border border-line
                           rounded-xl shadow-2xl z-20 overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[#e4d8c4]">
-              <h3 className="text-[#3a2c1e] font-bold text-sm">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-line">
+              <h3 className="text-ink font-bold text-sm">
                 Notificaciones
                 {unreadCount > 0 && (
-                  <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full bg-[#c0492f]/10 text-[#c0492f]">
+                  <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full bg-danger/10 text-danger">
                     {unreadCount} nuevas
                   </span>
                 )}
@@ -143,7 +143,7 @@ export default function NotificationBell({ coachId }: { coachId: string }) {
                 <button
                   onClick={markAllRead}
                   disabled={isPending}
-                  className="text-xs text-[#c65f3f] hover:text-[#c65f3f] transition"
+                  className="text-xs text-brand hover:text-brand transition"
                 >
                   Marcar todo leído
                 </button>
@@ -153,19 +153,19 @@ export default function NotificationBell({ coachId }: { coachId: string }) {
             {/* Notification list */}
             <div className="max-h-96 overflow-y-auto divide-y divide-slate-800">
               {loading ? (
-                <p className="text-[#8a7660] text-sm text-center py-8">Cargando…</p>
+                <p className="text-ink-soft text-sm text-center py-8">Cargando…</p>
               ) : notifications.length === 0 ? (
                 <div className="py-12 text-center">
                   <p className="text-2xl mb-2">🔔</p>
-                  <p className="text-[#8a7660] text-sm">Sin notificaciones</p>
+                  <p className="text-ink-soft text-sm">Sin notificaciones</p>
                 </div>
               ) : (
                 notifications.map((n) => (
                   <div
                     key={n.id}
                     onClick={() => !n.read_at && markOneRead(n.id)}
-                    className={`px-4 py-3 cursor-pointer hover:bg-[#f7efe2]/50 transition ${
-                      !n.read_at ? "bg-[#f7efe2]/30" : ""
+                    className={`px-4 py-3 cursor-pointer hover:bg-surface-high/50 transition ${
+                      !n.read_at ? "bg-surface-high/30" : ""
                     }`}
                   >
                     <div className="flex items-start gap-2">
@@ -174,30 +174,30 @@ export default function NotificationBell({ coachId }: { coachId: string }) {
                       </span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <p className={`text-sm font-semibold truncate ${!n.read_at ? "text-[#3a2c1e]" : "text-[#8a7660]"}`}>
+                          <p className={`text-sm font-semibold truncate ${!n.read_at ? "text-ink" : "text-ink-soft"}`}>
                             {n.title}
                           </p>
-                          <span className="text-xs text-[#b0a08c] flex-shrink-0">
+                          <span className="text-xs text-ink-muted flex-shrink-0">
                             {timeAgo(n.created_at)}
                           </span>
                         </div>
-                        <p className="text-[#8a7660] text-xs mt-0.5 line-clamp-2 leading-relaxed">
+                        <p className="text-ink-soft text-xs mt-0.5 line-clamp-2 leading-relaxed">
                           {n.message}
                         </p>
                         {n.previous_zone && n.current_zone && (
                           <div className="flex items-center gap-1 mt-1">
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-[#efe4d2] text-[#8a7660]">
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-surface-top text-ink-soft">
                               {n.previous_zone}
                             </span>
-                            <span className="text-[#b0a08c] text-xs">→</span>
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-[#c0492f]/10 text-[#c0492f]">
+                            <span className="text-ink-muted text-xs">→</span>
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-danger/10 text-danger">
                               {n.current_zone}
                             </span>
                           </div>
                         )}
                       </div>
                       {!n.read_at && (
-                        <div className="w-2 h-2 rounded-full bg-[#d17a54] flex-shrink-0 mt-1.5" />
+                        <div className="w-2 h-2 rounded-full bg-brand-light flex-shrink-0 mt-1.5" />
                       )}
                     </div>
                   </div>

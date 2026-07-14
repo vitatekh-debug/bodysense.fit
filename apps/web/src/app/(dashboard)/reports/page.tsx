@@ -143,11 +143,11 @@ function EmptyState() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black text-[#3a2c1e]">Informes</h1>
-        <p className="text-[#8a7660] text-sm mt-1">Exportación y resumen del equipo</p>
+        <h1 className="text-3xl font-black text-ink">Informes</h1>
+        <p className="text-ink-soft text-sm mt-1">Exportación y resumen del equipo</p>
       </div>
-      <div className="bg-surface border border-[#e4d8c4] rounded-xl p-16 text-center">
-        <p className="text-[#8a7660] text-sm">No tienes atletas registrados.</p>
+      <div className="bg-surface border border-line rounded-xl p-16 text-center">
+        <p className="text-ink-soft text-sm">No tienes atletas registrados.</p>
       </div>
     </div>
   );

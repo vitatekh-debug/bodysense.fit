@@ -47,7 +47,7 @@ function EvalCard({ cfg }: { cfg: CardConfig }) {
   return (
     <motion.div
       variants={fadeUpItem}
-      className="flex flex-col rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]"
+      className="flex flex-col rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]"
     >
       <div className="flex items-start gap-3">
         <div
@@ -57,19 +57,19 @@ function EvalCard({ cfg }: { cfg: CardConfig }) {
           {cfg.emoji}
         </div>
         <div className="min-w-0">
-          <h3 className="text-[#3a2c1e] font-bold text-sm leading-tight">{cfg.title}</h3>
-          <p className="text-[#8a7660] text-xs mt-0.5 leading-snug">{cfg.subtitle}</p>
+          <h3 className="text-ink font-bold text-sm leading-tight">{cfg.title}</h3>
+          <p className="text-ink-soft text-xs mt-0.5 leading-snug">{cfg.subtitle}</p>
         </div>
       </div>
 
       {/* Último registro */}
-      <div className="mt-4 rounded-xl border border-[#e4d8c4] bg-[#f7efe2] px-3 py-2.5">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-[#8a7660]">
+      <div className="mt-4 rounded-xl border border-line bg-surface-high px-3 py-2.5">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-ink-soft">
           Último registro
         </p>
-        <p className="text-[#5d4c3a] text-sm font-medium mt-0.5">{fmtDate(cfg.data.lastDate)}</p>
+        <p className="text-ink-body text-sm font-medium mt-0.5">{fmtDate(cfg.data.lastDate)}</p>
         {cfg.data.lastSummary && (
-          <p className="text-[#8a7660] text-xs mt-1 tabular-nums">{cfg.data.lastSummary}</p>
+          <p className="text-ink-soft text-xs mt-1 tabular-nums">{cfg.data.lastSummary}</p>
         )}
       </div>
 

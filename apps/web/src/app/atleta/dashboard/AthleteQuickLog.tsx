@@ -91,7 +91,7 @@ function MetricSlider({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase">
+        <label className="text-[11px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
           {label}
         </label>
         <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ function MetricSlider({
           >
             {value}
           </motion.span>
-          {valueLabel && <span className="text-[#8a7660] text-xs">{valueLabel}</span>}
+          {valueLabel && <span className="text-ink-soft text-xs">{valueLabel}</span>}
         </div>
       </div>
       <input
@@ -115,7 +115,7 @@ function MetricSlider({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 rounded-full appearance-none cursor-pointer bg-[#f7efe2]"
+        className="w-full h-2 rounded-full appearance-none cursor-pointer bg-surface-high"
         style={{ accentColor: color }}
       />
     </div>
@@ -234,17 +234,17 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
       {/* ── Saludo ── */}
       <div>
-        <h1 className="text-2xl font-black text-[#3a2c1e]">
+        <h1 className="text-2xl font-black text-ink">
           Hola, {userName.split(" ")[0]} 👋
         </h1>
-        <p className="text-[#8a7660] text-sm mt-1">Registra la sesión de hoy.</p>
+        <p className="text-ink-soft text-sm mt-1">Registra la sesión de hoy.</p>
       </div>
 
       {/* ════════════ SECCIÓN 1: SESIÓN ════════════ */}
-      <div className="bg-[#fdf9f2] border border-[#e4d8c4] rounded-2xl p-6 space-y-5">
+      <div className="bg-surface border border-line rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-2">
           <span className="text-xl">📊</span>
-          <h2 className="text-[#3a2c1e] font-bold">Registrar Sesión</h2>
+          <h2 className="text-ink font-bold">Registrar Sesión</h2>
         </div>
 
         <form onSubmit={handleSessionSubmit} className="space-y-5">
@@ -252,7 +252,7 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
           {/* RPE Slider */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase">
+              <label className="text-[11px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
                 RPE — Esfuerzo Percibido (1-10)
               </label>
               <div className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
                 >
                   {cr10Rpe}
                 </motion.span>
-                <span className="text-[#8a7660] text-xs">{rpeLabel(cr10Rpe)}</span>
+                <span className="text-ink-soft text-xs">{rpeLabel(cr10Rpe)}</span>
               </div>
             </div>
             <input
@@ -276,12 +276,12 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
               step={1}
               value={cr10Rpe}
               onChange={(e) => setCr10Rpe(Number(e.target.value))}
-              className="w-full h-2 rounded-full appearance-none cursor-pointer bg-[#f7efe2]"
+              className="w-full h-2 rounded-full appearance-none cursor-pointer bg-surface-high"
               style={{
                 accentColor: rpeColor(cr10Rpe),
               }}
             />
-            <div className="flex justify-between text-[10px] text-[#b0a08c]">
+            <div className="flex justify-between text-[10px] text-ink-muted">
               <span>1 Muy ligero</span>
               <span>5 Moderado</span>
               <span>10 Máximo</span>
@@ -290,7 +290,7 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
           {/* Duración */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase">
+            <label className="text-[11px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
               Duración (minutos)
             </label>
             <input
@@ -300,32 +300,32 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
               value={durationMin}
               onChange={(e) => setDuration(Math.max(1, Number(e.target.value)))}
               required
-              className="w-full bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-4 py-3 text-[#3a2c1e] text-sm focus:outline-none focus:border-[#c65f3f] focus:ring-2 focus:ring-[#c65f3f]/20 transition-all"
+              className="w-full bg-surface-high border border-line rounded-lg px-4 py-3 text-ink text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all"
             />
           </div>
 
           {/* sRPE Preview */}
-          <div className="flex items-center justify-between rounded-xl border border-[#e4d8c4] bg-[#f7efe2] px-4 py-3">
-            <div className="text-[#8a7660] text-xs">
+          <div className="flex items-center justify-between rounded-xl border border-line bg-surface-high px-4 py-3">
+            <div className="text-ink-soft text-xs">
               Carga de Sesión (sRPE)
-              <span className="text-[#b0a08c] ml-1">
+              <span className="text-ink-muted ml-1">
                 = RPE {borgRpe} × {durationMin} min
               </span>
             </div>
             <div className="text-right">
-              <span className="text-2xl font-black text-[#c65f3f]">{srpe}</span>
-              <span className="text-[#8a7660] text-xs ml-1">UA</span>
+              <span className="text-2xl font-black text-brand">{srpe}</span>
+              <span className="text-ink-soft text-xs ml-1">UA</span>
             </div>
           </div>
 
           {/* Feedback */}
           {sessionState === "success" && (
-            <div className="flex items-center gap-2 text-[#6f9c4a] text-sm font-medium">
+            <div className="flex items-center gap-2 text-success text-sm font-medium">
               <span>✅</span> {sessionMsg}
             </div>
           )}
           {sessionState === "error" && (
-            <div className="flex items-center gap-2 text-[#c0492f] text-sm">
+            <div className="flex items-center gap-2 text-danger text-sm">
               <span>⚠</span> {sessionMsg}
             </div>
           )}
@@ -333,11 +333,11 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
           <button
             type="submit"
             disabled={sessionState === "loading"}
-            className="w-full bg-[#c65f3f] hover:bg-[#c65f3f] active:bg-[#a8472a] text-[#3a2c1e] font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-brand hover:bg-brand active:bg-brand-dark text-ink font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {sessionState === "loading" ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-[#d6c6ac] border-t-white animate-spin" />
+                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-line-strong border-t-white animate-spin" />
                 Guardando…
               </span>
             ) : (
@@ -348,12 +348,12 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
       </div>
 
       {/* ════════════ SECCIÓN 2: WELLNESS ════════════ */}
-      <div className="bg-[#fdf9f2] border border-[#e4d8c4] rounded-2xl p-6 space-y-5">
+      <div className="bg-surface border border-line rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌙</span>
-          <h2 className="text-[#3a2c1e] font-bold">Check-in de Bienestar</h2>
+          <h2 className="text-ink font-bold">Check-in de Bienestar</h2>
         </div>
-        <p className="text-[#8a7660] text-xs -mt-3">
+        <p className="text-ink-soft text-xs -mt-3">
           Registra cómo te sientes hoy. Alimenta tus tendencias de recuperación.
         </p>
 
@@ -401,12 +401,12 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
           {/* Feedback */}
           {wellnessState === "success" && (
-            <div className="flex items-center gap-2 text-[#6f9c4a] text-sm font-medium">
+            <div className="flex items-center gap-2 text-success text-sm font-medium">
               <span>✅</span> {wellnessMsg}
             </div>
           )}
           {wellnessState === "error" && (
-            <div className="flex items-center gap-2 text-[#c0492f] text-sm">
+            <div className="flex items-center gap-2 text-danger text-sm">
               <span>⚠</span> {wellnessMsg}
             </div>
           )}
@@ -414,11 +414,11 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
           <button
             type="submit"
             disabled={wellnessState === "loading"}
-            className="w-full bg-[#6f9c4a] hover:bg-[#6f9c4a] active:bg-[#5a8039] text-[#3a2c1e] font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-success hover:bg-success active:bg-success-dark text-ink font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {wellnessState === "loading" ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-[#d6c6ac] border-t-white animate-spin" />
+                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-line-strong border-t-white animate-spin" />
                 Guardando…
               </span>
             ) : (

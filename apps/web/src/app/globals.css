@@ -5,38 +5,107 @@
 /* ── Bodysense CSS Design Tokens ─────────────────────────────
    Central source of truth for design values used in box-shadow,
    filter, and other properties that Tailwind can't inline easily. */
-:root {
-  /* ── Tema cálido (crema / terracota) ─────────────────────────
-     Fuente central del tema. La app se sirve en modo cálido. */
+/* ── Sistema de temas ────────────────────────────────────────
+   Los tokens se declaran como CANALES RGB (sin rgb()) porque
+   Tailwind los consume con `rgb(var(--x) / <alpha-value>)`, lo
+   que habilita opacidades (bg-brand/15). Cambiar de tema = solo
+   reasignar estos canales en [data-theme].
 
-  /* Jerarquía de superficies (antes fondos oscuros) */
-  --bs-void:         #f1e6d4;  /* fondo de página crema */
-  --bs-surface:      #fdf9f2;  /* tarjeta */
-  --bs-surface-high: #f7efe2;  /* tarjeta elevada */
+   :root            → tema cálido (por defecto)
+   [data-theme=dark]→ tema oscuro (industrial original)           */
 
-  /* Espectro de marca — terracota */
-  --bs-brand:        #c65f3f;
-  --bs-brand-light:  #d17a54;
-  --bs-brand-dark:   #a8472a;
+:root,
+:root[data-theme="warm"] {
+  /* Superficies */
+  --bs-void:          241 230 212;  /* fondo de página — crema */
+  --bs-surface:       253 249 242;  /* tarjeta */
+  --bs-surface-high:  247 239 226;  /* elevada / inputs */
+  --bs-surface-top:   239 228 210;  /* la más elevada */
 
-  /* Texto cálido */
-  --bs-text:         #3a2c1e;  /* primario (marrón oscuro) */
-  --bs-text-soft:    #8a7660;  /* secundario */
-  --bs-text-muted:   #b0a08c;  /* terciario / hints */
+  /* Bordes */
+  --bs-line:          228 216 196;
+  --bs-line-strong:   214 198 172;
 
-  /* Bordes cálidos */
-  --bs-border:       #e4d8c4;
-  --bs-border-strong:#d6c6ac;
+  /* Texto */
+  --bs-ink:            58  44  30;  /* primario — marrón oscuro */
+  --bs-ink-body:       93  76  58;  /* cuerpo */
+  --bs-ink-soft:      138 118  96;  /* secundario */
+  --bs-ink-muted:     176 160 140;  /* terciario / hints */
 
-  /* Zonas ACWR — ajustadas para contraste sobre crema */
-  --bs-zone-low:       #4a86b0;
-  --bs-zone-optimal:   #6f9c4a;
-  --bs-zone-high:      #d9902a;
-  --bs-zone-very-high: #c0492f;
+  /* Marca — terracota */
+  --bs-brand:         198  95  63;
+  --bs-brand-light:   209 122  84;
+  --bs-brand-dark:    168  71  42;
+  --bs-brand-deep:    143  60  35;
+  --bs-on-brand:      253 243 234;  /* texto sobre la marca */
 
-  /* Fondo/texto de página */
-  --background: #f1e6d4;
-  --foreground: #3a2c1e;
+  /* Semánticos — ajustados para contraste sobre claro */
+  --bs-success:       111 156  74;
+  --bs-success-dark:   90 128  57;
+  --bs-danger:        192  73  47;
+  --bs-warning:       217 144  42;
+  --bs-info:           74 134 176;
+  --bs-amber-text:    181 118  31;
+  --bs-orange:        217 112  42;
+  --bs-cyan:           63 154 168;
+  --bs-teal:           58 169 154;
+  --bs-mint:           90 160 122;
+  --bs-purple:        155 107 191;
+
+  /* Textura de puntos del fondo */
+  --bs-grid-dot: rgba(168, 71, 42, 0.08);
+
+  /* Efectos: en claro el brillo interno es una sombra sutil, no luz */
+  --bs-card-inset:  rgba(58, 44, 30, 0.04);
+  --bs-card-shadow: rgba(120, 80, 40, 0.10);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* Superficies */
+  --bs-void:            8   8   8;
+  --bs-surface:        15  15  15;
+  --bs-surface-high:   25  25  25;
+  --bs-surface-top:    51  65  85;
+
+  /* Bordes */
+  --bs-line:           38  38  38;
+  --bs-line-strong:    71  85 105;
+
+  /* Texto */
+  --bs-ink:           241 245 249;  /* primario — casi blanco */
+  --bs-ink-body:      203 213 225;
+  --bs-ink-soft:      148 163 184;
+  --bs-ink-muted:     100 116 139;
+
+  /* Marca — índigo */
+  --bs-brand:         129 140 248;
+  --bs-brand-light:   165 180 252;
+  --bs-brand-dark:     79  70 229;
+  --bs-brand-deep:     67  56 202;
+  --bs-on-brand:       10  10  10;  /* texto sobre la marca */
+
+  /* Semánticos */
+  --bs-success:        34 197  94;
+  --bs-success-dark:    4 120  87;
+  --bs-danger:        239  68  68;
+  --bs-warning:       245 158  11;
+  --bs-info:           59 130 246;
+  --bs-amber-text:    251 191  36;
+  --bs-orange:        249 115  22;
+  --bs-cyan:           34 211 238;
+  --bs-teal:           45 212 191;
+  --bs-mint:           52 211 153;
+  --bs-purple:        167 139 250;
+
+  --bs-grid-dot: rgba(129, 140, 248, 0.07);
+
+  /* Efectos: en oscuro el brillo interno es luz blanca */
+  --bs-card-inset:  rgba(255, 255, 255, 0.07);
+  --bs-card-shadow: rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
 }
 
 /* ── Viewport Fix (#5) ───────────────────────────────────────
@@ -49,11 +118,12 @@ html {
 
 body {
   overflow-x: hidden;
-  background: var(--background);
-  color: var(--foreground);
+  background: rgb(var(--bs-void));
+  color: rgb(var(--bs-ink));
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ── Dot-grid texture ────────────────────────────────────────
@@ -63,7 +133,7 @@ body {
 .auth-grid-bg {
   background-image: radial-gradient(
     circle,
-    rgba(168, 71, 42, 0.08) 1px,
+    var(--bs-grid-dot) 1px,
     transparent 1px
   );
   background-size: 24px 24px;
@@ -74,20 +144,20 @@ body {
    Includes: subtle gradient top-edge highlight + backdrop blur. */
 @layer components {
   .bs-card {
-    @apply rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2];
+    @apply rounded-2xl border border-line bg-surface;
     @apply backdrop-blur-md;
     /* Top-edge highlight simulates gradient border */
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.07),
-      0 1px 3px rgba(0, 0, 0, 0.4);
+      inset 0 1px 0 var(--bs-card-inset),
+      0 1px 3px var(--bs-card-shadow);
   }
 
   .bs-card-brand {
-    @apply bs-card border-[#c65f3f]/25;
+    @apply bs-card border-brand/25;
     box-shadow:
-      inset 0 1px 0 rgba(198,95,63, 0.12),
-      0 0 0 1px rgba(198,95,63, 0.08),
-      0 4px 16px rgba(0, 0, 0, 0.5);
+      inset 0 1px 0 rgb(var(--bs-brand) / 0.12),
+      0 0 0 1px rgb(var(--bs-brand) / 0.08),
+      0 4px 16px var(--bs-card-shadow);
   }
 }
 
@@ -135,20 +205,20 @@ body {
    Static variants below for common zones. */
 @layer utilities {
   .bs-glow-brand {
-    box-shadow: 0 0 12px rgba(198,95,63, 0.35),
-                0 0 32px rgba(198,95,63, 0.12);
+    box-shadow: 0 0 12px rgb(var(--bs-brand) / 0.35),
+                0 0 32px rgb(var(--bs-brand) / 0.12);
   }
   .bs-glow-optimal {
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.35),
-                0 0 28px rgba(34, 197, 94, 0.10);
+    box-shadow: 0 0 10px rgb(var(--bs-success) / 0.35),
+                0 0 28px rgb(var(--bs-success) / 0.10);
   }
   .bs-glow-high {
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.40),
-                0 0 28px rgba(245, 158, 11, 0.12);
+    box-shadow: 0 0 10px rgb(var(--bs-warning) / 0.40),
+                0 0 28px rgb(var(--bs-warning) / 0.12);
   }
   .bs-glow-critical {
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.45),
-                0 0 28px rgba(239, 68, 68, 0.14);
+    box-shadow: 0 0 10px rgb(var(--bs-danger) / 0.45),
+                0 0 28px rgb(var(--bs-danger) / 0.14);
   }
 }
 
@@ -229,8 +299,8 @@ body {
     color: #111827 !important;
   }
 
-  .border-[#e4d8c4],
-  .border-[#e4d8c4] {
+  .border-line,
+  .border-line {
     border-color: #d1d5db !important;
   }
 

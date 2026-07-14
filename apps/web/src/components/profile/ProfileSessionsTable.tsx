@@ -2,7 +2,7 @@
  * ProfileSessionsTable — Bodysense
  *
  * Glass-morphism table of the last 10 training sessions.
- * Design tokens: backdrop-blur-md, inset top-highlight, text-[#8a7660] labels.
+ * Design tokens: backdrop-blur-md, inset top-highlight, text-ink-soft labels.
  */
 
 import { formatDate } from "@vitatekh/shared";
@@ -81,7 +81,7 @@ function Th({
     <th
       scope="col"
       className={cn(
-        "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#b0a08c]",
+        "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-muted",
         align === "center" && "text-center",
         align === "right" && "text-right"
       )}
@@ -123,25 +123,25 @@ export default function ProfileSessionsTable({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] overflow-hidden",
+        "rounded-2xl border border-line bg-surface overflow-hidden",
         "backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
         "bs-fade-up bs-d1"
       )}
     >
       {/* Card header */}
-      <div className="flex items-center justify-between border-b border-[#e4d8c4] px-5 py-4">
-        <h2 className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+      <div className="flex items-center justify-between border-b border-line px-5 py-4">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
           Sesiones Recientes
         </h2>
-        <span className="text-[11px] font-medium text-[#b0a08c]">
+        <span className="text-[11px] font-medium text-ink-muted">
           {rows.length} sesión{rows.length !== 1 ? "es" : ""}
         </span>
       </div>
 
       <table className="w-full text-xs">
         <thead>
-          <tr className="border-b border-[#e4d8c4]">
+          <tr className="border-b border-line">
             <Th>Fecha</Th>
             <Th>Tipo</Th>
             <Th align="center">Dur.</Th>
@@ -154,7 +154,7 @@ export default function ProfileSessionsTable({
             <tr>
               <td
                 colSpan={5}
-                className="py-10 text-center text-[13px] text-[#b0a08c]"
+                className="py-10 text-center text-[13px] text-ink-muted"
               >
                 Sin sesiones registradas
               </td>
@@ -165,25 +165,25 @@ export default function ProfileSessionsTable({
               return (
                 <tr
                   key={s.id}
-                  className="border-b border-[#e4d8c4] transition-colors hover:bg-[#fdf9f2]"
+                  className="border-b border-line transition-colors hover:bg-surface"
                 >
-                  <td className="px-4 py-3 text-[#3a2c1e]/45 tabular-nums">
+                  <td className="px-4 py-3 text-ink/45 tabular-nums">
                     {formatDate(s.date)}
                   </td>
                   <td className="px-4 py-3">
                     <SessionTypeBadge type={s.session_type} />
                   </td>
-                  <td className="px-4 py-3 text-center text-[#3a2c1e]/45 tabular-nums">
-                    {s.duration_min}<span className="text-[#b0a08c]">&thinsp;min</span>
+                  <td className="px-4 py-3 text-center text-ink/45 tabular-nums">
+                    {s.duration_min}<span className="text-ink-muted">&thinsp;min</span>
                   </td>
-                  <td className="px-4 py-3 text-center text-[#5d4c3a] tabular-nums">
-                    {rpe ? rpe.rpe : <span className="text-[#b0a08c]">—</span>}
+                  <td className="px-4 py-3 text-center text-ink-body tabular-nums">
+                    {rpe ? rpe.rpe : <span className="text-ink-muted">—</span>}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {rpe ? (
                       <SrpeBadge srpe={rpe.srpe} />
                     ) : (
-                      <span className="text-[#b0a08c]">—</span>
+                      <span className="text-ink-muted">—</span>
                     )}
                   </td>
                 </tr>

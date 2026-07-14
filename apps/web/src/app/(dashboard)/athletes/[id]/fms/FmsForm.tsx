@@ -91,12 +91,12 @@ export default function FmsForm({
   return (
     <form onSubmit={handleSubmit}>
       {/* Total en vivo */}
-      <div className="mb-6 flex items-center justify-between rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] px-5 py-4">
+      <div className="mb-6 flex items-center justify-between rounded-2xl border border-line bg-surface px-5 py-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#8a7660]">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-soft">
             FMS Total
           </p>
-          <p className="text-xs text-[#8a7660] mt-0.5">{scored}/7 patrones evaluados</p>
+          <p className="text-xs text-ink-soft mt-0.5">{scored}/7 patrones evaluados</p>
         </div>
         <motion.span
           key={total}
@@ -107,7 +107,7 @@ export default function FmsForm({
           style={{ color: totalColor }}
         >
           {total}
-          <span className="text-lg text-[#b0a08c]">/21</span>
+          <span className="text-lg text-ink-muted">/21</span>
         </motion.span>
       </div>
 
@@ -116,9 +116,9 @@ export default function FmsForm({
         {FMS_PATTERNS.map((pattern) => (
           <div
             key={pattern.key}
-            className="rounded-xl border border-[#e4d8c4] bg-[#fdf9f2] p-4"
+            className="rounded-xl border border-line bg-surface p-4"
           >
-            <p className="text-sm font-semibold text-[#3a2c1e] mb-2.5">{pattern.label}</p>
+            <p className="text-sm font-semibold text-ink mb-2.5">{pattern.label}</p>
             <div className="flex gap-2">
               {[0, 1, 2, 3].map((score) => {
                 const active = scores[pattern.key] === score;
@@ -152,7 +152,7 @@ export default function FmsForm({
       {/* Contexto */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
-          <p className="text-[11px] font-semibold tracking-wide text-[#8a7660] uppercase mb-2">
+          <p className="text-[11px] font-semibold tracking-wide text-ink-soft uppercase mb-2">
             Superficie
           </p>
           <div className="flex flex-wrap gap-2">
@@ -163,8 +163,8 @@ export default function FmsForm({
                 onClick={() => setSurface(surface === o.value ? "" : o.value)}
                 className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
                   surface === o.value
-                    ? "border-[#c65f3f] bg-[#c65f3f]/15 text-[#c65f3f]"
-                    : "border-[#e4d8c4] bg-[#f7efe2] text-[#8a7660] hover:border-[#d6c6ac]"
+                    ? "border-brand bg-brand/15 text-brand"
+                    : "border-line bg-surface-high text-ink-soft hover:border-line-strong"
                 }`}
               >
                 {o.label}
@@ -173,7 +173,7 @@ export default function FmsForm({
           </div>
         </div>
         <div>
-          <p className="text-[11px] font-semibold tracking-wide text-[#8a7660] uppercase mb-2">
+          <p className="text-[11px] font-semibold tracking-wide text-ink-soft uppercase mb-2">
             Calzado
           </p>
           <div className="flex flex-wrap gap-2">
@@ -184,8 +184,8 @@ export default function FmsForm({
                 onClick={() => setFootwear(footwear === o.value ? "" : o.value)}
                 className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
                   footwear === o.value
-                    ? "border-[#c65f3f] bg-[#c65f3f]/15 text-[#c65f3f]"
-                    : "border-[#e4d8c4] bg-[#f7efe2] text-[#8a7660] hover:border-[#d6c6ac]"
+                    ? "border-brand bg-brand/15 text-brand"
+                    : "border-line bg-surface-high text-ink-soft hover:border-line-strong"
                 }`}
               >
                 {o.label}
@@ -200,15 +200,15 @@ export default function FmsForm({
         onChange={(e) => setNotes(e.target.value)}
         rows={2}
         placeholder="Observaciones (opcional)…"
-        className="w-full bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-3 py-2.5 text-[#3a2c1e] text-sm placeholder-[#b0a08c] focus:outline-none focus:border-[#c65f3f] mb-4"
+        className="w-full bg-surface-high border border-line rounded-lg px-3 py-2.5 text-ink text-sm placeholder-ink-muted focus:outline-none focus:border-brand mb-4"
       />
 
-      {error && <p className="text-sm text-[#c0492f] mb-4">{error}</p>}
+      {error && <p className="text-sm text-danger mb-4">{error}</p>}
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-[#c65f3f] hover:bg-[#c65f3f] active:bg-[#a8472a] disabled:opacity-50 text-[#3a2c1e] font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors"
+        className="w-full bg-brand hover:bg-brand active:bg-brand-dark disabled:opacity-50 text-ink font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors"
       >
         {submitting ? "Guardando…" : "Guardar Evaluación FMS"}
       </button>

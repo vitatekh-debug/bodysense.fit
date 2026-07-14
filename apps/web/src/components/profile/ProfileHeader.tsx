@@ -81,8 +81,8 @@ function AthleteAvatar({ name }: { name: string }) {
     <div
       className={cn(
         "flex h-20 w-20 shrink-0 items-center justify-center select-none",
-        "rounded-2xl bg-[#c65f3f]/10 text-2xl font-black text-[#c65f3f]",
-        "ring-2 ring-[#c65f3f]/25 ring-offset-2 ring-offset-[#f1e6d4]",
+        "rounded-2xl bg-brand/10 text-2xl font-black text-brand",
+        "ring-2 ring-brand/25 ring-offset-2 ring-offset-void",
         // Soft neon glow on the avatar ring
         "shadow-[0_0_18px_rgba(198,95,63,0.22),0_0_48px_rgba(198,95,63,0.08)]"
       )}
@@ -105,14 +105,14 @@ export default function ProfileHeader({
     : null;
 
   return (
-    <div className="auth-grid-bg relative -mx-6 -mt-6 mb-8 overflow-hidden bg-[#f1e6d4] px-6 pb-10 pt-6">
+    <div className="auth-grid-bg relative -mx-6 -mt-6 mb-8 overflow-hidden bg-void px-6 pb-10 pt-6">
       {/* Gradient bleed into dashboard surface */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[#f1e6d4]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-void" />
 
       {/* Back link */}
       <Link
         href="/athletes"
-        className="relative mb-6 inline-flex items-center gap-1.5 text-[12px] font-medium text-[#8a7660] transition-colors hover:text-[#5d4c3a]"
+        className="relative mb-6 inline-flex items-center gap-1.5 text-[12px] font-medium text-ink-soft transition-colors hover:text-ink-body"
       >
         <ArrowLeft size={13} />
         Volver a atletas
@@ -125,21 +125,21 @@ export default function ProfileHeader({
         {/* Identity block */}
         <div className="flex min-w-0 flex-1 flex-col gap-2.5">
           {/* Name */}
-          <h1 className="truncate text-3xl font-black tracking-tight text-[#3a2c1e]">
+          <h1 className="truncate text-3xl font-black tracking-tight text-ink">
             {profile.full_name}
           </h1>
 
           {/* Meta row */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
             {sport && (
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
                 {sport}
               </span>
             )}
             {sport && (
-              <span className="text-[#b0a08c] text-[10px]">·</span>
+              <span className="text-ink-muted text-[10px]">·</span>
             )}
-            <span className="text-[11px] font-medium text-[#8a7660]">
+            <span className="text-[11px] font-medium text-ink-soft">
               {profile.email}
             </span>
 
@@ -155,12 +155,12 @@ export default function ProfileHeader({
             href={`/athletes/${athleteId}/plan`}
             className={cn(
               "inline-flex items-center gap-2 rounded-lg px-4 py-2",
-              "border border-[#c65f3f]/50 bg-[#c65f3f]/12",
-              "text-[13px] font-semibold text-[#c65f3f]",
+              "border border-brand/50 bg-brand/12",
+              "text-[13px] font-semibold text-brand",
               "transition-all duration-200",
-              "hover:border-[#c65f3f]/80 hover:bg-[#c65f3f]/20",
+              "hover:border-brand/80 hover:bg-brand/20",
               "hover:shadow-[0_0_14px_rgba(198,95,63,0.25)]",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             )}
           >
             <CalendarDays size={13} />
@@ -172,11 +172,11 @@ export default function ProfileHeader({
             href={`/athletes/${athleteId}/ankle-foot`}
             className={cn(
               "inline-flex items-center gap-2 rounded-lg px-4 py-2",
-              "border border-[#c65f3f]/30 bg-[#c65f3f]/8",
-              "text-[13px] font-semibold text-[#c65f3f]",
+              "border border-brand/30 bg-brand/8",
+              "text-[13px] font-semibold text-brand",
               "transition-all duration-200",
-              "hover:border-[#c65f3f]/60 hover:bg-[#c65f3f]/15",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
+              "hover:border-brand/60 hover:bg-brand/15",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             )}
           >
             🦶 Tobillo/Pie
@@ -187,11 +187,11 @@ export default function ProfileHeader({
             href={`/athletes/${athleteId}/edit`}
             className={cn(
               "inline-flex items-center gap-2 rounded-lg px-4 py-2",
-              "border border-[#c65f3f]/30 bg-[#c65f3f]/8",
-              "text-[13px] font-semibold text-[#c65f3f]",
+              "border border-brand/30 bg-brand/8",
+              "text-[13px] font-semibold text-brand",
               "transition-all duration-200",
-              "hover:border-[#c65f3f]/60 hover:bg-[#c65f3f]/15",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
+              "hover:border-brand/60 hover:bg-brand/15",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             )}
           >
             <Pencil size={13} />

@@ -68,19 +68,19 @@ const TOAST_STYLES: Record<
   { border: string; icon: React.ReactNode; glow: string }
 > = {
   success: {
-    border: "border-[#c65f3f]/40",
+    border: "border-brand/40",
     glow:   "shadow-[0_0_14px_rgba(198,95,63,0.18)]",
-    icon:   <CheckCircle2 size={16} className="text-[#c65f3f] shrink-0 mt-0.5" />,
+    icon:   <CheckCircle2 size={16} className="text-brand shrink-0 mt-0.5" />,
   },
   error: {
-    border: "border-[#c0492f]/40",
+    border: "border-danger/40",
     glow:   "shadow-[0_0_14px_rgba(239,68,68,0.15)]",
-    icon:   <AlertTriangle size={16} className="text-[#c0492f] shrink-0 mt-0.5" />,
+    icon:   <AlertTriangle size={16} className="text-danger shrink-0 mt-0.5" />,
   },
   warning: {
-    border: "border-[#d9902a]/40",
+    border: "border-warning/40",
     glow:   "shadow-[0_0_14px_rgba(245,158,11,0.15)]",
-    icon:   <AlertTriangle size={16} className="text-[#d9902a] shrink-0 mt-0.5" />,
+    icon:   <AlertTriangle size={16} className="text-warning shrink-0 mt-0.5" />,
   },
 };
 
@@ -131,7 +131,7 @@ function ToastStack({
             className={cn(
               "pointer-events-auto",
               "flex items-start gap-3",
-              "rounded-xl border bg-[#fdf9f2]/95 backdrop-blur-md",
+              "rounded-xl border bg-surface/95 backdrop-blur-md",
               "px-4 py-3",
               "animate-in slide-in-from-right-4 fade-in duration-300",
               style.border,
@@ -140,17 +140,17 @@ function ToastStack({
           >
             {style.icon}
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-[#3a2c1e]/80 mb-0.5">
+              <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-ink/80 mb-0.5">
                 {toast.title}
               </p>
-              <p className="text-[13px] text-[#5d4c3a] leading-snug">
+              <p className="text-[13px] text-ink-body leading-snug">
                 {toast.message}
               </p>
             </div>
             <button
               onClick={() => onDismiss(toast.id)}
               aria-label="Cerrar notificación"
-              className="shrink-0 text-[#8a7660] hover:text-[#5d4c3a] transition-colors"
+              className="shrink-0 text-ink-soft hover:text-ink-body transition-colors"
             >
               <X size={14} />
             </button>
@@ -350,44 +350,44 @@ export default function PlanClient({
   return (
     <>
       {/* ── Page header ─────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-4 px-6 pt-8 pb-4 border-b border-[#e4d8c4]">
+      <div className="flex items-center gap-4 px-6 pt-8 pb-4 border-b border-line">
         <Link
           href={`/athletes/${athleteId}`}
           className={cn(
             "flex items-center gap-1.5 text-[11px] font-bold tracking-widest uppercase",
-            "text-[#8a7660] hover:text-[#c65f3f] transition-colors"
+            "text-ink-soft hover:text-brand transition-colors"
           )}
         >
           <ChevronLeft size={14} />
           Perfil
         </Link>
 
-        <div className="h-4 w-px bg-[#f7efe2]" />
+        <div className="h-4 w-px bg-surface-high" />
 
         <div>
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#8a7660] leading-none mb-1">
+          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-ink-soft leading-none mb-1">
             Planificación
           </p>
-          <p className="text-[15px] font-bold text-[#3a2c1e] leading-none">
+          <p className="text-[15px] font-bold text-ink leading-none">
             {profile.full_name}
           </p>
         </div>
 
         {currentAcwr != null && (
-          <div className="ml-auto hidden sm:flex items-center gap-2 rounded-full border border-[#e4d8c4] bg-[#fdf9f2] px-3 py-1.5">
-            <span className="text-[10px] font-bold tracking-widest uppercase text-[#8a7660]">
+          <div className="ml-auto hidden sm:flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-ink-soft">
               ACWR actual
             </span>
             <span
               className={cn(
                 "text-[13px] font-bold tabular-nums",
                 currentAcwr < 0.8
-                  ? "text-[#4a86b0]"
+                  ? "text-info"
                   : currentAcwr < 1.3
-                  ? "text-[#6f9c4a]"
+                  ? "text-success"
                   : currentAcwr < 1.5
-                  ? "text-[#d9902a]"
-                  : "text-[#c0492f]"
+                  ? "text-warning"
+                  : "text-danger"
               )}
             >
               {currentAcwr.toFixed(2)}

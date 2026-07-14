@@ -36,19 +36,19 @@ export default async function AnkleFootPage({
     <div className="max-w-4xl mx-auto px-4 py-6">
       <Link
         href={`/athletes/${params.id}`}
-        className="text-sm text-[#c65f3f] hover:text-[#c65f3f] transition-colors"
+        className="text-sm text-brand hover:text-brand transition-colors"
       >
         ← Volver al perfil
       </Link>
 
       <div className="mt-4 mb-8">
-        <h1 className="text-2xl font-bold text-[#3a2c1e]">
+        <h1 className="text-2xl font-bold text-ink">
           Evaluación de Tobillo, Pie y Rendimiento Funcional
         </h1>
-        <p className="text-sm text-[#8a7660] mt-1">
+        <p className="text-sm text-ink-soft mt-1">
           {athlete.full_name}
           {lastAssessment && (
-            <span className="ml-2 text-[#b0a08c]">
+            <span className="ml-2 text-ink-muted">
               · Última evaluación:{" "}
               {new Date(lastAssessment.assessment_date).toLocaleDateString("es-CO")}
             </span>

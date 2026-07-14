@@ -2,7 +2,7 @@
  * ProfileWellnessTable — Bodysense
  *
  * Glass-morphism table for the last 7 wellness check-ins.
- * Design tokens: backdrop-blur-md, inset top-highlight, text-[#8a7660] labels.
+ * Design tokens: backdrop-blur-md, inset top-highlight, text-ink-soft labels.
  */
 
 import { formatDate } from "@vitatekh/shared";
@@ -44,13 +44,13 @@ function FatigueBar({ value }: { value: number }) {
       aria-valuemax={10}
       aria-label={`Fatiga: ${value}/10`}
     >
-      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[#f7efe2]">
+      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-high">
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: `${(value / 10) * 100}%`, backgroundColor: color }}
         />
       </div>
-      <span className="w-4 text-right text-[11px] tabular-nums text-[#8a7660]">
+      <span className="w-4 text-right text-[11px] tabular-nums text-ink-soft">
         {value}
       </span>
     </div>
@@ -65,7 +65,7 @@ function SleepQuality({ value }: { value: number }) {
       className="text-[12px] tracking-tight"
     >
       <span className="text-yellow-400/80">{"★".repeat(Math.max(0, value))}</span>
-      <span className="text-[#3a2c1e]/15">{"☆".repeat(Math.max(0, 5 - value))}</span>
+      <span className="text-ink/15">{"☆".repeat(Math.max(0, 5 - value))}</span>
     </span>
   );
 }
@@ -85,7 +85,7 @@ function Th({
     <th
       scope="col"
       className={cn(
-        "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#b0a08c]",
+        "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-muted",
         align === "center" ? "text-center" : "text-left"
       )}
     >
@@ -102,25 +102,25 @@ export default function ProfileWellnessTable({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] overflow-hidden",
+        "rounded-2xl border border-line bg-surface overflow-hidden",
         "backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
         "bs-fade-up bs-d0"
       )}
     >
       {/* Card header */}
-      <div className="flex items-center justify-between border-b border-[#e4d8c4] px-5 py-4">
-        <h2 className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+      <div className="flex items-center justify-between border-b border-line px-5 py-4">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
           Wellness Reciente
         </h2>
-        <span className="text-[11px] font-medium text-[#b0a08c]">
+        <span className="text-[11px] font-medium text-ink-muted">
           {rows.length} check-in{rows.length !== 1 ? "s" : ""}
         </span>
       </div>
 
       <table className="w-full text-xs">
         <thead>
-          <tr className="border-b border-[#e4d8c4]">
+          <tr className="border-b border-line">
             <Th>Fecha</Th>
             <Th align="center">Fatiga</Th>
             <Th align="center">Sueño</Th>
@@ -133,7 +133,7 @@ export default function ProfileWellnessTable({
             <tr>
               <td
                 colSpan={5}
-                className="py-10 text-center text-[13px] text-[#b0a08c]"
+                className="py-10 text-center text-[13px] text-ink-muted"
               >
                 Sin check-ins registrados
               </td>
@@ -142,15 +142,15 @@ export default function ProfileWellnessTable({
             rows.map((w) => (
               <tr
                 key={w.date}
-                className="border-b border-[#e4d8c4] transition-colors hover:bg-[#fdf9f2]"
+                className="border-b border-line transition-colors hover:bg-surface"
               >
-                <td className="px-4 py-3 text-[#3a2c1e]/45 tabular-nums">
+                <td className="px-4 py-3 text-ink/45 tabular-nums">
                   {formatDate(w.date)}
                 </td>
                 <td className="px-4 py-3">
                   <FatigueBar value={w.fatigue} />
                 </td>
-                <td className="px-4 py-3 text-center text-[#5d4c3a] tabular-nums">
+                <td className="px-4 py-3 text-center text-ink-body tabular-nums">
                   {w.sleep_hours}h
                 </td>
                 <td className="px-4 py-3 text-center">

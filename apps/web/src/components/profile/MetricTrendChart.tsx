@@ -15,6 +15,7 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from "recharts";
+import { useThemeColors } from "@/components/theme/useThemeColors";
 
 export interface TrendPoint {
   date: string;    // ISO
@@ -43,6 +44,7 @@ export default function MetricTrendChart({
   data,
   benchmark,
 }: Props) {
+  const c = useThemeColors();
   const clean = data.filter((d) => d.value != null);
 
   const latest = clean.length > 0 ? clean[clean.length - 1]!.value : null;
@@ -51,15 +53,15 @@ export default function MetricTrendChart({
     latest != null && previous != null ? latest - previous : null;
 
   return (
-    <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <div className="rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
             {title}
           </p>
           <p className="mt-1.5 text-2xl font-black tabular-nums" style={{ color }}>
             {latest != null ? latest.toFixed(latest % 1 === 0 ? 0 : 2) : "—"}
-            <span className="ml-1 text-xs font-medium text-[#b0a08c]">{unit}</span>
+            <span className="ml-1 text-xs font-medium text-ink-muted">{unit}</span>
           </p>
         </div>
         {delta != null && delta !== 0 && (
@@ -77,7 +79,7 @@ export default function MetricTrendChart({
 
       {clean.length < 2 ? (
         <div className="h-[140px] flex items-center justify-center">
-          <p className="text-[#b0a08c] text-xs text-center max-w-[200px]">
+          <p className="text-ink-muted text-xs text-center max-w-[200px]">
             Registra al menos 2 evaluaciones para ver la tendencia.
           </p>
         </div>
@@ -85,17 +87,17 @@ export default function MetricTrendChart({
         <div className="h-[140px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={clean} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.04)" strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid stroke={c.line} strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="date"
                 tickFormatter={fmtDate}
-                tick={{ fill: "#b0a08c", fontSize: 10 }}
+                tick={{ fill: c.inkMuted, fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fill: "#b0a08c", fontSize: 10 }}
+                tick={{ fill: c.inkMuted, fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
                 domain={["auto", "auto"]}
@@ -103,11 +105,11 @@ export default function MetricTrendChart({
               {benchmark && (
                 <ReferenceLine
                   y={benchmark.value}
-                  stroke="#8a7660"
+                  stroke={c.inkSoft}
                   strokeDasharray="4 4"
                   label={{
                     value: benchmark.label,
-                    fill: "#8a7660",
+                    fill: c.inkSoft,
                     fontSize: 9,
                     position: "insideTopRight",
                   }}
@@ -115,10 +117,11 @@ export default function MetricTrendChart({
               )}
               <Tooltip
                 contentStyle={{
-                  background: "#fdf9f2",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: c.surfaceHigh,
+                  border: `1px solid ${c.line}`,
                   borderRadius: 12,
                   fontSize: 12,
+                  color: c.ink,
                 }}
                 labelFormatter={(l) => fmtDate(String(l))}
                 formatter={(v: any) => [`${v} ${unit}`, title]}
@@ -128,7 +131,7 @@ export default function MetricTrendChart({
                 dataKey="value"
                 stroke={color}
                 strokeWidth={2.5}
-                dot={{ r: 3, fill: color, stroke: "#fdf9f2", strokeWidth: 1.5 }}
+                dot={{ r: 3, fill: color, stroke: c.surface, strokeWidth: 1.5 }}
                 activeDot={{ r: 5 }}
                 connectNulls
                 isAnimationActive
