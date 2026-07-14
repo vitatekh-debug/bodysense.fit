@@ -69,7 +69,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     <aside
       className={cn(
         // ── Base — siempre ──────────────────────────────────────
-        "flex flex-col bg-[#0a0a0a] border-r border-slate-800/80",
+        "flex flex-col bg-[#fdf9f2] border-r border-[#e4d8c4]",
 
         // ── Móvil: Sheet fuera del flujo, desliza desde izquierda ──
         "fixed inset-y-0 left-0 z-40 w-72",
@@ -83,10 +83,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       aria-label="Navegación principal"
     >
       {/* ── Logo + botón cerrar ── */}
-      <div className="flex items-center justify-between px-5 py-5 border-b border-slate-800/80 flex-shrink-0">
+      <div className="flex items-center justify-between px-5 py-5 border-b border-[#e4d8c4] flex-shrink-0">
         <span className="text-lg font-black tracking-[0.15em] select-none">
-          <span className="text-[#818cf8]">BODY</span>
-          <span className="text-slate-100">SENSE</span>
+          <span className="text-[#c65f3f]">BODY</span>
+          <span className="text-[#3a2c1e]">SENSE</span>
         </span>
 
         {/* Botón × — sólo en móvil */}
@@ -95,9 +95,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           aria-label="Cerrar menú"
           className={cn(
             "flex items-center justify-center h-8 w-8 rounded-lg",
-            "text-slate-500 hover:text-slate-200",
-            "border border-white/[0.07] hover:border-white/[0.15]",
-            "bg-white/[0.03] hover:bg-white/[0.06]",
+            "text-[#8a7660] hover:text-[#3a2c1e]",
+            "border border-[#e4d8c4] hover:border-[#d6c6ac]",
+            "bg-[#fdf9f2] hover:bg-[#f7efe2]",
             "transition-all duration-150",
             "lg:hidden",
           )}
@@ -122,10 +122,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium",
                 "transition-all duration-150",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40",
                 active
-                  ? "bg-[#818cf8]/12 text-[#818cf8] border border-[#818cf8]/20"
-                  : "text-slate-400 border border-transparent hover:bg-white/[0.04] hover:text-slate-200",
+                  ? "bg-[#c65f3f]/12 text-[#c65f3f] border border-[#c65f3f]/20"
+                  : "text-[#8a7660] border border-transparent hover:bg-[#fdf9f2] hover:text-[#3a2c1e]",
               )}
               aria-current={active ? "page" : undefined}
             >
@@ -137,14 +137,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       </nav>
 
       {/* ── Sign out ── */}
-      <div className="px-3 pb-5 flex-shrink-0 border-t border-slate-800/60 pt-3">
+      <div className="px-3 pb-5 flex-shrink-0 border-t border-[#e4d8c4]/60 pt-3">
         <button
           onClick={handleSignOut}
           className={cn(
             "flex items-center gap-3 w-full",
             "px-3 py-2.5 rounded-xl text-sm font-medium",
-            "text-slate-500 border border-transparent",
-            "hover:text-red-400 hover:bg-red-950/30 hover:border-red-900/30",
+            "text-[#8a7660] border border-transparent",
+            "hover:text-[#c0492f] hover:bg-red-950/30 hover:border-red-900/30",
             "transition-all duration-150",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30",
           )}

@@ -64,7 +64,7 @@ function formatDate(d: string) {
 }
 
 function NoData({ message = "Sin evaluación registrada" }: { message?: string }) {
-  return <span className="text-slate-600 text-xs italic">{message}</span>;
+  return <span className="text-[#b0a08c] text-xs italic">{message}</span>;
 }
 
 // ─── EVA Traffic Light Badge ──────────────────────────────────────────────────
@@ -162,10 +162,10 @@ export default function PreventionClient({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black text-slate-100">
+        <h1 className="text-3xl font-black text-[#3a2c1e]">
           Prevención & Monitoreo
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-[#8a7660] text-sm mt-1">
           SMCP — Sistema de Monitoreo de Carga y Prevención
         </p>
       </div>
@@ -175,19 +175,19 @@ export default function PreventionClient({
         <AlertBanner
           count={alerts.redPain.length}
           label="Dolor severo (EVA ≥ 7) — detener actividad"
-          color="#EF4444"
+          color="#c0492f"
           names={alerts.redPain.map((a) => a.full_name)}
         />
         <AlertBanner
           count={alerts.pomsRisk.length}
           label="Riesgo de sobreentrenamiento (TMD > 20)"
-          color="#F97316"
+          color="#d9702a"
           names={alerts.pomsRisk.map((a) => a.full_name)}
         />
         <AlertBanner
           count={alerts.hqRisk.length}
           label="Desequilibrio H/Q — riesgo lesión isquiotibial"
-          color="#F59E0B"
+          color="#d9902a"
           names={alerts.hqRisk.map((a) => a.full_name)}
         />
         <AlertBanner
@@ -199,15 +199,15 @@ export default function PreventionClient({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-slate-700 flex gap-1 overflow-x-auto">
+      <div className="border-b border-[#e4d8c4] flex gap-1 overflow-x-auto">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px ${
               tab === t.id
-                ? "text-indigo-400 border-indigo-400"
-                : "text-slate-400 border-transparent hover:text-slate-200"
+                ? "text-[#c65f3f] border-[#c65f3f]"
+                : "text-[#8a7660] border-transparent hover:text-[#3a2c1e]"
             }`}
           >
             {t.label}
@@ -222,22 +222,22 @@ export default function PreventionClient({
           placeholder="Buscar atleta…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-sm bg-surface border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full max-w-sm bg-surface border border-[#e4d8c4] rounded-lg px-4 py-2 text-sm text-[#3a2c1e] placeholder-[#b0a08c] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
         />
       )}
 
       {/* ── Tab: Resumen SMCP ─────────────────────────────────────── */}
       {tab === "overview" && (
         <div className="overflow-x-auto rounded-xl">
-        <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
+        <div className="bg-surface border border-[#e4d8c4] rounded-xl overflow-hidden">
           <table className="w-full text-xs sm:text-sm">
             <thead>
-              <tr className="border-b border-slate-700">
-                <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">EVA Dolor</th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">POMS TMD</th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">Ratio H/Q</th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">FMS</th>
+              <tr className="border-b border-[#e4d8c4]">
+                <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Atleta</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">EVA Dolor</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">POMS TMD</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Ratio H/Q</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">FMS</th>
               </tr>
             </thead>
             <tbody>
@@ -250,15 +250,15 @@ export default function PreventionClient({
                   : null;
 
                 return (
-                  <tr key={a.id} className="border-b border-slate-800 hover:bg-slate-800/40 transition">
+                  <tr key={a.id} className="border-b border-[#e4d8c4] hover:bg-[#f7efe2] transition">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-indigo-600/30 flex items-center justify-center text-indigo-300 text-xs font-bold flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-[#c65f3f]/30 flex items-center justify-center text-[#c65f3f] text-xs font-bold flex-shrink-0">
                           {getInitials(a.full_name)}
                         </div>
                         <div>
-                          <p className="text-slate-100 font-medium">{a.full_name}</p>
-                          <p className="text-slate-500 text-xs">
+                          <p className="text-[#3a2c1e] font-medium">{a.full_name}</p>
+                          <p className="text-[#8a7660] text-xs">
                             {a.sport ? (SPORT_LABELS[a.sport] ?? a.sport) : "—"}
                           </p>
                         </div>
@@ -287,8 +287,8 @@ export default function PreventionClient({
                         <span
                           className="text-xs font-bold px-2 py-1 rounded-full"
                           style={{
-                            color: fmsResult?.isRisk ? "#EF4444" : "#22C55E",
-                            backgroundColor: fmsResult?.isRisk ? "#EF444422" : "#22C55E22",
+                            color: fmsResult?.isRisk ? "#c0492f" : "#6f9c4a",
+                            backgroundColor: fmsResult?.isRisk ? "#c0492f22" : "#6f9c4a22",
                           }}
                         >
                           {a.latest_biomech.fms_total}/21
@@ -301,7 +301,7 @@ export default function PreventionClient({
               })}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-slate-500 text-sm">
+                  <td colSpan={5} className="px-4 py-12 text-center text-[#8a7660] text-sm">
                     No hay atletas que coincidan con la búsqueda.
                   </td>
                 </tr>
@@ -329,45 +329,45 @@ export default function PreventionClient({
                 >
                   <p className="text-2xl font-black" style={{ color: cfg.color }}>{count}</p>
                   <p className="text-xs mt-1" style={{ color: cfg.color }}>{cfg.label}</p>
-                  <p className="text-slate-500 text-xs mt-1">{cfg.action}</p>
+                  <p className="text-[#8a7660] text-xs mt-1">{cfg.action}</p>
                 </div>
               );
             })}
           </div>
 
           <div className="overflow-x-auto rounded-xl">
-          <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
+          <div className="bg-surface border border-[#e4d8c4] rounded-xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-slate-700">
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">EVA</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Semáforo</th>
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Región</th>
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Momento</th>
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Fecha</th>
+                <tr className="border-b border-[#e4d8c4]">
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Atleta</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">EVA</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Semáforo</th>
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Región</th>
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Momento</th>
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Fecha</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((a) => (
-                  <tr key={a.id} className="border-b border-slate-800 hover:bg-slate-800/40 transition">
-                    <td className="px-4 py-3 text-slate-100 font-medium">{a.full_name}</td>
+                  <tr key={a.id} className="border-b border-[#e4d8c4] hover:bg-[#f7efe2] transition">
+                    <td className="px-4 py-3 text-[#3a2c1e] font-medium">{a.full_name}</td>
                     <td className="px-4 py-3 text-center">
                       {a.latest_pain
-                        ? <span className="text-lg font-black text-slate-100">{a.latest_pain.eva_score}</span>
+                        ? <span className="text-lg font-black text-[#3a2c1e]">{a.latest_pain.eva_score}</span>
                         : <NoData />
                       }
                     </td>
                     <td className="px-4 py-3 text-center">
                       {a.latest_pain ? <EvaBadge score={a.latest_pain.eva_score} /> : <NoData />}
                     </td>
-                    <td className="px-4 py-3 text-slate-300 capitalize">
+                    <td className="px-4 py-3 text-[#5d4c3a] capitalize">
                       {a.latest_pain?.body_region?.replace(/_/g, " ") ?? "—"}
                     </td>
-                    <td className="px-4 py-3 text-slate-400 text-xs capitalize">
+                    <td className="px-4 py-3 text-[#8a7660] text-xs capitalize">
                       {a.latest_pain?.timing?.replace(/_/g, " ") ?? "—"}
                     </td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">
+                    <td className="px-4 py-3 text-[#8a7660] text-xs">
                       {a.latest_pain ? formatDate(a.latest_pain.date) : "—"}
                     </td>
                   </tr>
@@ -393,45 +393,45 @@ export default function PreventionClient({
                   style={{ borderColor: cfg.color + "55", backgroundColor: cfg.color + "11" }}
                 >
                   <p className="text-xs font-bold" style={{ color: cfg.color }}>{cfg.label}</p>
-                  <p className="text-slate-500 text-xs mt-1">{cfg.description}</p>
+                  <p className="text-[#8a7660] text-xs mt-1">{cfg.description}</p>
                 </div>
               );
             })}
           </div>
 
           <div className="overflow-x-auto rounded-xl">
-          <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
+          <div className="bg-surface border border-[#e4d8c4] rounded-xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-slate-700">
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">TMD</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Tensión</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Depresión</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Vigor</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Fatiga</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Confusión</th>
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Fecha</th>
+                <tr className="border-b border-[#e4d8c4]">
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Atleta</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">TMD</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Tensión</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Depresión</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Vigor</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Fatiga</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Confusión</th>
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Fecha</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((a) => {
                   const p = a.latest_poms;
                   return (
-                    <tr key={a.id} className="border-b border-slate-800 hover:bg-slate-800/40 transition">
-                      <td className="px-4 py-3 text-slate-100 font-medium">{a.full_name}</td>
+                    <tr key={a.id} className="border-b border-[#e4d8c4] hover:bg-[#f7efe2] transition">
+                      <td className="px-4 py-3 text-[#3a2c1e] font-medium">{a.full_name}</td>
                       <td className="px-4 py-3 text-center">
                         {p ? <PomsBadge tmd={p.tmd_score} /> : <NoData />}
                       </td>
-                      <td className="px-4 py-3 text-center text-slate-300">{p?.tension ?? "—"}</td>
-                      <td className="px-4 py-3 text-center text-slate-300">{p?.depression ?? "—"}</td>
+                      <td className="px-4 py-3 text-center text-[#5d4c3a]">{p?.tension ?? "—"}</td>
+                      <td className="px-4 py-3 text-center text-[#5d4c3a]">{p?.depression ?? "—"}</td>
                       <td className="px-4 py-3 text-center font-bold"
-                        style={{ color: p ? (p.vigor >= 3 ? "#22C55E" : "#F59E0B") : undefined }}>
+                        style={{ color: p ? (p.vigor >= 3 ? "#6f9c4a" : "#d9902a") : undefined }}>
                         {p?.vigor ?? "—"}
                       </td>
-                      <td className="px-4 py-3 text-center text-slate-300">{p?.fatigue_poms ?? "—"}</td>
-                      <td className="px-4 py-3 text-center text-slate-300">{p?.confusion ?? "—"}</td>
-                      <td className="px-4 py-3 text-slate-500 text-xs">
+                      <td className="px-4 py-3 text-center text-[#5d4c3a]">{p?.fatigue_poms ?? "—"}</td>
+                      <td className="px-4 py-3 text-center text-[#5d4c3a]">{p?.confusion ?? "—"}</td>
+                      <td className="px-4 py-3 text-[#8a7660] text-xs">
                         {p ? formatDate(p.date) : "—"}
                       </td>
                     </tr>
@@ -442,7 +442,7 @@ export default function PreventionClient({
           </div>
           </div>
 
-          <p className="text-slate-600 text-xs">
+          <p className="text-[#b0a08c] text-xs">
             * TMD (Total Mood Disturbance) = Tensión + Depresión + Ira + Fatiga + Confusión − Vigor.
             Perfil iceberg saludable: TMD negativo con Vigor elevado.
           </p>
@@ -454,74 +454,74 @@ export default function PreventionClient({
         <div className="space-y-4">
           {/* Thresholds info */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-surface border border-slate-700 rounded-xl p-4">
-              <p className="text-slate-200 font-bold text-sm">Ratio Convencional (60°/s)</p>
+            <div className="bg-surface border border-[#e4d8c4] rounded-xl p-4">
+              <p className="text-[#3a2c1e] font-bold text-sm">Ratio Convencional (60°/s)</p>
               <div className="mt-2 space-y-1 text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-green-500 inline-block" />
-                  <span className="text-slate-400">≥ 0.65 — Sin riesgo</span>
+                  <span className="w-3 h-3 rounded-full bg-[#6f9c4a] inline-block" />
+                  <span className="text-[#8a7660]">≥ 0.65 — Sin riesgo</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-yellow-500 inline-block" />
-                  <span className="text-slate-400">0.60–0.65 — Límite</span>
+                  <span className="w-3 h-3 rounded-full bg-[#d9902a] inline-block" />
+                  <span className="text-[#8a7660]">0.60–0.65 — Límite</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-                  <span className="text-slate-400">&lt; 0.60 — En riesgo (Kannus 1994)</span>
+                  <span className="w-3 h-3 rounded-full bg-[#c0492f] inline-block" />
+                  <span className="text-[#8a7660]">&lt; 0.60 — En riesgo (Kannus 1994)</span>
                 </div>
               </div>
             </div>
-            <div className="bg-surface border border-slate-700 rounded-xl p-4">
-              <p className="text-slate-200 font-bold text-sm">Ratio Funcional (180°/s)</p>
+            <div className="bg-surface border border-[#e4d8c4] rounded-xl p-4">
+              <p className="text-[#3a2c1e] font-bold text-sm">Ratio Funcional (180°/s)</p>
               <div className="mt-2 space-y-1 text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-green-500 inline-block" />
-                  <span className="text-slate-400">≥ 1.10 — Sin riesgo</span>
+                  <span className="w-3 h-3 rounded-full bg-[#6f9c4a] inline-block" />
+                  <span className="text-[#8a7660]">≥ 1.10 — Sin riesgo</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-yellow-500 inline-block" />
-                  <span className="text-slate-400">1.00–1.10 — Límite</span>
+                  <span className="w-3 h-3 rounded-full bg-[#d9902a] inline-block" />
+                  <span className="text-[#8a7660]">1.00–1.10 — Límite</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-                  <span className="text-slate-400">&lt; 1.00 — En riesgo (Croisier 2008)</span>
+                  <span className="w-3 h-3 rounded-full bg-[#c0492f] inline-block" />
+                  <span className="text-[#8a7660]">&lt; 1.00 — En riesgo (Croisier 2008)</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="overflow-x-auto rounded-xl">
-          <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
+          <div className="bg-surface border border-[#e4d8c4] rounded-xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-slate-700">
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Lado</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Tipo</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Cuádriceps (Nm/kg)</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Isquiotibial (Nm/kg)</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Ratio H/Q</th>
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Fecha</th>
+                <tr className="border-b border-[#e4d8c4]">
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Atleta</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Lado</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Tipo</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Cuádriceps (Nm/kg)</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Isquiotibial (Nm/kg)</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Ratio H/Q</th>
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Fecha</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((a) => {
                   const h = a.latest_hq;
                   return (
-                    <tr key={a.id} className="border-b border-slate-800 hover:bg-slate-800/40 transition">
-                      <td className="px-4 py-3 text-slate-100 font-medium">{a.full_name}</td>
-                      <td className="px-4 py-3 text-center text-slate-300 capitalize">{h?.side ?? "—"}</td>
+                    <tr key={a.id} className="border-b border-[#e4d8c4] hover:bg-[#f7efe2] transition">
+                      <td className="px-4 py-3 text-[#3a2c1e] font-medium">{a.full_name}</td>
+                      <td className="px-4 py-3 text-center text-[#5d4c3a] capitalize">{h?.side ?? "—"}</td>
                       <td className="px-4 py-3 text-center">
                         {h ? (
-                          <span className="text-xs px-2 py-1 rounded-full bg-slate-700 text-slate-300">
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#efe4d2] text-[#5d4c3a]">
                             {h.ratio_type === "conventional" ? "Conv." : "Func."}
                           </span>
                         ) : "—"}
                       </td>
-                      <td className="px-4 py-3 text-center text-slate-300">
+                      <td className="px-4 py-3 text-center text-[#5d4c3a]">
                         {h?.quadriceps_peak_nm_kg?.toFixed(2) ?? "—"}
                       </td>
-                      <td className="px-4 py-3 text-center text-slate-300">
+                      <td className="px-4 py-3 text-center text-[#5d4c3a]">
                         {h?.hamstring_peak_nm_kg?.toFixed(2) ?? "—"}
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -529,7 +529,7 @@ export default function PreventionClient({
                           <HqBadge ratio={h.hq_ratio} type={h.ratio_type} />
                         ) : <NoData />}
                       </td>
-                      <td className="px-4 py-3 text-slate-500 text-xs">
+                      <td className="px-4 py-3 text-[#8a7660] text-xs">
                         {h ? formatDate(h.date) : "—"}
                       </td>
                     </tr>
@@ -545,29 +545,29 @@ export default function PreventionClient({
       {/* ── Tab: FMS ──────────────────────────────────────────────── */}
       {tab === "fms" && (
         <div className="space-y-4">
-          <div className="bg-amber-950/40 border border-amber-800/50 rounded-xl p-4 text-sm">
-            <p className="text-amber-300 font-semibold">Sobre el FMS (Functional Movement Screen)</p>
-            <p className="text-slate-400 mt-1">
+          <div className="bg-[#d9902a]/10 border border-[#d9902a]/40 rounded-xl p-4 text-sm">
+            <p className="text-[#b5761f] font-semibold">Sobre el FMS (Functional Movement Screen)</p>
+            <p className="text-[#8a7660] mt-1">
               7 patrones de movimiento, cada uno puntuado 0-3 (máx. 21).
-              Puntuación total <strong className="text-amber-200">≤ 14</strong> = riesgo elevado de lesión.
-              Puntuación <strong className="text-amber-200">0</strong> en cualquier patrón (dolor) = señal de alerta inmediata.
+              Puntuación total <strong className="text-[#b5761f]">≤ 14</strong> = riesgo elevado de lesión.
+              Puntuación <strong className="text-[#b5761f]">0</strong> en cualquier patrón (dolor) = señal de alerta inmediata.
             </p>
           </div>
 
           <div className="overflow-x-auto rounded-xl">
-          <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
+          <div className="bg-surface border border-[#e4d8c4] rounded-xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-slate-700">
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Total</th>
-                  <th className="text-center px-4 py-3 text-slate-400 font-medium">Riesgo</th>
+                <tr className="border-b border-[#e4d8c4]">
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Atleta</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Total</th>
+                  <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Riesgo</th>
                   {FMS_PATTERNS.map((p) => (
-                    <th key={p.key} className="text-center px-2 py-3 text-slate-500 font-medium text-xs">
+                    <th key={p.key} className="text-center px-2 py-3 text-[#8a7660] font-medium text-xs">
                       {p.label.split(" ").slice(0, 2).join(" ")}
                     </th>
                   ))}
-                  <th className="text-left px-4 py-3 text-slate-400 font-medium">Fecha</th>
+                  <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Fecha</th>
                 </tr>
               </thead>
               <tbody>
@@ -578,10 +578,10 @@ export default function PreventionClient({
                     : null;
                   const fmsResult = b ? getFmsRiskLevel(b.fms_total, patterns ?? undefined) : null;
                   return (
-                    <tr key={a.id} className="border-b border-slate-800 hover:bg-slate-800/40 transition">
-                      <td className="px-4 py-3 text-slate-100 font-medium">{a.full_name}</td>
+                    <tr key={a.id} className="border-b border-[#e4d8c4] hover:bg-[#f7efe2] transition">
+                      <td className="px-4 py-3 text-[#3a2c1e] font-medium">{a.full_name}</td>
                       <td className="px-4 py-3 text-center font-black text-lg"
-                        style={{ color: b ? (fmsResult?.isRisk ? "#EF4444" : "#22C55E") : undefined }}>
+                        style={{ color: b ? (fmsResult?.isRisk ? "#c0492f" : "#6f9c4a") : undefined }}>
                         {b ? `${b.fms_total}/21` : "—"}
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -589,8 +589,8 @@ export default function PreventionClient({
                           <span
                             className="text-xs font-bold px-2 py-1 rounded-full"
                             style={{
-                              color: fmsResult.isRisk ? "#EF4444" : "#22C55E",
-                              backgroundColor: fmsResult.isRisk ? "#EF444422" : "#22C55E22",
+                              color: fmsResult.isRisk ? "#c0492f" : "#6f9c4a",
+                              backgroundColor: fmsResult.isRisk ? "#c0492f22" : "#6f9c4a22",
                             }}
                           >
                             {fmsResult.isRisk ? "⚠ En riesgo" : "✓ OK"}
@@ -601,10 +601,10 @@ export default function PreventionClient({
                         const score = b ? (b as any)[p.key] as number : null;
                         const scoreColor =
                           score === null ? "#6B7280"
-                          : score === 0 ? "#EF4444"
-                          : score === 1 ? "#F59E0B"
-                          : score === 2 ? "#3B82F6"
-                          : "#22C55E";
+                          : score === 0 ? "#c0492f"
+                          : score === 1 ? "#d9902a"
+                          : score === 2 ? "#4a86b0"
+                          : "#6f9c4a";
                         return (
                           <td key={p.key} className="px-2 py-3 text-center">
                             <span
@@ -616,7 +616,7 @@ export default function PreventionClient({
                           </td>
                         );
                       })}
-                      <td className="px-4 py-3 text-slate-500 text-xs">
+                      <td className="px-4 py-3 text-[#8a7660] text-xs">
                         {b ? formatDate(b.date) : "—"}
                       </td>
                     </tr>
@@ -630,10 +630,10 @@ export default function PreventionClient({
           {/* FMS Score Legend */}
           <div className="flex flex-wrap gap-3">
             {Object.entries(FMS_SCORE_LABELS).map(([score, label]) => {
-              const colors = ["#EF4444", "#F59E0B", "#3B82F6", "#22C55E"];
+              const colors = ["#c0492f", "#d9902a", "#4a86b0", "#6f9c4a"];
               const color = colors[Number(score)] ?? "#6B7280";
               return (
-                <div key={score} className="flex items-center gap-1 text-xs text-slate-400">
+                <div key={score} className="flex items-center gap-1 text-xs text-[#8a7660]">
                   <span
                     className="w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs"
                     style={{ backgroundColor: color + "33", color }}
@@ -652,11 +652,11 @@ export default function PreventionClient({
       {tab === "sessions" && (
         <div className="space-y-4">
           {preventionSessions.length === 0 ? (
-            <div className="bg-surface border border-slate-700 rounded-xl p-12 text-center">
-              <p className="text-slate-500 text-sm">
+            <div className="bg-surface border border-[#e4d8c4] rounded-xl p-12 text-center">
+              <p className="text-[#8a7660] text-sm">
                 No hay sesiones preventivas registradas aún.
               </p>
-              <p className="text-slate-600 text-xs mt-2">
+              <p className="text-[#b0a08c] text-xs mt-2">
                 Crea sesiones desde la app móvil para asignar protocolos de ejercicio a tus atletas.
               </p>
             </div>
@@ -673,26 +673,26 @@ export default function PreventionClient({
                   <div
                     key={s.id}
                     className={`bg-surface border rounded-xl p-4 transition ${
-                      allDone ? "border-green-800/60" : "border-slate-700 hover:border-slate-600"
+                      allDone ? "border-green-800/60" : "border-[#e4d8c4] hover:border-[#d6c6ac]"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          {allDone && <span className="text-green-400 text-sm">✅</span>}
-                          <p className={`font-semibold ${allDone ? "text-green-300" : "text-slate-100"}`}>
+                          {allDone && <span className="text-[#6f9c4a] text-sm">✅</span>}
+                          <p className={`font-semibold ${allDone ? "text-green-300" : "text-[#3a2c1e]"}`}>
                             {s.title}
                           </p>
                         </div>
                         {s.description && (
-                          <p className="text-slate-400 text-sm mt-1">{s.description}</p>
+                          <p className="text-[#8a7660] text-sm mt-1">{s.description}</p>
                         )}
                         <div className="flex items-center gap-3 mt-2 flex-wrap">
-                          <span className="text-xs px-2 py-1 rounded-full bg-indigo-900/50 text-indigo-300">
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#c65f3f]/10 text-[#c65f3f]">
                             {s.type === "group" ? "Grupal" : "Individual"}
                           </span>
                           {s.sport && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-slate-700 text-slate-300">
+                            <span className="text-xs px-2 py-1 rounded-full bg-[#efe4d2] text-[#5d4c3a]">
                               {SPORT_LABELS[s.sport] ?? s.sport}
                             </span>
                           )}
@@ -702,16 +702,16 @@ export default function PreventionClient({
                         {total > 0 && (
                           <div className="mt-3">
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs text-slate-400">
+                              <span className="text-xs text-[#8a7660]">
                                 Completado por {completed}/{total} atleta{total !== 1 ? "s" : ""}
                               </span>
-                              <span className={`text-xs font-bold ${allDone ? "text-green-400" : "text-indigo-400"}`}>
+                              <span className={`text-xs font-bold ${allDone ? "text-[#6f9c4a]" : "text-[#c65f3f]"}`}>
                                 {pct}%
                               </span>
                             </div>
-                            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="w-full h-1.5 bg-[#f7efe2] rounded-full overflow-hidden">
                               <div
-                                className={`h-full rounded-full transition-all ${allDone ? "bg-green-500" : "bg-indigo-500"}`}
+                                className={`h-full rounded-full transition-all ${allDone ? "bg-[#6f9c4a]" : "bg-[#c65f3f]"}`}
                                 style={{ width: `${pct}%` }}
                               />
                             </div>
@@ -727,9 +727,9 @@ export default function PreventionClient({
                                     title={done ? `Completado` : "Pendiente"}
                                     className="text-xs px-2 py-0.5 rounded-full border"
                                     style={{
-                                      borderColor: done ? "#166534" : "#334155",
-                                      backgroundColor: done ? "#0F2117" : "#1E293B",
-                                      color: done ? "#4ADE80" : "#64748B",
+                                      borderColor: done ? "#166534" : "#e4d8c4",
+                                      backgroundColor: done ? "#0F2117" : "#f7efe2",
+                                      color: done ? "#4ADE80" : "#8a7660",
                                     }}
                                   >
                                     {done ? "✓ " : ""}{name.split(" ")[0]}
@@ -742,9 +742,9 @@ export default function PreventionClient({
                       </div>
 
                       <div className="text-right flex-shrink-0">
-                        <p className="text-slate-400 text-xs">{formatDate(s.date)}</p>
+                        <p className="text-[#8a7660] text-xs">{formatDate(s.date)}</p>
                         {total > 0 && (
-                          <p className={`text-sm font-black mt-1 ${allDone ? "text-green-400" : "text-indigo-400"}`}>
+                          <p className={`text-sm font-black mt-1 ${allDone ? "text-[#6f9c4a]" : "text-[#c65f3f]"}`}>
                             {pct}%
                           </p>
                         )}

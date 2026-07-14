@@ -12,7 +12,7 @@
  *     │  Main (overflow-y-auto)          │  px-4 py-5
  *     └──────────────────────────────────┘
  *     Sidebar = Sheet fixed (z-40) que desliza desde la izquierda
- *     Overlay  = bg-black/60 backdrop-blur-sm (z-30) debajo del Sheet
+ *     Overlay  = bg-[#3a2c1e]/40 backdrop-blur-sm (z-30) debajo del Sheet
  *
  *   Desktop (≥ 1024px):
  *     ┌──────────┬───────────────────────┐  ← h-dvh
@@ -79,12 +79,12 @@ export default function DashboardShell({ children, coachId, userEmail, dualMode 
      *   w-full   → 100% del ancho sin forzar 100vw (evita scroll horizontal)
      *   overflow-hidden → ningún hijo puede desbordarse lateralmente
      */
-    <div className="flex h-dvh w-full overflow-hidden bg-[#0a0a0a]">
+    <div className="flex h-dvh w-full overflow-hidden bg-[#fdf9f2]">
 
       {/* ── Overlay Sheet — solo en móvil, solo cuando mounted ── */}
       {mounted && sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-30 bg-[#3a2c1e]/40 backdrop-blur-sm lg:hidden"
           onClick={closeSidebar}
           aria-hidden="true"
         />
@@ -97,22 +97,22 @@ export default function DashboardShell({ children, coachId, userEmail, dualMode 
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
 
         {/* ── Header fijo (#4) ── */}
-        <header className="flex shrink-0 items-center gap-3 h-14 px-4 sm:px-5 lg:px-6 border-b border-slate-800/80 bg-[#0a0a0a]">
+        <header className="flex shrink-0 items-center gap-3 h-14 px-4 sm:px-5 lg:px-6 border-b border-[#e4d8c4] bg-[#fdf9f2]">
 
           {/* Botón hamburguesa — solo móvil (#1) */}
           <button
             onClick={openSidebar}
             aria-label="Abrir menú de navegación"
             aria-expanded={sidebarOpen}
-            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-xl border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:border-white/[0.15] hover:bg-white/[0.06] transition-all duration-150 lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
+            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-xl border border-[#e4d8c4] bg-[#fdf9f2] text-[#8a7660] hover:text-[#3a2c1e] hover:border-[#d6c6ac] hover:bg-[#f7efe2] transition-all duration-150 lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
           >
             <Menu size={18} />
           </button>
 
           {/* Logo — solo móvil */}
           <span className="text-sm font-black tracking-[0.15em] select-none lg:hidden">
-            <span className="text-[#818cf8]">BODY</span>
-            <span className="text-slate-100">SENSE</span>
+            <span className="text-[#c65f3f]">BODY</span>
+            <span className="text-[#3a2c1e]">SENSE</span>
           </span>
 
           {/* Botón dual-mode — para cuentas con modo dual o el dueño */}
@@ -120,7 +120,7 @@ export default function DashboardShell({ children, coachId, userEmail, dualMode 
             <button
               onClick={() => router.push("/atleta/dashboard")}
               title="Cambiar a vista de atleta"
-              className="ml-auto flex items-center gap-1.5 h-8 px-3 shrink-0 rounded-lg border border-emerald-800/60 bg-emerald-950/40 text-emerald-400 text-xs font-semibold hover:bg-emerald-900/50 hover:border-emerald-700 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40"
+              className="ml-auto flex items-center gap-1.5 h-8 px-3 shrink-0 rounded-lg border border-[#6f9c4a]/40 bg-[#6f9c4a]/10 text-[#6f9c4a] text-xs font-semibold hover:bg-[#6f9c4a]/10 hover:border-[#6f9c4a]/60 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6f9c4a]/40"
             >
               <span>🏃</span>
               <span className="hidden sm:inline">Vista Atleta</span>

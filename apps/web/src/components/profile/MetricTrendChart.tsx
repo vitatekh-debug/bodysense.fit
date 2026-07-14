@@ -51,23 +51,23 @@ export default function MetricTrendChart({
     latest != null && previous != null ? latest - previous : null;
 
   return (
-    <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
             {title}
           </p>
           <p className="mt-1.5 text-2xl font-black tabular-nums" style={{ color }}>
             {latest != null ? latest.toFixed(latest % 1 === 0 ? 0 : 2) : "—"}
-            <span className="ml-1 text-xs font-medium text-white/25">{unit}</span>
+            <span className="ml-1 text-xs font-medium text-[#b0a08c]">{unit}</span>
           </p>
         </div>
         {delta != null && delta !== 0 && (
           <span
             className="text-xs font-bold px-2 py-0.5 rounded-full tabular-nums"
             style={{
-              color: delta > 0 ? "#4ade80" : "#f87171",
-              backgroundColor: (delta > 0 ? "#22c55e" : "#ef4444") + "1a",
+              color: delta > 0 ? "#6f9c4a" : "#c0492f",
+              backgroundColor: (delta > 0 ? "#6f9c4a" : "#c0492f") + "1a",
             }}
           >
             {delta > 0 ? "▲" : "▼"} {Math.abs(delta).toFixed(2)}
@@ -77,7 +77,7 @@ export default function MetricTrendChart({
 
       {clean.length < 2 ? (
         <div className="h-[140px] flex items-center justify-center">
-          <p className="text-white/25 text-xs text-center max-w-[200px]">
+          <p className="text-[#b0a08c] text-xs text-center max-w-[200px]">
             Registra al menos 2 evaluaciones para ver la tendencia.
           </p>
         </div>
@@ -89,13 +89,13 @@ export default function MetricTrendChart({
               <XAxis
                 dataKey="date"
                 tickFormatter={fmtDate}
-                tick={{ fill: "#475569", fontSize: 10 }}
+                tick={{ fill: "#b0a08c", fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fill: "#475569", fontSize: 10 }}
+                tick={{ fill: "#b0a08c", fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
                 domain={["auto", "auto"]}
@@ -103,11 +103,11 @@ export default function MetricTrendChart({
               {benchmark && (
                 <ReferenceLine
                   y={benchmark.value}
-                  stroke="#64748b"
+                  stroke="#8a7660"
                   strokeDasharray="4 4"
                   label={{
                     value: benchmark.label,
-                    fill: "#64748b",
+                    fill: "#8a7660",
                     fontSize: 9,
                     position: "insideTopRight",
                   }}
@@ -115,7 +115,7 @@ export default function MetricTrendChart({
               )}
               <Tooltip
                 contentStyle={{
-                  background: "#0a0a0a",
+                  background: "#fdf9f2",
                   border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: 12,
                   fontSize: 12,
@@ -128,7 +128,7 @@ export default function MetricTrendChart({
                 dataKey="value"
                 stroke={color}
                 strokeWidth={2.5}
-                dot={{ r: 3, fill: color, stroke: "#0a0a0a", strokeWidth: 1.5 }}
+                dot={{ r: 3, fill: color, stroke: "#fdf9f2", strokeWidth: 1.5 }}
                 activeDot={{ r: 5 }}
                 connectNulls
                 isAnimationActive

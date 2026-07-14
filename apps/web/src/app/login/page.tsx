@@ -125,9 +125,9 @@ export default function LoginPage() {
 
             {/* Error banner */}
             {error && (
-              <div className="flex items-start gap-3 bg-red-950/40 border border-red-900/60 rounded-lg px-4 py-3">
-                <span className="text-red-400 text-base mt-0.5 shrink-0">⚠</span>
-                <p className="text-red-300 text-sm leading-snug">{error}</p>
+              <div className="flex items-start gap-3 bg-[#c0492f]/10 border border-[#c0492f]/40 rounded-lg px-4 py-3">
+                <span className="text-[#c0492f] text-base mt-0.5 shrink-0">⚠</span>
+                <p className="text-[#c0492f] text-sm leading-snug">{error}</p>
               </div>
             )}
 
@@ -147,7 +147,7 @@ export default function LoginPage() {
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                  <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-[#d6c6ac] border-t-white animate-spin" />
                   Ingresando…
                 </span>
               ) : (

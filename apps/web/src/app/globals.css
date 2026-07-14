@@ -74,7 +74,7 @@ body {
    Includes: subtle gradient top-edge highlight + backdrop blur. */
 @layer components {
   .bs-card {
-    @apply rounded-2xl border border-white/[0.09] bg-white/[0.025];
+    @apply rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2];
     @apply backdrop-blur-md;
     /* Top-edge highlight simulates gradient border */
     box-shadow:
@@ -83,10 +83,10 @@ body {
   }
 
   .bs-card-brand {
-    @apply bs-card border-[#818cf8]/25;
+    @apply bs-card border-[#c65f3f]/25;
     box-shadow:
-      inset 0 1px 0 rgba(129, 140, 248, 0.12),
-      0 0 0 1px rgba(129, 140, 248, 0.08),
+      inset 0 1px 0 rgba(198,95,63, 0.12),
+      0 0 0 1px rgba(198,95,63, 0.08),
       0 4px 16px rgba(0, 0, 0, 0.5);
   }
 }
@@ -135,8 +135,8 @@ body {
    Static variants below for common zones. */
 @layer utilities {
   .bs-glow-brand {
-    box-shadow: 0 0 12px rgba(129, 140, 248, 0.35),
-                0 0 32px rgba(129, 140, 248, 0.12);
+    box-shadow: 0 0 12px rgba(198,95,63, 0.35),
+                0 0 32px rgba(198,95,63, 0.12);
   }
   .bs-glow-optimal {
     box-shadow: 0 0 10px rgba(34, 197, 94, 0.35),
@@ -229,8 +229,8 @@ body {
     color: #111827 !important;
   }
 
-  .border-slate-700,
-  .border-slate-800 {
+  .border-[#e4d8c4],
+  .border-[#e4d8c4] {
     border-color: #d1d5db !important;
   }
 

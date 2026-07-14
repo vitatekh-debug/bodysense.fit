@@ -69,24 +69,24 @@ export default function RegisterAthletePage() {
   // ── Success ────────────────────────────────────────────────────────────────
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#080808] px-4 auth-grid-bg">
-        <div className="w-full max-w-sm text-center rounded-2xl border border-white/[0.07] bg-white/[0.025] p-10 shadow-xl shadow-black/60">
+      <div className="min-h-screen flex items-center justify-center bg-[#f1e6d4] px-4 auth-grid-bg">
+        <div className="w-full max-w-sm text-center rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-10 shadow-xl shadow-[#a8472a]/10">
           <div className="text-5xl mb-6">✅</div>
-          <h2 className="text-2xl font-black text-slate-100 mb-3">¡Cuenta creada!</h2>
-          <p className="text-slate-400 text-sm leading-relaxed mb-6">
+          <h2 className="text-2xl font-black text-[#3a2c1e] mb-3">¡Cuenta creada!</h2>
+          <p className="text-[#8a7660] text-sm leading-relaxed mb-6">
             Revisa tu correo para confirmar la cuenta.<br />
             Después podrás iniciar sesión en la app móvil y registrar tus datos.
           </p>
           {/* Next steps hint */}
-          <div className="bg-indigo-950/40 border border-indigo-800/40 rounded-xl px-4 py-3 text-left mb-8 space-y-1.5">
-            <p className="text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2">¿Qué sigue?</p>
-            <p className="text-slate-400 text-xs">1. Confirma tu correo (revisa spam).</p>
-            <p className="text-slate-400 text-xs">2. Tu entrenador te vinculará a su equipo.</p>
-            <p className="text-slate-400 text-xs">3. Inicia sesión en la app móvil y registra tu primera sesión.</p>
+          <div className="bg-[#c65f3f]/10 border border-[#c65f3f]/30 rounded-xl px-4 py-3 text-left mb-8 space-y-1.5">
+            <p className="text-[#c65f3f] text-xs font-bold uppercase tracking-wider mb-2">¿Qué sigue?</p>
+            <p className="text-[#8a7660] text-xs">1. Confirma tu correo (revisa spam).</p>
+            <p className="text-[#8a7660] text-xs">2. Tu entrenador te vinculará a su equipo.</p>
+            <p className="text-[#8a7660] text-xs">3. Inicia sesión en la app móvil y registra tu primera sesión.</p>
           </div>
           <Link
             href="/login"
-            className="inline-block w-full bg-[#6366F1] hover:bg-[#4F46E5] active:bg-[#4338CA] text-white font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors duration-150"
+            className="inline-block w-full bg-[#c65f3f] hover:bg-[#a8472a] active:bg-[#8f3c23] text-[#3a2c1e] font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors duration-150"
           >
             Ir al Login
           </Link>
@@ -97,32 +97,32 @@ export default function RegisterAthletePage() {
 
   // ── Form ───────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#080808] px-4 auth-grid-bg">
+    <div className="min-h-screen flex items-center justify-center bg-[#f1e6d4] px-4 auth-grid-bg">
       <div className="w-full max-w-sm">
 
         {/* Brand */}
         <div className="text-center mb-10">
-          <span className="inline-block text-[11px] font-bold tracking-[0.35em] text-[#818cf8]/60 uppercase mb-4">
+          <span className="inline-block text-[11px] font-bold tracking-[0.35em] text-[#c65f3f]/60 uppercase mb-4">
             bodysense.fit
           </span>
-          <h1 className="text-5xl font-black tracking-[0.18em] text-white mb-1">
-            BODY<span className="text-[#818cf8]">SENSE</span>
+          <h1 className="text-5xl font-black tracking-[0.18em] text-[#3a2c1e] mb-1">
+            BODY<span className="text-[#c65f3f]">SENSE</span>
           </h1>
-          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-[#818cf8] to-transparent opacity-60" />
-          <p className="mt-4 text-[13px] text-slate-500 tracking-wide">
+          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-[#c65f3f] to-transparent opacity-60" />
+          <p className="mt-4 text-[13px] text-[#8a7660] tracking-wide">
             Crear cuenta de Atleta
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm p-8 shadow-xl shadow-black/60">
+        <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] backdrop-blur-sm p-8 shadow-xl shadow-[#a8472a]/10">
           <form onSubmit={handleRegister} className="flex flex-col gap-5">
 
             {/* Nombre */}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="fullName"
-                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+                className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase"
               >
                 Nombre completo
               </label>
@@ -133,7 +133,7 @@ export default function RegisterAthletePage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="bg-black/40 border border-white/[0.09] rounded-lg px-4 py-3 text-slate-100 text-sm placeholder-slate-700 focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all duration-200"
+                className="bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-4 py-3 text-[#3a2c1e] text-sm placeholder-[#b0a08c] focus:outline-none focus:border-[#c65f3f] focus:ring-2 focus:ring-[#c65f3f]/20 transition-all duration-200"
               />
             </div>
 
@@ -141,7 +141,7 @@ export default function RegisterAthletePage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
-                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+                className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase"
               >
                 Correo electrónico
               </label>
@@ -153,7 +153,7 @@ export default function RegisterAthletePage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="bg-black/40 border border-white/[0.09] rounded-lg px-4 py-3 text-slate-100 text-sm placeholder-slate-700 focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all duration-200"
+                className="bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-4 py-3 text-[#3a2c1e] text-sm placeholder-[#b0a08c] focus:outline-none focus:border-[#c65f3f] focus:ring-2 focus:ring-[#c65f3f]/20 transition-all duration-200"
               />
             </div>
 
@@ -161,7 +161,7 @@ export default function RegisterAthletePage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="password"
-                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+                className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase"
               >
                 Contraseña
               </label>
@@ -173,7 +173,7 @@ export default function RegisterAthletePage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="new-password"
-                className="bg-black/40 border border-white/[0.09] rounded-lg px-4 py-3 text-slate-100 text-sm placeholder-slate-700 focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all duration-200"
+                className="bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-4 py-3 text-[#3a2c1e] text-sm placeholder-[#b0a08c] focus:outline-none focus:border-[#c65f3f] focus:ring-2 focus:ring-[#c65f3f]/20 transition-all duration-200"
               />
             </div>
 
@@ -181,7 +181,7 @@ export default function RegisterAthletePage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="sport"
-                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+                className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase"
               >
                 Deporte
               </label>
@@ -189,10 +189,10 @@ export default function RegisterAthletePage() {
                 id="sport"
                 value={sport}
                 onChange={(e) => setSport(e.target.value)}
-                className="bg-black/40 border border-white/[0.09] rounded-lg px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all duration-200 appearance-none"
+                className="bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-4 py-3 text-[#3a2c1e] text-sm focus:outline-none focus:border-[#c65f3f] focus:ring-2 focus:ring-[#c65f3f]/20 transition-all duration-200 appearance-none"
               >
                 {SPORTS.map((s) => (
-                  <option key={s.value} value={s.value} className="bg-[#0a0a0a]">
+                  <option key={s.value} value={s.value} className="bg-[#fdf9f2]">
                     {s.label}
                   </option>
                 ))}
@@ -200,11 +200,11 @@ export default function RegisterAthletePage() {
             </div>
 
             {/* Role info chip */}
-            <div className="flex gap-3 items-start rounded-lg border border-emerald-800/30 bg-emerald-950/20 px-4 py-3">
-              <span className="text-emerald-400 text-base mt-0.5 shrink-0">🏃</span>
+            <div className="flex gap-3 items-start rounded-lg border border-[#6f9c4a]/30 bg-[#6f9c4a]/10 px-4 py-3">
+              <span className="text-[#6f9c4a] text-base mt-0.5 shrink-0">🏃</span>
               <div>
-                <p className="text-slate-200 text-sm font-semibold">Cuenta Atleta</p>
-                <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">
+                <p className="text-[#3a2c1e] text-sm font-semibold">Cuenta Atleta</p>
+                <p className="text-[#8a7660] text-xs mt-0.5 leading-relaxed">
                   Podrás registrar sesiones, bienestar y datos físicos.<br />
                   Tu entrenador verá tus métricas en tiempo real.
                 </p>
@@ -213,9 +213,9 @@ export default function RegisterAthletePage() {
 
             {/* Error */}
             {error && (
-              <div className="flex items-start gap-3 bg-red-950/40 border border-red-900/60 rounded-lg px-4 py-3">
-                <span className="text-red-400 text-base mt-0.5 shrink-0">⚠</span>
-                <p className="text-red-300 text-sm leading-snug">{error}</p>
+              <div className="flex items-start gap-3 bg-[#c0492f]/10 border border-[#c0492f]/40 rounded-lg px-4 py-3">
+                <span className="text-[#c0492f] text-base mt-0.5 shrink-0">⚠</span>
+                <p className="text-[#c0492f] text-sm leading-snug">{error}</p>
               </div>
             )}
 
@@ -223,11 +223,11 @@ export default function RegisterAthletePage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+              className="mt-1 w-full bg-[#6f9c4a] hover:bg-[#6f9c4a] active:bg-[#5a8039] text-[#3a2c1e] font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6f9c4a]/50"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                  <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-[#d6c6ac] border-t-white animate-spin" />
                   Creando cuenta…
                 </span>
               ) : (
@@ -239,15 +239,15 @@ export default function RegisterAthletePage() {
 
         {/* Footer links */}
         <div className="mt-6 space-y-2 text-center">
-          <p className="text-[13px] text-slate-600">
+          <p className="text-[13px] text-[#b0a08c]">
             ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-[#818cf8] hover:text-[#6366F1] transition-colors duration-150 font-medium">
+            <Link href="/login" className="text-[#c65f3f] hover:text-[#c65f3f] transition-colors duration-150 font-medium">
               Iniciar sesión
             </Link>
           </p>
-          <p className="text-[13px] text-slate-600">
+          <p className="text-[13px] text-[#b0a08c]">
             ¿Eres profesional?{" "}
-            <Link href="/register" className="text-[#818cf8] hover:text-[#6366F1] transition-colors duration-150 font-medium">
+            <Link href="/register" className="text-[#c65f3f] hover:text-[#c65f3f] transition-colors duration-150 font-medium">
               Crear cuenta profesional
             </Link>
           </p>

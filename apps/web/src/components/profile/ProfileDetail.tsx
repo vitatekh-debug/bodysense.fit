@@ -93,7 +93,7 @@ async function AcwrChartSection({ athleteId }: { athleteId: string }) {
   return (
     <div
       className={[
-        "rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6 backdrop-blur-md",
+        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-6 backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
         "bs-fade-up bs-d2",
       ].join(" ")}
@@ -144,11 +144,11 @@ function EmptyState({ message }: { message: string }) {
     <div
       className={[
         "flex items-center justify-center rounded-2xl p-10 text-center",
-        "border border-white/[0.09] bg-white/[0.025] backdrop-blur-md",
+        "border border-[#e4d8c4] bg-[#fdf9f2] backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
       ].join(" ")}
     >
-      <p className="max-w-sm text-[13px] leading-relaxed text-white/25">{message}</p>
+      <p className="max-w-sm text-[13px] leading-relaxed text-[#b0a08c]">{message}</p>
     </div>
   );
 }
@@ -163,7 +163,7 @@ function SectionHeading({
   return (
     <h2
       className={[
-        "mb-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white/30",
+        "mb-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]",
         className,
       ]
         .filter(Boolean)

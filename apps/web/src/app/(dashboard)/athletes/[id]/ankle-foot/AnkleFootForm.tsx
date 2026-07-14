@@ -38,9 +38,9 @@ const MYOFASCIAL: { value: MyofascialStatus; label: string; desc: string }[] = [
 ];
 
 const SLS_STATUS: { value: SlsOverallStatus; label: string; color: string }[] = [
-  { value: "optimal",     label: "Óptimo",     color: "text-emerald-400 border-emerald-700" },
-  { value: "compensated", label: "Compensado", color: "text-amber-400 border-amber-700" },
-  { value: "deficient",   label: "Deficiente", color: "text-red-400 border-red-700" },
+  { value: "optimal",     label: "Óptimo",     color: "text-[#6f9c4a] border-[#6f9c4a]/60" },
+  { value: "compensated", label: "Compensado", color: "text-[#b5761f] border-[#d9902a]/60" },
+  { value: "deficient",   label: "Deficiente", color: "text-[#c0492f] border-[#c0492f]/60" },
 ];
 
 const SLS_COMPENSATIONS = [
@@ -53,8 +53,8 @@ const SLS_COMPENSATIONS = [
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5 mb-6">
-      <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-4">
+    <section className="rounded-xl border border-[#e4d8c4] bg-[#fdf9f2] p-5 mb-6">
+      <h2 className="text-xs font-bold uppercase tracking-widest text-[#c65f3f] mb-4">
         {title}
       </h2>
       {children}
@@ -74,8 +74,8 @@ function NumField({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
-        {label} {unit && <span className="text-slate-600">({unit})</span>}
+      <span className="text-[11px] font-semibold tracking-wide text-[#8a7660] uppercase">
+        {label} {unit && <span className="text-[#b0a08c]">({unit})</span>}
       </span>
       <input
         type="number"
@@ -84,9 +84,9 @@ function NumField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={`bg-black/40 border rounded-lg px-3 py-2.5 text-slate-100 text-sm text-center
-          placeholder-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all
-          ${warn ? "border-amber-600/60" : "border-white/[0.09] focus:border-indigo-500"}`}
+        className={`bg-[#f7efe2] border rounded-lg px-3 py-2.5 text-[#3a2c1e] text-sm text-center
+          placeholder-[#b0a08c] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]/30 transition-all
+          ${warn ? "border-[#d9902a]/60" : "border-[#e4d8c4] focus:border-[#c65f3f]"}`}
       />
     </label>
   );
@@ -108,12 +108,12 @@ function Toggle({
       transition={springPop}
       className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border text-sm transition-colors duration-200
         ${checked
-          ? "border-indigo-500 bg-indigo-500/15 text-indigo-300"
-          : "border-white/[0.09] bg-black/30 text-slate-500 hover:border-white/20"}`}
+          ? "border-[#c65f3f] bg-[#c65f3f]/15 text-[#c65f3f]"
+          : "border-[#e4d8c4] bg-[#f7efe2] text-[#8a7660] hover:border-[#d6c6ac]"}`}
     >
       <span
         className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] font-bold transition-colors
-          ${checked ? "bg-indigo-500 border-indigo-500 text-white" : "border-slate-600"}`}
+          ${checked ? "bg-[#c65f3f] border-[#c65f3f] text-[#3a2c1e]" : "border-[#d6c6ac]"}`}
       >
         {checked ? "✓" : ""}
       </span>
@@ -261,7 +261,7 @@ export default function AnkleFootForm({
       {/* ── 1. Biomecánica clínica ── */}
       <SectionCard title="1 · Biomecánica y Parámetros Clínicos">
         {/* Tipo de pisada — Feiss */}
-        <p className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase mb-2">
+        <p className="text-[11px] font-semibold tracking-wide text-[#8a7660] uppercase mb-2">
           Tipo de pisada — Test de Línea de Feiss
         </p>
         <div className="grid grid-cols-2 gap-4 mb-5">
@@ -270,7 +270,7 @@ export default function AnkleFootForm({
             const setter = side === "left" ? setFootTypeLeft : setFootTypeRight;
             return (
               <div key={side}>
-                <p className="text-xs text-slate-600 mb-1.5">
+                <p className="text-xs text-[#b0a08c] mb-1.5">
                   {side === "left" ? "Pie izquierdo" : "Pie derecho"}
                 </p>
                 <div className="flex gap-2">
@@ -284,8 +284,8 @@ export default function AnkleFootForm({
                       transition={springPop}
                       className={`flex-1 px-2 py-2 rounded-lg border text-xs font-medium transition-colors duration-200
                         ${value === ft.value
-                          ? "border-indigo-500 bg-indigo-500/15 text-indigo-300"
-                          : "border-white/[0.09] bg-black/30 text-slate-500 hover:border-white/20"}`}
+                          ? "border-[#c65f3f] bg-[#c65f3f]/15 text-[#c65f3f]"
+                          : "border-[#e4d8c4] bg-[#f7efe2] text-[#8a7660] hover:border-[#d6c6ac]"}`}
                     >
                       {ft.label}
                     </motion.button>
@@ -310,7 +310,7 @@ export default function AnkleFootForm({
           <NumField label="WBLT Derecho"   unit="cm" value={wbltRight} onChange={setWbltRight} placeholder="12" warn={wbltWarnR} />
         </div>
         {(wbltWarnL || wbltWarnR || dorsiWarnL || dorsiWarnR) && (
-          <p className="text-xs text-amber-400 mb-4">
+          <p className="text-xs text-[#b5761f] mb-4">
             ⚠ Valores bajo el umbral (WBLT &lt; {WBLT_RISK_CM} cm / dorsiflexión &lt; {DORSIFLEXION_RISK_DEG}°) —
             el Motor de Reglas generará una alerta de movilidad.
           </p>
@@ -325,7 +325,7 @@ export default function AnkleFootForm({
         </div>
 
         {/* Miofascial */}
-        <p className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase mb-2">
+        <p className="text-[11px] font-semibold tracking-wide text-[#8a7660] uppercase mb-2">
           Estado miofascial — gastro-sóleo-calcáneo-fascia plantar
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
@@ -336,13 +336,13 @@ export default function AnkleFootForm({
               onClick={() => setMyofascial(myofascial === m.value ? "" : m.value)}
               className={`flex-1 px-3 py-2.5 rounded-lg border text-left transition-all
                 ${myofascial === m.value
-                  ? "border-indigo-500 bg-indigo-500/15"
-                  : "border-white/[0.09] bg-black/30 hover:border-white/20"}`}
+                  ? "border-[#c65f3f] bg-[#c65f3f]/15"
+                  : "border-[#e4d8c4] bg-[#f7efe2] hover:border-[#d6c6ac]"}`}
             >
-              <span className={`block text-sm font-semibold ${myofascial === m.value ? "text-indigo-300" : "text-slate-400"}`}>
+              <span className={`block text-sm font-semibold ${myofascial === m.value ? "text-[#c65f3f]" : "text-[#8a7660]"}`}>
                 {m.label}
               </span>
-              <span className="block text-[11px] text-slate-600">{m.desc}</span>
+              <span className="block text-[11px] text-[#b0a08c]">{m.desc}</span>
             </button>
           ))}
         </div>
@@ -355,15 +355,15 @@ export default function AnkleFootForm({
           <NumField label="Daniels Derecho"   unit="0-5" value={danielsRight} onChange={setDanielsRight} placeholder="5" />
         </div>
 
-        <p className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase mb-3">
+        <p className="text-[11px] font-semibold tracking-wide text-[#8a7660] uppercase mb-3">
           Single-Leg Squat — checklist de compensaciones
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           {(["left", "right"] as const).map((side) => {
             const state = side === "left" ? slsLeft : slsRight;
             return (
-              <div key={side} className="rounded-lg border border-white/[0.06] bg-black/20 p-4">
-                <p className="text-xs font-semibold text-slate-400 mb-3">
+              <div key={side} className="rounded-lg border border-[#e4d8c4] bg-[#f7efe2] p-4">
+                <p className="text-xs font-semibold text-[#8a7660] mb-3">
                   {side === "left" ? "🦵 Pierna izquierda" : "🦵 Pierna derecha"}
                 </p>
                 <div className="flex flex-col gap-2 mb-4">
@@ -376,7 +376,7 @@ export default function AnkleFootForm({
                     />
                   ))}
                 </div>
-                <p className="text-[11px] text-slate-600 mb-1.5">Estado general</p>
+                <p className="text-[11px] text-[#b0a08c] mb-1.5">Estado general</p>
                 <div className="flex gap-1.5">
                   {SLS_STATUS.map((s) => (
                     <button
@@ -385,8 +385,8 @@ export default function AnkleFootForm({
                       onClick={() => updateSls(side, { overall_status: s.value })}
                       className={`flex-1 px-1 py-1.5 rounded-md border text-[11px] font-semibold transition-all
                         ${state.overall_status === s.value
-                          ? `${s.color} bg-white/[0.04]`
-                          : "border-white/[0.07] text-slate-600 hover:border-white/20"}`}
+                          ? `${s.color} bg-[#fdf9f2]`
+                          : "border-[#e4d8c4] text-[#b0a08c] hover:border-[#d6c6ac]"}`}
                     >
                       {s.label}
                     </button>
@@ -406,7 +406,7 @@ export default function AnkleFootForm({
           <NumField label="CMJ"         unit="cm" value={cmj}       onChange={setCmj}       placeholder="40" />
           <NumField label="Drop Jump"   unit="RSI" value={rsi}      onChange={setRsi}       placeholder="1.4" />
         </div>
-        <p className="text-[11px] text-slate-600 mt-3">
+        <p className="text-[11px] text-[#b0a08c] mt-3">
           Baremos: T-Test ≤ 11.5 s · CMJ ≥ 30 cm · RSI ≥ 1.0. Valores inferiores activan la regla de
           ajuste de agilidad/pliometría.
         </p>
@@ -419,20 +419,20 @@ export default function AnkleFootForm({
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           placeholder="Observaciones, contexto de la evaluación, derivaciones…"
-          className="w-full bg-black/40 border border-white/[0.09] rounded-lg px-3 py-2.5 text-slate-100 text-sm
-            placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+          className="w-full bg-[#f7efe2] border border-[#e4d8c4] rounded-lg px-3 py-2.5 text-[#3a2c1e] text-sm
+            placeholder-[#b0a08c] focus:outline-none focus:border-[#c65f3f] focus:ring-2 focus:ring-[#c65f3f]/30"
         />
       </SectionCard>
 
       {error && (
-        <p className="text-sm text-red-400 mb-4">{error}</p>
+        <p className="text-sm text-[#c0492f] mb-4">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50
-          text-white font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors"
+        className="w-full bg-[#c65f3f] hover:bg-[#c65f3f] active:bg-[#a8472a] disabled:opacity-50
+          text-[#3a2c1e] font-bold text-sm tracking-wide py-3.5 rounded-lg transition-colors"
       >
         {submitting ? "Guardando…" : "Guardar Evaluación"}
       </button>

@@ -29,9 +29,9 @@ interface Props {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PHASE_LABELS: Record<string, { label: string; color: string }> = {
-  preseason:   { label: "Pretemporada",  color: "#3B82F6" },
-  competition: { label: "Competición",   color: "#22C55E" },
-  transition:  { label: "Transición",    color: "#F59E0B" },
+  preseason:   { label: "Pretemporada",  color: "#4a86b0" },
+  competition: { label: "Competición",   color: "#6f9c4a" },
+  transition:  { label: "Transición",    color: "#d9902a" },
 };
 
 const MODEL_LABELS: Record<string, string> = {
@@ -40,9 +40,9 @@ const MODEL_LABELS: Record<string, string> = {
 };
 
 const LEVEL_CONFIG: Record<string, { label: string; indent: string; textSize: string; bg: string }> = {
-  macrocycle: { label: "Macrociclo", indent: "ml-0",  textSize: "text-sm",  bg: "bg-indigo-900/30 border-indigo-700/50" },
-  mesocycle:  { label: "Mesociclo",  indent: "ml-6",  textSize: "text-xs",  bg: "bg-slate-800/60 border-slate-700/50"   },
-  microcycle: { label: "Microciclo", indent: "ml-12", textSize: "text-xs",  bg: "bg-slate-800/30 border-slate-700/30"   },
+  macrocycle: { label: "Macrociclo", indent: "ml-0",  textSize: "text-sm",  bg: "bg-[#c65f3f]/10 border-[#c65f3f]/40" },
+  mesocycle:  { label: "Mesociclo",  indent: "ml-6",  textSize: "text-xs",  bg: "bg-[#f7efe2] border-[#e4d8c4]/50"   },
+  microcycle: { label: "Microciclo", indent: "ml-12", textSize: "text-xs",  bg: "bg-[#f7efe2]/30 border-[#e4d8c4]/30"   },
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ function TimelineBar({ cycles, planStart, planEnd }: {
 
   return (
     <div className="mt-4">
-      <div className="flex h-8 rounded-lg overflow-hidden border border-slate-700 relative">
+      <div className="flex h-8 rounded-lg overflow-hidden border border-[#e4d8c4] relative">
         {mesos.map((m) => {
           const start = m.start_date < planStart ? planStart : m.start_date;
           const end   = m.end_date   > planEnd   ? planEnd   : m.end_date;
@@ -97,7 +97,7 @@ function TimelineBar({ cycles, planStart, planEnd }: {
                 left: `${offsetPct}%`,
                 width: `${widthPct}%`,
                 backgroundColor: phaseCfg.color + (active ? "55" : "22"),
-                borderRight: "1px solid #1e293b",
+                borderRight: "1px solid #f7efe2",
                 color: phaseCfg.color,
                 opacity: active ? 1 : 0.7,
               }}
@@ -112,7 +112,7 @@ function TimelineBar({ cycles, planStart, planEnd }: {
       {/* Phase legend */}
       <div className="flex gap-4 mt-2">
         {Object.entries(PHASE_LABELS).map(([key, { label, color }]) => (
-          <div key={key} className="flex items-center gap-1 text-xs text-slate-400">
+          <div key={key} className="flex items-center gap-1 text-xs text-[#8a7660]">
             <span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: color + "55", border: `1px solid ${color}` }} />
             {label}
           </div>
@@ -175,7 +175,7 @@ function NewPlanForm({ teams, userId, onCreated }: {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition"
+        className="px-4 py-2 bg-[#c65f3f] hover:bg-[#c65f3f] text-[#3a2c1e] text-sm font-medium rounded-lg transition"
       >
         + Nuevo plan
       </button>
@@ -183,25 +183,25 @@ function NewPlanForm({ teams, userId, onCreated }: {
   }
 
   return (
-    <div className="bg-surface border border-indigo-700/50 rounded-xl p-5 space-y-4">
-      <h3 className="text-slate-100 font-bold text-sm">Nuevo Plan de Periodización</h3>
+    <div className="bg-surface border border-[#c65f3f]/40 rounded-xl p-5 space-y-4">
+      <h3 className="text-[#3a2c1e] font-bold text-sm">Nuevo Plan de Periodización</h3>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
-          <label className="block text-slate-400 text-xs mb-1">Nombre del plan</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Nombre del plan</label>
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="Temporada 2025-2026"
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-sm text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           />
         </div>
 
         <div>
-          <label className="block text-slate-400 text-xs mb-1">Equipo</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Equipo</label>
           <select
             value={form.team_id}
             onChange={(e) => setForm({ ...form, team_id: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-sm text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           >
             <option value="">Seleccionar equipo…</option>
             {teams.map((t) => (
@@ -213,11 +213,11 @@ function NewPlanForm({ teams, userId, onCreated }: {
         </div>
 
         <div>
-          <label className="block text-slate-400 text-xs mb-1">Modelo de periodización</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Modelo de periodización</label>
           <select
             value={form.model}
             onChange={(e) => setForm({ ...form, model: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-sm text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           >
             <option value="classic">Clásica (Matveyev)</option>
             <option value="tactical">Periodización Táctica</option>
@@ -225,41 +225,41 @@ function NewPlanForm({ teams, userId, onCreated }: {
         </div>
 
         <div>
-          <label className="block text-slate-400 text-xs mb-1">Fecha inicio</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Fecha inicio</label>
           <input
             type="date"
             value={form.start_date}
             onChange={(e) => setForm({ ...form, start_date: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-sm text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           />
         </div>
 
         <div>
-          <label className="block text-slate-400 text-xs mb-1">Fecha fin</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Fecha fin</label>
           <input
             type="date"
             value={form.end_date}
             onChange={(e) => setForm({ ...form, end_date: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-sm text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           />
         </div>
 
         {err && (
-          <p className="sm:col-span-2 text-red-400 text-xs">{err}</p>
+          <p className="sm:col-span-2 text-[#c0492f] text-xs">{err}</p>
         )}
 
         <div className="sm:col-span-2 flex gap-3">
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
+            className="px-4 py-2 bg-[#c65f3f] hover:bg-[#c65f3f] disabled:opacity-50 text-[#3a2c1e] text-sm font-medium rounded-lg transition"
           >
             {isPending ? "Guardando…" : "Crear plan"}
           </button>
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="px-4 py-2 text-slate-400 hover:text-slate-200 text-sm transition"
+            className="px-4 py-2 text-[#8a7660] hover:text-[#3a2c1e] text-sm transition"
           >
             Cancelar
           </button>
@@ -328,7 +328,7 @@ function NewCycleForm({ planId, cycles, onCreated }: {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="text-xs px-3 py-1.5 border border-slate-600 text-slate-400 hover:text-slate-200 hover:border-slate-500 rounded-lg transition"
+        className="text-xs px-3 py-1.5 border border-[#d6c6ac] text-[#8a7660] hover:text-[#3a2c1e] hover:border-[#d6c6ac] rounded-lg transition"
       >
         + Ciclo
       </button>
@@ -336,15 +336,15 @@ function NewCycleForm({ planId, cycles, onCreated }: {
   }
 
   return (
-    <div className="mt-3 bg-slate-800/50 border border-slate-600 rounded-xl p-4 space-y-3">
-      <h4 className="text-slate-200 font-semibold text-xs uppercase tracking-wider">Nuevo ciclo</h4>
+    <div className="mt-3 bg-[#f7efe2]/50 border border-[#d6c6ac] rounded-xl p-4 space-y-3">
+      <h4 className="text-[#3a2c1e] font-semibold text-xs uppercase tracking-wider">Nuevo ciclo</h4>
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-3">
         <div className="col-span-2">
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="Nombre del ciclo (ej. Mesociclo 1 — Base)"
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-sm text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           />
         </div>
 
@@ -352,7 +352,7 @@ function NewCycleForm({ planId, cycles, onCreated }: {
           <select
             value={form.level}
             onChange={(e) => setForm({ ...form, level: e.target.value as Cycle["level"] })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           >
             <option value="macrocycle">Macrociclo</option>
             <option value="mesocycle">Mesociclo</option>
@@ -364,7 +364,7 @@ function NewCycleForm({ planId, cycles, onCreated }: {
           <select
             value={form.phase}
             onChange={(e) => setForm({ ...form, phase: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           >
             <option value="preseason">Pretemporada</option>
             <option value="competition">Competición</option>
@@ -378,7 +378,7 @@ function NewCycleForm({ planId, cycles, onCreated }: {
             <select
               value={form.parent_id}
               onChange={(e) => setForm({ ...form, parent_id: e.target.value })}
-              className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
             >
               <option value="">Sin macrociclo padre (opcional)</option>
               {macros.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
@@ -390,7 +390,7 @@ function NewCycleForm({ planId, cycles, onCreated }: {
             <select
               value={form.parent_id}
               onChange={(e) => setForm({ ...form, parent_id: e.target.value })}
-              className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
             >
               <option value="">Sin mesociclo padre (opcional)</option>
               {mesos.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
@@ -399,18 +399,18 @@ function NewCycleForm({ planId, cycles, onCreated }: {
         )}
 
         <div>
-          <label className="block text-slate-500 text-xs mb-1">Inicio</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Inicio</label>
           <input type="date" value={form.start_date}
             onChange={(e) => setForm({ ...form, start_date: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           />
         </div>
 
         <div>
-          <label className="block text-slate-500 text-xs mb-1">Fin</label>
+          <label className="block text-[#8a7660] text-xs mb-1">Fin</label>
           <input type="date" value={form.end_date}
             onChange={(e) => setForm({ ...form, end_date: e.target.value })}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f]"
           />
         </div>
 
@@ -420,21 +420,21 @@ function NewCycleForm({ planId, cycles, onCreated }: {
             onChange={(e) => setForm({ ...form, objectives: e.target.value })}
             placeholder="Objetivos del ciclo (opcional)…"
             rows={2}
-            className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+            className="w-full bg-[#f7efe2] border border-[#d6c6ac] rounded-lg px-3 py-2 text-xs text-[#3a2c1e] focus:outline-none focus:ring-2 focus:ring-[#c65f3f] resize-none"
           />
         </div>
 
-        {err && <p className="col-span-2 text-red-400 text-xs">{err}</p>}
+        {err && <p className="col-span-2 text-[#c0492f] text-xs">{err}</p>}
 
         <div className="col-span-2 flex gap-2">
           <button
             type="submit" disabled={isPending}
-            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
+            className="px-3 py-1.5 bg-[#c65f3f] hover:bg-[#c65f3f] disabled:opacity-50 text-[#3a2c1e] text-xs font-medium rounded-lg transition"
           >
             {isPending ? "Guardando…" : "Añadir ciclo"}
           </button>
           <button type="button" onClick={() => setOpen(false)}
-            className="px-3 py-1.5 text-slate-500 hover:text-slate-300 text-xs transition"
+            className="px-3 py-1.5 text-[#8a7660] hover:text-[#5d4c3a] text-xs transition"
           >
             Cancelar
           </button>
@@ -487,24 +487,24 @@ function PlanCard({
   micros.filter((mi) => !ordered.includes(mi)).forEach((mi) => ordered.push(mi));
 
   return (
-    <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden">
+    <div className="bg-surface border border-[#e4d8c4] rounded-xl overflow-hidden">
       {/* Plan header */}
       <div
-        className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-800/30 transition"
+        className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-[#f7efe2]/30 transition"
         onClick={() => setExpanded((v) => !v)}
       >
         <div className="flex items-center gap-3">
-          <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${active ? "bg-green-400" : "bg-slate-600"}`} />
+          <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${active ? "bg-green-400" : "bg-[#efe4d2]"}`} />
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-slate-100 font-bold">{plan.name}</h3>
+              <h3 className="text-[#3a2c1e] font-bold">{plan.name}</h3>
               {active && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-green-900/50 text-green-400">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-green-900/50 text-[#6f9c4a]">
                   Activo
                 </span>
               )}
             </div>
-            <p className="text-slate-400 text-xs mt-0.5">
+            <p className="text-[#8a7660] text-xs mt-0.5">
               {team ? `${team.name} · ${SPORT_LABELS[team.sport] ?? team.sport}` : "—"}
               {" · "}
               {MODEL_LABELS[plan.model] ?? plan.model}
@@ -515,7 +515,7 @@ function PlanCard({
             </p>
           </div>
         </div>
-        <span className="text-slate-500 text-lg">{expanded ? "▲" : "▼"}</span>
+        <span className="text-[#8a7660] text-lg">{expanded ? "▲" : "▼"}</span>
       </div>
 
       {expanded && (
@@ -531,7 +531,7 @@ function PlanCard({
 
           {/* Cycle list */}
           {ordered.length === 0 ? (
-            <p className="text-slate-600 text-sm italic">
+            <p className="text-[#b0a08c] text-sm italic">
               Sin ciclos añadidos aún. Crea un macrociclo para empezar.
             </p>
           ) : (
@@ -557,7 +557,7 @@ function PlanCard({
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`${cfg.textSize} font-semibold text-slate-200`}>
+                        <span className={`${cfg.textSize} font-semibold text-[#3a2c1e]`}>
                           {cycle.name}
                         </span>
                         <span
@@ -566,22 +566,22 @@ function PlanCard({
                         >
                           {phaseCfg.label}
                         </span>
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-slate-700 text-slate-400">
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-[#efe4d2] text-[#8a7660]">
                           {cfg.label}
                         </span>
                         {cycActive && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-green-900/40 text-green-400">
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-green-900/40 text-[#6f9c4a]">
                             Semana actual
                           </span>
                         )}
                       </div>
-                      <p className="text-slate-500 text-xs mt-1">
+                      <p className="text-[#8a7660] text-xs mt-1">
                         {fmt(cycle.start_date)} → {fmt(cycle.end_date)}
                         {" · "}
                         {weeks} sem{weeks > 1 ? "anas" : "ana"}
                       </p>
                       {cycle.objectives && (
-                        <p className="text-slate-400 text-xs mt-1 italic">{cycle.objectives}</p>
+                        <p className="text-[#8a7660] text-xs mt-1 italic">{cycle.objectives}</p>
                       )}
                     </div>
                   </div>
@@ -633,8 +633,8 @@ export default function PeriodizationClient({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-100">Periodización</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-3xl font-black text-[#3a2c1e]">Periodización</h1>
+          <p className="text-[#8a7660] text-sm mt-1">
             Planificación de macrociclos, mesociclos y microciclos
           </p>
         </div>
@@ -647,29 +647,29 @@ export default function PeriodizationClient({
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-surface border border-slate-700 rounded-xl p-5">
-          <p className="text-3xl font-black text-slate-100">{plans.length}</p>
-          <p className="text-slate-400 text-sm mt-1">Planes totales</p>
+        <div className="bg-surface border border-[#e4d8c4] rounded-xl p-5">
+          <p className="text-3xl font-black text-[#3a2c1e]">{plans.length}</p>
+          <p className="text-[#8a7660] text-sm mt-1">Planes totales</p>
         </div>
-        <div className="bg-surface border border-slate-700 rounded-xl p-5">
-          <p className="text-3xl font-black text-green-400">{activePlans.length}</p>
-          <p className="text-slate-400 text-sm mt-1">Planes activos</p>
+        <div className="bg-surface border border-[#e4d8c4] rounded-xl p-5">
+          <p className="text-3xl font-black text-[#6f9c4a]">{activePlans.length}</p>
+          <p className="text-[#8a7660] text-sm mt-1">Planes activos</p>
         </div>
-        <div className="bg-surface border border-slate-700 rounded-xl p-5">
-          <p className="text-3xl font-black text-indigo-400">{totalCycles}</p>
-          <p className="text-slate-400 text-sm mt-1">Ciclos registrados</p>
+        <div className="bg-surface border border-[#e4d8c4] rounded-xl p-5">
+          <p className="text-3xl font-black text-[#c65f3f]">{totalCycles}</p>
+          <p className="text-[#8a7660] text-sm mt-1">Ciclos registrados</p>
         </div>
       </div>
 
       {/* Current cycle callout */}
       {activeCycle && (
-        <div className="bg-indigo-950/40 border border-indigo-700/50 rounded-xl px-5 py-3 flex items-center gap-3">
-          <span className="text-indigo-400 text-lg">📅</span>
+        <div className="bg-[#c65f3f]/10 border border-[#c65f3f]/40 rounded-xl px-5 py-3 flex items-center gap-3">
+          <span className="text-[#c65f3f] text-lg">📅</span>
           <div>
-            <p className="text-indigo-200 font-semibold text-sm">
+            <p className="text-[#c65f3f] font-semibold text-sm">
               Ciclo actual: {activeCycle.name}
             </p>
-            <p className="text-slate-400 text-xs">
+            <p className="text-[#8a7660] text-xs">
               {PHASE_LABELS[activeCycle.phase]?.label ?? activeCycle.phase}
               {" · "}
               {fmt(activeCycle.start_date)} → {fmt(activeCycle.end_date)}
@@ -677,7 +677,7 @@ export default function PeriodizationClient({
               {LEVEL_CONFIG[activeCycle.level]?.label}
             </p>
             {activeCycle.objectives && (
-              <p className="text-slate-500 text-xs italic mt-0.5">{activeCycle.objectives}</p>
+              <p className="text-[#8a7660] text-xs italic mt-0.5">{activeCycle.objectives}</p>
             )}
           </div>
         </div>
@@ -685,10 +685,10 @@ export default function PeriodizationClient({
 
       {/* Plans */}
       {plans.length === 0 ? (
-        <div className="bg-surface border border-slate-700 rounded-xl p-16 text-center">
-          <p className="text-slate-400 text-2xl mb-3">📋</p>
-          <p className="text-slate-300 font-semibold">Sin planes de periodización</p>
-          <p className="text-slate-500 text-sm mt-2">
+        <div className="bg-surface border border-[#e4d8c4] rounded-xl p-16 text-center">
+          <p className="text-[#8a7660] text-2xl mb-3">📋</p>
+          <p className="text-[#5d4c3a] font-semibold">Sin planes de periodización</p>
+          <p className="text-[#8a7660] text-sm mt-2">
             Crea tu primer plan usando el botón superior y añade macrociclos, mesociclos y microciclos.
           </p>
         </div>
@@ -707,10 +707,10 @@ export default function PeriodizationClient({
       )}
 
       {/* Reference */}
-      <div className="border-t border-slate-800 pt-4">
-        <p className="text-slate-600 text-xs">
-          <strong className="text-slate-500">Periodización Clásica (Matveyev):</strong> volumen alto → intensidad alta → competición → transición. &nbsp;
-          <strong className="text-slate-500">Periodización Táctica:</strong> semana tipo estructurada según el partido; morfociclo como unidad básica.
+      <div className="border-t border-[#e4d8c4] pt-4">
+        <p className="text-[#b0a08c] text-xs">
+          <strong className="text-[#8a7660]">Periodización Clásica (Matveyev):</strong> volumen alto → intensidad alta → competición → transición. &nbsp;
+          <strong className="text-[#8a7660]">Periodización Táctica:</strong> semana tipo estructurada según el partido; morfociclo como unidad básica.
         </p>
       </div>
     </div>

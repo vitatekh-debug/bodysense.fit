@@ -89,13 +89,13 @@ const SESSION_TYPE_CONFIG: Record<
   SessionType,
   { label: string; abbr: string; color: string }
 > = {
-  technical:  { label: "Técnica",       abbr: "TEC", color: "#818cf8" },
-  tactical:   { label: "Táctica",       abbr: "TAC", color: "#34d399" },
-  physical:   { label: "Física",        abbr: "FIS", color: "#f59e0b" },
-  match:      { label: "Partido",       abbr: "PAR", color: "#ef4444" },
-  recovery:   { label: "Recuperación",  abbr: "REC", color: "#22d3ee" },
-  prevention: { label: "Prevención",    abbr: "PRE", color: "#a78bfa" },
-  rehabilitation: { label: "Rehabilitación", abbr: "REH", color: "#2dd4bf" },
+  technical:  { label: "Técnica",       abbr: "TEC", color: "#c65f3f" },
+  tactical:   { label: "Táctica",       abbr: "TAC", color: "#5aa07a" },
+  physical:   { label: "Física",        abbr: "FIS", color: "#d9902a" },
+  match:      { label: "Partido",       abbr: "PAR", color: "#c0492f" },
+  recovery:   { label: "Recuperación",  abbr: "REC", color: "#3f9aa8" },
+  prevention: { label: "Prevención",    abbr: "PRE", color: "#9b6bbf" },
+  rehabilitation: { label: "Rehabilitación", abbr: "REH", color: "#3aa99a" },
 };
 
 const PHASE_LABELS: Record<SessionPhase, string> = {
@@ -152,14 +152,14 @@ function isToday(date: Date): boolean {
 
 /**
  * Maps a projected ACWR ratio to the neon colour spectrum:
- * indigo (#818cf8) → green → amber → red
+ * indigo (#c65f3f) → green → amber → red
  */
 function acwrZoneColor(acwrProjected: number | undefined): string {
-  if (acwrProjected === undefined) return "rgba(129,140,248,0.35)";
-  if (acwrProjected < 0.8)  return ACWR_ZONES.low.color;       // #3B82F6
-  if (acwrProjected < 1.3)  return ACWR_ZONES.optimal.color;   // #22C55E
-  if (acwrProjected < 1.5)  return ACWR_ZONES.high.color;      // #F59E0B
-  return ACWR_ZONES.very_high.color;                             // #EF4444
+  if (acwrProjected === undefined) return "rgba(198,95,63,0.35)";
+  if (acwrProjected < 0.8)  return ACWR_ZONES.low.color;       // #4a86b0
+  if (acwrProjected < 1.3)  return ACWR_ZONES.optimal.color;   // #6f9c4a
+  if (acwrProjected < 1.5)  return ACWR_ZONES.high.color;      // #d9902a
+  return ACWR_ZONES.very_high.color;                             // #c0492f
 }
 
 function acwrZoneLabel(acwrProjected: number | undefined): string {
@@ -188,7 +188,7 @@ const LoadImpactBar = memo(function LoadImpactBar({ srpe, maxSrpe, acwr }: LoadI
     <div className="flex flex-col gap-1 px-2 py-2">
       {/* Horizontal fill bar */}
       <div
-        className="h-1 w-full overflow-hidden rounded-full bg-white/[0.06]"
+        className="h-1 w-full overflow-hidden rounded-full bg-[#f7efe2]"
         role="meter"
         aria-valuenow={Math.round(srpe)}
         aria-valuemin={0}
@@ -210,7 +210,7 @@ const LoadImpactBar = memo(function LoadImpactBar({ srpe, maxSrpe, acwr }: LoadI
           {srpeDisp}
         </span>
         {acwr !== undefined && (
-          <span className="text-[9px] text-slate-600 truncate">{label}</span>
+          <span className="text-[9px] text-[#b0a08c] truncate">{label}</span>
         )}
       </div>
     </div>
@@ -234,8 +234,8 @@ const SessionCard = memo(function SessionCard({ session, onRemove }: SessionCard
   return (
     <article
       className={cn(
-        "group relative rounded-xl border border-white/[0.09] bg-[#0f0f0f]",
-        "overflow-hidden transition-colors hover:border-white/[0.15]"
+        "group relative rounded-xl border border-[#e4d8c4] bg-[#fdf9f2]",
+        "overflow-hidden transition-colors hover:border-[#d6c6ac]"
       )}
       aria-label={`Sesión: ${cfg.label}`}
     >
@@ -256,8 +256,8 @@ const SessionCard = memo(function SessionCard({ session, onRemove }: SessionCard
             >
               {cfg.abbr}
             </span>
-            <span className="text-[9px] text-slate-700">·</span>
-            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-600">
+            <span className="text-[9px] text-[#b0a08c]">·</span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#b0a08c]">
               {PHASE_LABELS[session.phase]}
             </span>
           </div>
@@ -268,8 +268,8 @@ const SessionCard = memo(function SessionCard({ session, onRemove }: SessionCard
               onClick={() => onRemove(session.id)}
               className={cn(
                 "flex h-5 w-5 shrink-0 items-center justify-center rounded-md",
-                "text-slate-700 opacity-0 transition-all",
-                "hover:bg-red-950/60 hover:text-red-400",
+                "text-[#b0a08c] opacity-0 transition-all",
+                "hover:bg-red-950/60 hover:text-[#c0492f]",
                 "group-hover:opacity-100",
                 "focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/50"
               )}
@@ -282,36 +282,36 @@ const SessionCard = memo(function SessionCard({ session, onRemove }: SessionCard
 
         {/* Description */}
         {session.description && (
-          <p className="text-[11px] text-slate-300 leading-snug line-clamp-2">
+          <p className="text-[11px] text-[#5d4c3a] leading-snug line-clamp-2">
             {session.description}
           </p>
         )}
 
         {/* Data grid: Objetivo / RPE Est. / Volumen */}
-        <div className="grid grid-cols-3 gap-x-2 gap-y-1 border-t border-white/[0.05] pt-2">
+        <div className="grid grid-cols-3 gap-x-2 gap-y-1 border-t border-[#e4d8c4] pt-2">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+            <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-[#b0a08c]">
               Objetivo
             </span>
-            <span className="text-[11px] font-semibold text-slate-200">
+            <span className="text-[11px] font-semibold text-[#3a2c1e]">
               {cfg.label}
             </span>
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+            <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-[#b0a08c]">
               RPE Est.
             </span>
-            <span className="text-[11px] font-semibold text-slate-200">
+            <span className="text-[11px] font-semibold text-[#3a2c1e]">
               {session.rpe_target != null ? `${session.rpe_target} Borg` : "—"}
             </span>
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+            <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-[#b0a08c]">
               Volumen
             </span>
-            <span className="text-[11px] font-semibold text-slate-200">
+            <span className="text-[11px] font-semibold text-[#3a2c1e]">
               {session.duration_min}&thinsp;min
             </span>
           </div>
@@ -320,8 +320,8 @@ const SessionCard = memo(function SessionCard({ session, onRemove }: SessionCard
         {/* sRPE chip */}
         {srpe != null && (
           <div className="flex items-center gap-1">
-            <Zap size={9} className="text-[#818cf8]" aria-hidden />
-            <span className="text-[9px] font-bold text-[#818cf8] tabular-nums">
+            <Zap size={9} className="text-[#c65f3f]" aria-hidden />
+            <span className="text-[9px] font-bold text-[#c65f3f] tabular-nums">
               sRPE {srpe} UA
             </span>
           </div>
@@ -358,33 +358,33 @@ function AddSessionForm({ onSubmit, onCancel }: AddSessionFormProps) {
   }
 
   const inputCls = cn(
-    "w-full rounded-lg border border-white/[0.09] bg-black/40",
-    "px-2.5 py-1.5 text-[12px] text-slate-100",
-    "focus:border-[#818cf8] focus:outline-none focus:ring-1 focus:ring-[#818cf8]/20",
+    "w-full rounded-lg border border-[#e4d8c4] bg-[#f7efe2]",
+    "px-2.5 py-1.5 text-[12px] text-[#3a2c1e]",
+    "focus:border-[#c65f3f] focus:outline-none focus:ring-1 focus:ring-[#c65f3f]/20",
     "transition-all duration-150"
   );
 
   const labelCls =
-    "text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-600 mb-0.5";
+    "text-[9px] font-semibold uppercase tracking-[0.14em] text-[#b0a08c] mb-0.5";
 
   return (
     <form
       onSubmit={handleSubmit}
       className={cn(
-        "rounded-xl border border-[#818cf8]/30 bg-[#0a0a0f]",
+        "rounded-xl border border-[#c65f3f]/30 bg-[#0a0a0f]",
         "p-3 flex flex-col gap-3"
       )}
       aria-label="Nueva sesión"
     >
       {/* Form header */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#818cf8]">
+        <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#c65f3f]">
           Nueva Sesión
         </span>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded p-0.5 text-slate-600 hover:text-slate-300 transition-colors"
+          className="rounded p-0.5 text-[#b0a08c] hover:text-[#5d4c3a] transition-colors"
           aria-label="Cancelar"
         >
           <X size={12} />
@@ -442,7 +442,7 @@ function AddSessionForm({ onSubmit, onCancel }: AddSessionFormProps) {
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <label className={labelCls}>RPE Objetivo (Borg)</label>
-          <span className="text-[10px] font-bold text-slate-300">
+          <span className="text-[10px] font-bold text-[#5d4c3a]">
             {draft.rpe_target}
           </span>
         </div>
@@ -453,10 +453,10 @@ function AddSessionForm({ onSubmit, onCancel }: AddSessionFormProps) {
           step={1}
           value={draft.rpe_target}
           onChange={(e) => set("rpe_target", Number(e.target.value))}
-          className="h-1.5 w-full cursor-pointer accent-[#818cf8]"
+          className="h-1.5 w-full cursor-pointer accent-[#c65f3f]"
           aria-label={`RPE: ${draft.rpe_target}`}
         />
-        <div className="flex justify-between text-[8px] text-slate-700">
+        <div className="flex justify-between text-[8px] text-[#b0a08c]">
           <span>6 — Muy suave</span>
           <span>20 — Máximo</span>
         </div>
@@ -470,15 +470,15 @@ function AddSessionForm({ onSubmit, onCancel }: AddSessionFormProps) {
           onChange={(e) => set("description", e.target.value)}
           rows={2}
           placeholder="Ej. Trabajo de presión y pase corto"
-          className={cn(inputCls, "resize-none placeholder-slate-700")}
+          className={cn(inputCls, "resize-none placeholder-[#b0a08c]")}
         />
       </div>
 
       {/* sRPE preview */}
-      <div className="flex items-center gap-1.5 rounded-lg border border-white/[0.05] bg-black/20 px-3 py-2">
-        <Zap size={10} className="text-[#818cf8]" aria-hidden />
-        <span className="text-[10px] text-slate-500">sRPE proyectado:</span>
-        <span className="text-[10px] font-bold text-[#818cf8] tabular-nums">
+      <div className="flex items-center gap-1.5 rounded-lg border border-[#e4d8c4] bg-[#f7efe2] px-3 py-2">
+        <Zap size={10} className="text-[#c65f3f]" aria-hidden />
+        <span className="text-[10px] text-[#8a7660]">sRPE proyectado:</span>
+        <span className="text-[10px] font-bold text-[#c65f3f] tabular-nums">
           {srpeProjected} UA
         </span>
       </div>
@@ -489,9 +489,9 @@ function AddSessionForm({ onSubmit, onCancel }: AddSessionFormProps) {
           type="button"
           onClick={onCancel}
           className={cn(
-            "flex-1 rounded-lg border border-white/[0.09] py-2",
-            "text-[11px] font-semibold text-slate-500",
-            "hover:border-white/[0.15] hover:text-slate-300 transition-colors"
+            "flex-1 rounded-lg border border-[#e4d8c4] py-2",
+            "text-[11px] font-semibold text-[#8a7660]",
+            "hover:border-[#d6c6ac] hover:text-[#5d4c3a] transition-colors"
           )}
         >
           Cancelar
@@ -501,11 +501,11 @@ function AddSessionForm({ onSubmit, onCancel }: AddSessionFormProps) {
           disabled={busy}
           className={cn(
             "flex-1 rounded-lg py-2",
-            "bg-[#818cf8] text-[11px] font-bold text-white",
-            "hover:bg-[#6366F1] active:bg-[#4F46E5]",
+            "bg-[#c65f3f] text-[11px] font-bold text-[#3a2c1e]",
+            "hover:bg-[#c65f3f] active:bg-[#a8472a]",
             "transition-colors duration-150",
             "disabled:opacity-50 disabled:cursor-not-allowed",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/50"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/50"
           )}
         >
           {busy ? "Añadiendo…" : "Añadir Sesión"}
@@ -556,13 +556,13 @@ const DayColumn = memo(function DayColumn({
     <div
       className={cn(
         "relative flex flex-col min-h-[420px] rounded-2xl overflow-hidden",
-        "border bg-[#080808]",
+        "border bg-[#f1e6d4]",
         "backdrop-blur-md",
         // Inset top-edge highlight
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.5)]",
         today
-          ? "border-[#818cf8]/40 shadow-[inset_0_1px_0_rgba(129,140,248,0.12),0_0_20px_rgba(129,140,248,0.08),0_2px_8px_rgba(0,0,0,0.5)]"
-          : "border-white/[0.07]",
+          ? "border-[#c65f3f]/40 shadow-[inset_0_1px_0_rgba(198,95,63,0.12),0_0_20px_rgba(198,95,63,0.08),0_2px_8px_rgba(0,0,0,0.5)]"
+          : "border-[#e4d8c4]",
         // Staggered fade-up
         "bs-fade-up",
         WEEK_STAGGER[columnIndex] ?? "bs-week-d6"
@@ -580,7 +580,7 @@ const DayColumn = memo(function DayColumn({
       <div
         className={cn(
           "px-3 pt-3 pb-0 ml-1",
-          "border-b border-white/[0.05]"
+          "border-b border-[#e4d8c4]"
         )}
       >
         {/* Day name */}
@@ -588,13 +588,13 @@ const DayColumn = memo(function DayColumn({
           <span
             className={cn(
               "text-[10px] font-black uppercase tracking-[0.18em]",
-              today ? "text-[#818cf8]" : "text-slate-600"
+              today ? "text-[#c65f3f]" : "text-[#b0a08c]"
             )}
           >
             {DAY_NAMES_SHORT[(date.getDay() + 6) % 7]}
           </span>
           {today && (
-            <span className="rounded-full bg-[#818cf8]/15 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[#818cf8]">
+            <span className="rounded-full bg-[#c65f3f]/15 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[#c65f3f]">
               hoy
             </span>
           )}
@@ -604,7 +604,7 @@ const DayColumn = memo(function DayColumn({
         <span
           className={cn(
             "text-xl font-black leading-none",
-            today ? "text-white" : "text-slate-400"
+            today ? "text-[#3a2c1e]" : "text-[#8a7660]"
           )}
         >
           {date.getDate()}
@@ -620,13 +620,13 @@ const DayColumn = memo(function DayColumn({
           <div className="flex flex-1 flex-col items-center justify-center gap-2 py-4">
             {isSunday ? (
               <>
-                <Moon size={18} className="text-slate-800" aria-hidden />
-                <span className="text-[9px] uppercase tracking-widest text-slate-800">
+                <Moon size={18} className="text-[#3a2c1e]" aria-hidden />
+                <span className="text-[9px] uppercase tracking-widest text-[#3a2c1e]">
                   Descanso
                 </span>
               </>
             ) : (
-              <span className="text-[10px] text-slate-800">Sin sesiones</span>
+              <span className="text-[10px] text-[#3a2c1e]">Sin sesiones</span>
             )}
           </div>
         )}
@@ -653,11 +653,11 @@ const DayColumn = memo(function DayColumn({
             onClick={onStartAdd}
             className={cn(
               "mt-auto flex items-center justify-center gap-1.5",
-              "rounded-xl border border-dashed border-white/[0.08] py-2.5",
-              "text-[10px] font-semibold text-slate-700",
-              "hover:border-[#818cf8]/40 hover:text-[#818cf8]",
+              "rounded-xl border border-dashed border-[#e4d8c4] py-2.5",
+              "text-[10px] font-semibold text-[#b0a08c]",
+              "hover:border-[#c65f3f]/40 hover:text-[#c65f3f]",
               "transition-colors duration-150",
-              "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#818cf8]/40"
+              "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c65f3f]/40"
             )}
             aria-label={`Añadir sesión el ${formatMonthDay(date)}`}
           >
@@ -678,7 +678,7 @@ const ZoneLegend = memo(function ZoneLegend({ currentAcwr }: { currentAcwr?: num
       className="flex flex-wrap items-center gap-x-5 gap-y-2"
       aria-label="Leyenda de zonas ACWR"
     >
-      <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/25">
+      <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#b0a08c]">
         Impacto de carga
       </span>
       {Object.entries(ACWR_ZONES).map(([key, zone]) => (
@@ -688,12 +688,12 @@ const ZoneLegend = memo(function ZoneLegend({ currentAcwr }: { currentAcwr?: num
             style={{ backgroundColor: zone.color }}
             aria-hidden
           />
-          <span className="text-[9px] text-white/30">{zone.label}</span>
+          <span className="text-[9px] text-[#8a7660]">{zone.label}</span>
         </div>
       ))}
       {currentAcwr != null && (
         <div className="ml-auto flex items-center gap-1.5">
-          <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-white/25">ACWR actual:</span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#b0a08c]">ACWR actual:</span>
           <span
             className="text-[10px] font-bold tabular-nums"
             style={{ color: acwrZoneColor(currentAcwr) }}
@@ -800,25 +800,25 @@ export default function TrainingPlanner({
       <header
         className={cn(
           "auth-grid-bg relative overflow-hidden rounded-2xl",
-          "bg-[#080808] px-6 py-5",
-          "border border-white/[0.09] backdrop-blur-md",
+          "bg-[#f1e6d4] px-6 py-5",
+          "border border-[#e4d8c4] backdrop-blur-md",
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.5)]",
           "bs-fade-up bs-d0"
         )}
       >
         {/* Bottom gradient bleed */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#0F172A]/60"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#f1e6d4]/60"
           aria-hidden
         />
 
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           {/* Title + range */}
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.20em] text-white/30">
+            <p className="text-[10px] font-bold uppercase tracking-[0.20em] text-[#8a7660]">
               Bodysense · Planificación
             </p>
-            <h2 className="mt-1.5 text-xl font-black text-white/90">
+            <h2 className="mt-1.5 text-xl font-black text-[#3a2c1e]">
               {formatWeekRange(weekStart)}
             </h2>
           </div>
@@ -829,11 +829,11 @@ export default function TrainingPlanner({
               <button
                 onClick={goToCurrentWeek}
                 className={cn(
-                  "rounded-lg border border-[#818cf8]/30 bg-[#818cf8]/8",
-                  "px-3 py-1.5 text-[11px] font-semibold text-[#818cf8]",
-                  "hover:border-[#818cf8]/60 hover:bg-[#818cf8]/15",
+                  "rounded-lg border border-[#c65f3f]/30 bg-[#c65f3f]/8",
+                  "px-3 py-1.5 text-[11px] font-semibold text-[#c65f3f]",
+                  "hover:border-[#c65f3f]/60 hover:bg-[#c65f3f]/15",
                   "transition-colors duration-150",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
                 )}
               >
                 Semana actual
@@ -845,10 +845,10 @@ export default function TrainingPlanner({
                 onClick={prevWeek}
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-lg",
-                  "border border-white/[0.09] text-slate-500",
-                  "hover:border-white/[0.18] hover:text-white",
+                  "border border-[#e4d8c4] text-[#8a7660]",
+                  "hover:border-[#d6c6ac] hover:text-[#3a2c1e]",
                   "transition-colors duration-150",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
                 )}
                 aria-label="Semana anterior"
               >
@@ -858,10 +858,10 @@ export default function TrainingPlanner({
                 onClick={nextWeek}
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-lg",
-                  "border border-white/[0.09] text-slate-500",
-                  "hover:border-white/[0.18] hover:text-white",
+                  "border border-[#e4d8c4] text-[#8a7660]",
+                  "hover:border-[#d6c6ac] hover:text-[#3a2c1e]",
                   "transition-colors duration-150",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/40"
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40"
                 )}
                 aria-label="Semana siguiente"
               >

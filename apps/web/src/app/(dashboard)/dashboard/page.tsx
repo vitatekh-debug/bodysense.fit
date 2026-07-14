@@ -231,15 +231,15 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-black text-slate-100">Dashboard</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-3xl font-black text-[#3a2c1e]">Dashboard</h1>
+          <p className="text-[#8a7660] text-sm mt-1">
             Resumen del estado de tu equipo · {athletes.length} atleta
             {athletes.length !== 1 ? "s" : ""}
           </p>
         </div>
         {unreadCount > 0 && (
-          <div className="bg-red-900/50 border border-red-700 rounded-xl px-4 py-2 text-right">
-            <p className="text-red-300 text-xs font-bold">
+          <div className="bg-[#c0492f]/10 border border-[#c0492f]/60 rounded-xl px-4 py-2 text-right">
+            <p className="text-[#c0492f] text-xs font-bold">
               🔔 {unreadCount} alerta{unreadCount > 1 ? "s" : ""} sin leer
             </p>
           </div>
@@ -249,17 +249,17 @@ export default async function DashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Atletas"         value={athletes.length} />
-        <StatCard label="Zona Óptima"     value={optimal.length}    color="text-green-400" />
-        <StatCard label="En Riesgo ACWR"  value={atRisk.length}     color="text-amber-400" />
+        <StatCard label="Zona Óptima"     value={optimal.length}    color="text-[#6f9c4a]" />
+        <StatCard label="En Riesgo ACWR"  value={atRisk.length}     color="text-[#b5761f]" />
         <StatCard
           label="Alertas Clínicas"
           value={totalAlerts}
           color={
             redAlerts > 0
-              ? "text-red-400"
+              ? "text-[#c0492f]"
               : orAlerts > 0
-              ? "text-orange-400"
-              : "text-slate-100"
+              ? "text-[#d9702a]"
+              : "text-[#3a2c1e]"
           }
         />
       </div>
@@ -272,7 +272,7 @@ export default async function DashboardPage() {
       {/* ACWR risk athletes */}
       {atRisk.length > 0 && (
         <div className="bg-red-950/50 border border-red-800 rounded-xl p-4">
-          <p className="text-red-300 font-semibold text-sm">
+          <p className="text-[#c0492f] font-semibold text-sm">
             ⚠️ {atRisk.length} atleta{atRisk.length > 1 ? "s" : ""} con ACWR en zona de riesgo
           </p>
           <div className="mt-2 flex gap-2 flex-wrap">
@@ -280,7 +280,7 @@ export default async function DashboardPage() {
               <Link
                 key={a.id}
                 href={`/athletes/${a.id}`}
-                className="bg-red-900/50 text-red-200 text-xs px-3 py-1 rounded-full hover:bg-red-800/60 transition"
+                className="bg-[#c0492f]/10 text-[#c0492f] text-xs px-3 py-1 rounded-full hover:bg-red-800/60 transition"
               >
                 {a.full_name} — {safeAcwr(a.latest_acwr?.acwr_ratio)}
               </Link>
@@ -291,24 +291,24 @@ export default async function DashboardPage() {
 
       {/* Team table */}
       <div>
-        <h2 className="text-slate-300 text-xs font-bold uppercase tracking-widest mb-3">
+        <h2 className="text-[#5d4c3a] text-xs font-bold uppercase tracking-widest mb-3">
           Estado del Equipo
         </h2>
         <div className="overflow-x-auto rounded-xl">
-        <div className="bg-surface rounded-xl overflow-hidden border border-slate-700">
+        <div className="bg-surface rounded-xl overflow-hidden border border-[#e4d8c4]">
           <table className="w-full text-xs sm:text-sm">
             <thead>
-              <tr className="border-b border-slate-700">
-                <th className="text-left px-4 py-3 text-slate-400 font-medium">Atleta</th>
-                <th className="text-left px-4 py-3 text-slate-400 font-medium hidden sm:table-cell">
+              <tr className="border-b border-[#e4d8c4]">
+                <th className="text-left px-4 py-3 text-[#8a7660] font-medium">Atleta</th>
+                <th className="text-left px-4 py-3 text-[#8a7660] font-medium hidden sm:table-cell">
                   Deporte
                 </th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">ACWR</th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">EVA</th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium hidden md:table-cell">
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">ACWR</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">EVA</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium hidden md:table-cell">
                   POMS
                 </th>
-                <th className="text-center px-4 py-3 text-slate-400 font-medium">Alertas</th>
+                <th className="text-center px-4 py-3 text-[#8a7660] font-medium">Alertas</th>
               </tr>
             </thead>
             <tbody>
@@ -328,7 +328,7 @@ export default async function DashboardPage() {
                 return (
                   <tr
                     key={athlete.id}
-                    className="border-b border-slate-800 hover:bg-slate-800/40 transition"
+                    className="border-b border-[#e4d8c4] hover:bg-[#f7efe2] transition"
                   >
                     {/* Name → links to athlete detail */}
                     <td className="px-4 py-3">
@@ -336,7 +336,7 @@ export default async function DashboardPage() {
                         href={`/athletes/${athlete.id}`}
                         className="flex items-center gap-2 group"
                       >
-                        <div className="w-7 h-7 rounded-full bg-indigo-600/30 flex items-center justify-center text-indigo-300 text-xs font-bold shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-[#c65f3f]/30 flex items-center justify-center text-[#c65f3f] text-xs font-bold shrink-0">
                           {(athlete.full_name as string)
                             .split(" ")
                             .map((n: string) => n[0])
@@ -344,14 +344,14 @@ export default async function DashboardPage() {
                             .join("")
                             .toUpperCase()}
                         </div>
-                        <span className="text-slate-100 font-medium group-hover:text-indigo-300 transition">
+                        <span className="text-[#3a2c1e] font-medium group-hover:text-[#c65f3f] transition">
                           {athlete.full_name}
                         </span>
                       </Link>
                     </td>
 
                     {/* Sport */}
-                    <td className="px-4 py-3 text-slate-400 text-xs hidden sm:table-cell">
+                    <td className="px-4 py-3 text-[#8a7660] text-xs hidden sm:table-cell">
                       {athlete.sport
                         ? (SPORT_LABELS[athlete.sport] ?? athlete.sport)
                         : "—"}
@@ -374,7 +374,7 @@ export default async function DashboardPage() {
                           )}
                         </div>
                       ) : (
-                        <span className="text-slate-600 text-xs">—</span>
+                        <span className="text-[#b0a08c] text-xs">—</span>
                       )}
                     </td>
 
@@ -386,7 +386,7 @@ export default async function DashboardPage() {
                           light={athlete.latest_pain.traffic_light}
                         />
                       ) : (
-                        <span className="text-slate-600 text-xs">—</span>
+                        <span className="text-[#b0a08c] text-xs">—</span>
                       )}
                     </td>
 
@@ -395,7 +395,7 @@ export default async function DashboardPage() {
                       {athlete.latest_poms != null ? (
                         <PomsBadge tmd={athlete.latest_poms.tmd_score} />
                       ) : (
-                        <span className="text-slate-600 text-xs">—</span>
+                        <span className="text-[#b0a08c] text-xs">—</span>
                       )}
                     </td>
 
@@ -412,7 +412,7 @@ export default async function DashboardPage() {
                           />
                         </Link>
                       ) : (
-                        <span className="text-green-400 text-xs font-bold">✓ OK</span>
+                        <span className="text-[#6f9c4a] text-xs font-bold">✓ OK</span>
                       )}
                     </td>
                   </tr>
@@ -432,25 +432,25 @@ export default async function DashboardPage() {
 function StatCard({
   label,
   value,
-  color = "text-slate-100",
+  color = "text-[#3a2c1e]",
 }: {
   label: string;
   value: number;
   color?: string;
 }) {
   return (
-    <div className="bg-surface rounded-xl p-5 border border-slate-700">
+    <div className="bg-surface rounded-xl p-5 border border-[#e4d8c4]">
       <p className={`text-4xl font-black ${color}`}>{value}</p>
-      <p className="text-slate-400 text-sm mt-1">{label}</p>
+      <p className="text-[#8a7660] text-sm mt-1">{label}</p>
     </div>
   );
 }
 
 function EvaChip({ score, light }: { score: number; light: string }) {
   const map: Record<string, string> = {
-    green: "#22C55E",
-    yellow: "#F59E0B",
-    red: "#EF4444",
+    green: "#6f9c4a",
+    yellow: "#d9902a",
+    red: "#c0492f",
   };
   const c = map[light] ?? "#6B7280";
   return (
@@ -465,7 +465,7 @@ function EvaChip({ score, light }: { score: number; light: string }) {
 
 function PomsBadge({ tmd }: { tmd: number }) {
   const color =
-    tmd > 7 ? "#F97316" : tmd > 0 ? "#EAB308" : "#22C55E";
+    tmd > 7 ? "#d9702a" : tmd > 0 ? "#d9902a" : "#6f9c4a";
   return (
     <span
       className="text-xs font-bold px-2 py-0.5 rounded-full"
@@ -484,9 +484,9 @@ function AlertBadge({
   count: number;
 }) {
   const map = {
-    red:    { color: "#EF4444", bg: "#EF444422" },
-    orange: { color: "#F97316", bg: "#F9731622" },
-    yellow: { color: "#EAB308", bg: "#EAB30822" },
+    red:    { color: "#c0492f", bg: "#c0492f22" },
+    orange: { color: "#d9702a", bg: "#d9702a22" },
+    yellow: { color: "#d9902a", bg: "#d9902a22" },
     info:   { color: "#60A5FA", bg: "#60A5FA22" },
   };
   const { color, bg } = map[level] ?? map.info;
@@ -504,13 +504,13 @@ function EmptyState() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black text-slate-100">Dashboard</h1>
-        <p className="text-slate-400 text-sm mt-1">Resumen del estado de tu equipo</p>
+        <h1 className="text-3xl font-black text-[#3a2c1e]">Dashboard</h1>
+        <p className="text-[#8a7660] text-sm mt-1">Resumen del estado de tu equipo</p>
       </div>
-      <div className="bg-surface border border-slate-700 rounded-xl p-16 text-center space-y-3">
+      <div className="bg-surface border border-[#e4d8c4] rounded-xl p-16 text-center space-y-3">
         <p className="text-4xl">👥</p>
-        <p className="text-slate-300 font-semibold">No tienes atletas registrados aún</p>
-        <p className="text-slate-500 text-sm">
+        <p className="text-[#5d4c3a] font-semibold">No tienes atletas registrados aún</p>
+        <p className="text-[#8a7660] text-sm">
           Crea un equipo en la app móvil e invita a tus atletas para empezar a monitorear.
         </p>
       </div>

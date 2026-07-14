@@ -70,9 +70,9 @@ const TABS: { key: TabKey; label: string; icon: typeof Activity }[] = [
 ];
 
 const SEVERITY_COLOR: Record<WeaknessItem["severity"], string> = {
-  high:   "#ef4444",
-  medium: "#f59e0b",
-  low:    "#818cf8",
+  high:   "#c0492f",
+  medium: "#d9902a",
+  low:    "#c65f3f",
 };
 
 // ─── Small presentational helpers ─────────────────────────────────────────────
@@ -81,19 +81,19 @@ function StatTile({ label, value, unit, color }: {
   label: string; value: string; unit?: string; color?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-4 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">{label}</p>
+    <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-4 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">{label}</p>
       <p className="mt-2 text-2xl font-black tabular-nums" style={{ color: color ?? "rgba(255,255,255,0.9)" }}>
         {value}
       </p>
-      {unit && <p className="mt-0.5 text-[11px] font-medium text-white/25">{unit}</p>}
+      {unit && <p className="mt-0.5 text-[11px] font-medium text-[#b0a08c]">{unit}</p>}
     </div>
   );
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/30">
+    <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
       {children}
     </h2>
   );
@@ -130,7 +130,7 @@ function ResumenTab(p: ProfileTabsProps) {
             label="Último sRPE"
             value={p.latestSrpe != null ? p.latestSrpe.toString() : "—"}
             unit="última sesión · UA"
-            color="#818cf8"
+            color="#c65f3f"
           />
         </div>
       </section>
@@ -139,9 +139,9 @@ function ResumenTab(p: ProfileTabsProps) {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <SectionHeading>Debilidades principales</SectionHeading>
-          <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-4 backdrop-blur-md space-y-2 min-h-[120px]">
+          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-4 backdrop-blur-md space-y-2 min-h-[120px]">
             {p.weaknesses.length === 0 ? (
-              <p className="text-white/25 text-xs py-6 text-center">
+              <p className="text-[#b0a08c] text-xs py-6 text-center">
                 Sin debilidades detectadas en las últimas evaluaciones.
               </p>
             ) : (
@@ -155,7 +155,7 @@ function ResumenTab(p: ProfileTabsProps) {
                   }}
                 >
                   <AlertTriangle size={14} style={{ color: SEVERITY_COLOR[w.severity] }} />
-                  <span className="text-slate-200 text-sm">{w.label}</span>
+                  <span className="text-[#3a2c1e] text-sm">{w.label}</span>
                 </div>
               ))
             )}
@@ -164,29 +164,29 @@ function ResumenTab(p: ProfileTabsProps) {
 
         <div>
           <SectionHeading>Historial de lesiones activo</SectionHeading>
-          <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-4 backdrop-blur-md space-y-2 min-h-[120px]">
+          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-4 backdrop-blur-md space-y-2 min-h-[120px]">
             {p.injuries.length === 0 ? (
-              <p className="text-white/25 text-xs py-6 text-center">
+              <p className="text-[#b0a08c] text-xs py-6 text-center">
                 Sin dolor activo registrado.
               </p>
             ) : (
               p.injuries.map((inj, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-black/20 px-3 py-2"
+                  className="flex items-center justify-between rounded-lg border border-[#e4d8c4] bg-[#f7efe2] px-3 py-2"
                 >
-                  <span className="text-slate-200 text-sm">{inj.region}</span>
+                  <span className="text-[#3a2c1e] text-sm">{inj.region}</span>
                   <div className="flex items-center gap-2">
                     <span
                       className="text-xs font-bold px-2 py-0.5 rounded-full tabular-nums"
                       style={{
-                        color: inj.eva >= 7 ? "#f87171" : inj.eva >= 4 ? "#fbbf24" : "#4ade80",
-                        backgroundColor: (inj.eva >= 7 ? "#ef4444" : inj.eva >= 4 ? "#f59e0b" : "#22c55e") + "1a",
+                        color: inj.eva >= 7 ? "#c0492f" : inj.eva >= 4 ? "#d9902a" : "#6f9c4a",
+                        backgroundColor: (inj.eva >= 7 ? "#c0492f" : inj.eva >= 4 ? "#d9902a" : "#6f9c4a") + "1a",
                       }}
                     >
                       EVA {inj.eva}
                     </span>
-                    <span className="text-slate-600 text-xs">
+                    <span className="text-[#b0a08c] text-xs">
                       {new Date(inj.date).toLocaleDateString("es-CO", { day: "2-digit", month: "short" })}
                     </span>
                   </div>
@@ -201,12 +201,12 @@ function ResumenTab(p: ProfileTabsProps) {
       <section>
         <SectionHeading>Evolución ACWR — últimos 30 días</SectionHeading>
         {p.acwrHistory.length > 0 ? (
-          <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6 backdrop-blur-md">
+          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-6 backdrop-blur-md">
             <AcwrHistoryChart data={p.acwrHistory} />
           </div>
         ) : (
-          <div className="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-10 text-center backdrop-blur-md">
-            <p className="text-white/25 text-[13px]">
+          <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-10 text-center backdrop-blur-md">
+            <p className="text-[#b0a08c] text-[13px]">
               Sin datos de ACWR todavía. Registra sesiones y sRPE para calcular.
             </p>
           </div>
@@ -224,7 +224,7 @@ function EvolucionTab(p: ProfileTabsProps) {
         <MetricTrendChart
           title="WBLT — Movilidad de tobillo"
           unit="cm"
-          color="#818cf8"
+          color="#c65f3f"
           data={p.wbltTrend}
           benchmark={{ value: 10, label: "≥ 10 cm" }}
           higherIsBetter
@@ -232,7 +232,7 @@ function EvolucionTab(p: ProfileTabsProps) {
         <MetricTrendChart
           title="Drop Jump — RSI (Bosco)"
           unit="RSI"
-          color="#4ade80"
+          color="#6f9c4a"
           data={p.rsiTrend}
           benchmark={{ value: 1.0, label: "≥ 1.0" }}
           higherIsBetter
@@ -240,14 +240,14 @@ function EvolucionTab(p: ProfileTabsProps) {
         <MetricTrendChart
           title="T-Test de agilidad"
           unit="s"
-          color="#22d3ee"
+          color="#3f9aa8"
           data={p.tTestTrend}
           benchmark={{ value: 11.5, label: "≤ 11.5 s" }}
         />
         <MetricTrendChart
           title="FMS total"
           unit="/21"
-          color="#f59e0b"
+          color="#d9902a"
           data={p.fmsTrend}
           benchmark={{ value: 14, label: "> 14" }}
           higherIsBetter
@@ -289,7 +289,7 @@ export default function ProfileTabs(props: ProfileTabsProps) {
       />
 
       {/* Tab bar */}
-      <div className="flex gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-1">
+      <div className="flex gap-1 rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-1">
         {TABS.map((t) => {
           const active = tab === t.key;
           const Icon = t.icon;
@@ -298,12 +298,12 @@ export default function ProfileTabs(props: ProfileTabsProps) {
               key={t.key}
               onClick={() => switchTo(t.key)}
               className="relative flex-1 flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs sm:text-sm font-semibold transition-colors"
-              style={{ color: active ? "#0a0a0a" : "#94a3b8" }}
+              style={{ color: active ? "#fdf3ea" : "#8a7660" }}
             >
               {active && (
                 <motion.div
                   layoutId="tab-pill"
-                  className="absolute inset-0 rounded-xl bg-[#818cf8]"
+                  className="absolute inset-0 rounded-xl bg-[#c65f3f]"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}

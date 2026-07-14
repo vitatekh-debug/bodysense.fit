@@ -2,7 +2,7 @@
  * ProfileSessionsTable — Bodysense
  *
  * Glass-morphism table of the last 10 training sessions.
- * Design tokens: backdrop-blur-md, inset top-highlight, text-white/35 labels.
+ * Design tokens: backdrop-blur-md, inset top-highlight, text-[#8a7660] labels.
  */
 
 import { formatDate } from "@vitatekh/shared";
@@ -42,20 +42,20 @@ const SESSION_TYPE_LABELS: Record<SessionType, string> = {
 };
 
 const SESSION_TYPE_COLORS: Record<SessionType, string> = {
-  technical:  "#818cf8",
-  tactical:   "#34d399",
-  physical:   "#f59e0b",
-  match:      "#ef4444",
-  recovery:   "#22d3ee",
-  prevention: "#a78bfa",
-  rehabilitation: "#2dd4bf",
+  technical:  "#c65f3f",
+  tactical:   "#5aa07a",
+  physical:   "#d9902a",
+  match:      "#c0492f",
+  recovery:   "#3f9aa8",
+  prevention: "#9b6bbf",
+  rehabilitation: "#3aa99a",
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function SessionTypeBadge({ type }: { type: SessionType }) {
   const label = SESSION_TYPE_LABELS[type] ?? type;
-  const color = SESSION_TYPE_COLORS[type] ?? "#64748b";
+  const color = SESSION_TYPE_COLORS[type] ?? "#8a7660";
   return (
     <span
       className="inline-block rounded-md px-2 py-0.5 text-[10px] font-bold tracking-wide"
@@ -81,7 +81,7 @@ function Th({
     <th
       scope="col"
       className={cn(
-        "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/25",
+        "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#b0a08c]",
         align === "center" && "text-center",
         align === "right" && "text-right"
       )}
@@ -95,12 +95,12 @@ function Th({
 function SrpeBadge({ srpe }: { srpe: number }) {
   const color =
     srpe < 400
-      ? "#22c55e"
+      ? "#6f9c4a"
       : srpe < 700
         ? "#84cc16"
         : srpe < 1000
-          ? "#f59e0b"
-          : "#ef4444";
+          ? "#d9902a"
+          : "#c0492f";
   return (
     <span
       className="inline-block rounded-md px-2 py-0.5 text-[11px] font-bold tabular-nums"
@@ -123,25 +123,25 @@ export default function ProfileSessionsTable({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/[0.09] bg-white/[0.025] overflow-hidden",
+        "rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] overflow-hidden",
         "backdrop-blur-md",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
         "bs-fade-up bs-d1"
       )}
     >
       {/* Card header */}
-      <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
-        <h2 className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">
+      <div className="flex items-center justify-between border-b border-[#e4d8c4] px-5 py-4">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7660]">
           Sesiones Recientes
         </h2>
-        <span className="text-[11px] font-medium text-white/20">
+        <span className="text-[11px] font-medium text-[#b0a08c]">
           {rows.length} sesión{rows.length !== 1 ? "es" : ""}
         </span>
       </div>
 
       <table className="w-full text-xs">
         <thead>
-          <tr className="border-b border-white/[0.04]">
+          <tr className="border-b border-[#e4d8c4]">
             <Th>Fecha</Th>
             <Th>Tipo</Th>
             <Th align="center">Dur.</Th>
@@ -154,7 +154,7 @@ export default function ProfileSessionsTable({
             <tr>
               <td
                 colSpan={5}
-                className="py-10 text-center text-[13px] text-white/20"
+                className="py-10 text-center text-[13px] text-[#b0a08c]"
               >
                 Sin sesiones registradas
               </td>
@@ -165,25 +165,25 @@ export default function ProfileSessionsTable({
               return (
                 <tr
                   key={s.id}
-                  className="border-b border-white/[0.03] transition-colors hover:bg-white/[0.02]"
+                  className="border-b border-[#e4d8c4] transition-colors hover:bg-[#fdf9f2]"
                 >
-                  <td className="px-4 py-3 text-white/45 tabular-nums">
+                  <td className="px-4 py-3 text-[#3a2c1e]/45 tabular-nums">
                     {formatDate(s.date)}
                   </td>
                   <td className="px-4 py-3">
                     <SessionTypeBadge type={s.session_type} />
                   </td>
-                  <td className="px-4 py-3 text-center text-white/45 tabular-nums">
-                    {s.duration_min}<span className="text-white/20">&thinsp;min</span>
+                  <td className="px-4 py-3 text-center text-[#3a2c1e]/45 tabular-nums">
+                    {s.duration_min}<span className="text-[#b0a08c]">&thinsp;min</span>
                   </td>
-                  <td className="px-4 py-3 text-center text-white/60 tabular-nums">
-                    {rpe ? rpe.rpe : <span className="text-white/20">—</span>}
+                  <td className="px-4 py-3 text-center text-[#5d4c3a] tabular-nums">
+                    {rpe ? rpe.rpe : <span className="text-[#b0a08c]">—</span>}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {rpe ? (
                       <SrpeBadge srpe={rpe.srpe} />
                     ) : (
-                      <span className="text-white/20">—</span>
+                      <span className="text-[#b0a08c]">—</span>
                     )}
                   </td>
                 </tr>
