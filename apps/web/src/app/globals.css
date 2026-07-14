@@ -6,25 +6,37 @@
    Central source of truth for design values used in box-shadow,
    filter, and other properties that Tailwind can't inline easily. */
 :root {
-  /* Background hierarchy */
-  --bs-void:         #080808;
-  --bs-surface:      #111111;
-  --bs-surface-high: #191919;
+  /* ── Tema cálido (crema / terracota) ─────────────────────────
+     Fuente central del tema. La app se sirve en modo cálido. */
 
-  /* Brand spectrum */
-  --bs-brand:        #6366F1;
-  --bs-brand-light:  #818CF8;
-  --bs-brand-dark:   #4F46E5;
+  /* Jerarquía de superficies (antes fondos oscuros) */
+  --bs-void:         #f1e6d4;  /* fondo de página crema */
+  --bs-surface:      #fdf9f2;  /* tarjeta */
+  --bs-surface-high: #f7efe2;  /* tarjeta elevada */
 
-  /* ACWR zone colours (also available as Tailwind arbitrary values) */
-  --bs-zone-low:       #3B82F6;
-  --bs-zone-optimal:   #22C55E;
-  --bs-zone-high:      #F59E0B;
-  --bs-zone-very-high: #EF4444;
+  /* Espectro de marca — terracota */
+  --bs-brand:        #c65f3f;
+  --bs-brand-light:  #d17a54;
+  --bs-brand-dark:   #a8472a;
 
-  /* Legacy page background — kept for dashboard layout */
-  --background: #0F172A;
-  --foreground: #F1F5F9;
+  /* Texto cálido */
+  --bs-text:         #3a2c1e;  /* primario (marrón oscuro) */
+  --bs-text-soft:    #8a7660;  /* secundario */
+  --bs-text-muted:   #b0a08c;  /* terciario / hints */
+
+  /* Bordes cálidos */
+  --bs-border:       #e4d8c4;
+  --bs-border-strong:#d6c6ac;
+
+  /* Zonas ACWR — ajustadas para contraste sobre crema */
+  --bs-zone-low:       #4a86b0;
+  --bs-zone-optimal:   #6f9c4a;
+  --bs-zone-high:      #d9902a;
+  --bs-zone-very-high: #c0492f;
+
+  /* Fondo/texto de página */
+  --background: #f1e6d4;
+  --foreground: #3a2c1e;
 }
 
 /* ── Viewport Fix (#5) ───────────────────────────────────────
@@ -51,7 +63,7 @@ body {
 .auth-grid-bg {
   background-image: radial-gradient(
     circle,
-    rgba(129, 140, 248, 0.07) 1px,
+    rgba(168, 71, 42, 0.08) 1px,
     transparent 1px
   );
   background-size: 24px 24px;

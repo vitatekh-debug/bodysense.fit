@@ -43,35 +43,35 @@ export default function LoginPage() {
   }
 
   return (
-    /* ── Industrial Dark background ── */
-    <div className="min-h-screen flex items-center justify-center bg-[#080808] px-4 auth-grid-bg">
+    /* ── Fondo cálido crema ── */
+    <div className="min-h-screen flex items-center justify-center bg-[#f1e6d4] px-4 auth-grid-bg">
 
       <div className="w-full max-w-sm">
 
         {/* ── Brand mark ── */}
         <div className="text-center mb-10">
-          <span className="inline-block text-[11px] font-bold tracking-[0.35em] text-[#818cf8]/60 uppercase mb-4">
+          <span className="inline-block text-[11px] font-bold tracking-[0.35em] text-[#c65f3f]/70 uppercase mb-4">
             bodysense.fit
           </span>
-          <h1 className="text-5xl font-black tracking-[0.18em] text-white mb-1">
-            BODY<span className="text-[#818cf8]">SENSE</span>
+          <h1 className="text-5xl font-black tracking-[0.18em] text-[#3a2c1e] mb-1">
+            BODY<span className="text-[#c65f3f]">SENSE</span>
           </h1>
-          {/* neon underline */}
-          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-[#818cf8] to-transparent opacity-60" />
-          <p className="mt-4 text-[13px] text-slate-500 tracking-wide">
+          {/* subrayado terracota */}
+          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-[#c65f3f] to-transparent opacity-70" />
+          <p className="mt-4 text-[13px] text-[#8a7660] tracking-wide">
             Gestión de Carga Deportiva
           </p>
         </div>
 
         {/* ── Form card ── */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm p-8 shadow-xl shadow-black/60">
+        <div className="rounded-2xl border border-[#e4d8c4] bg-[#fdf9f2] p-8 shadow-lg shadow-[#a8472a]/10">
           <form onSubmit={handleLogin} className="flex flex-col gap-5">
 
             {/* Email field */}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
-                className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+                className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase"
               >
                 Correo electrónico
               </label>
@@ -82,11 +82,11 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="
-                  bg-black/40 border border-white/[0.09] rounded-lg
-                  px-4 py-3 text-slate-100 text-sm
-                  placeholder-slate-700
-                  focus:outline-none focus:border-[#818cf8]
-                  focus:ring-2 focus:ring-[#818cf8]/20
+                  bg-[#f7efe2] border border-[#e4d8c4] rounded-lg
+                  px-4 py-3 text-[#3a2c1e] text-sm
+                  placeholder-[#b0a08c]
+                  focus:outline-none focus:border-[#c65f3f]
+                  focus:ring-2 focus:ring-[#c65f3f]/20
                   transition-all duration-200
                 "
                 required
@@ -99,7 +99,7 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase"
+                  className="text-[11px] font-semibold tracking-[0.12em] text-[#8a7660] uppercase"
                 >
                   Contraseña
                 </label>
@@ -111,11 +111,11 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="
-                  bg-black/40 border border-white/[0.09] rounded-lg
-                  px-4 py-3 text-slate-100 text-sm
-                  placeholder-slate-700
-                  focus:outline-none focus:border-[#818cf8]
-                  focus:ring-2 focus:ring-[#818cf8]/20
+                  bg-[#f7efe2] border border-[#e4d8c4] rounded-lg
+                  px-4 py-3 text-[#3a2c1e] text-sm
+                  placeholder-[#b0a08c]
+                  focus:outline-none focus:border-[#c65f3f]
+                  focus:ring-2 focus:ring-[#c65f3f]/20
                   transition-all duration-200
                 "
                 required
@@ -137,12 +137,12 @@ export default function LoginPage() {
               disabled={loading}
               className="
                 mt-1 w-full
-                bg-[#6366F1] hover:bg-[#4F46E5] active:bg-[#4338CA]
-                text-white font-bold text-sm tracking-wide
+                bg-[#c65f3f] hover:bg-[#a8472a] active:bg-[#8f3c23]
+                text-[#fdf3ea] font-bold text-sm tracking-wide
                 py-3.5 rounded-lg
                 transition-colors duration-150
                 disabled:opacity-50 disabled:cursor-not-allowed
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#818cf8]/50
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c65f3f]/40
               "
             >
               {loading ? (
@@ -158,11 +158,11 @@ export default function LoginPage() {
         </div>
 
         {/* ── Footer link ── */}
-        <p className="text-center text-[13px] text-slate-600 mt-6">
+        <p className="text-center text-[13px] text-[#8a7660] mt-6">
           ¿No tienes cuenta?{" "}
           <Link
             href="/register"
-            className="text-[#818cf8] hover:text-[#6366F1] transition-colors duration-150 font-medium"
+            className="text-[#c65f3f] hover:text-[#a8472a] transition-colors duration-150 font-medium"
           >
             Crear cuenta
           </Link>
