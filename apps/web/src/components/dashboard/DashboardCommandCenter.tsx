@@ -57,7 +57,7 @@ export interface RecoverySnapshot {
 
 export interface UpcomingSession {
   title: string;
-  sessionType: "technical" | "tactical" | "physical" | "match" | "recovery" | "prevention";
+  sessionType: "technical" | "tactical" | "physical" | "match" | "recovery" | "prevention" | "rehabilitation";
   scheduledAt: string;  // ISO date string
   durationMin: number;
   phase: string;
@@ -97,6 +97,7 @@ const SESSION_LABELS: Record<UpcomingSession["sessionType"], string> = {
   match:      "Partido",
   recovery:   "Recuperación",
   prevention: "Prevención",
+  rehabilitation: "Rehabilitación",
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

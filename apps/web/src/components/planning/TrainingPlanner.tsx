@@ -95,6 +95,7 @@ const SESSION_TYPE_CONFIG: Record<
   match:      { label: "Partido",       abbr: "PAR", color: "#ef4444" },
   recovery:   { label: "Recuperación",  abbr: "REC", color: "#22d3ee" },
   prevention: { label: "Prevención",    abbr: "PRE", color: "#a78bfa" },
+  rehabilitation: { label: "Rehabilitación", abbr: "REH", color: "#2dd4bf" },
 };
 
 const PHASE_LABELS: Record<SessionPhase, string> = {
