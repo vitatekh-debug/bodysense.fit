@@ -14,6 +14,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default async function AthleteLayout({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
@@ -33,19 +34,19 @@ export default async function AthleteLayout({ children }: { children: React.Reac
   const displayName    = profile?.full_name || user.email || "Atleta";
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#0a0a0a]">
+    <div className="min-h-dvh flex flex-col bg-surface">
 
       {/* ── Header ── */}
-      <header className="shrink-0 flex items-center gap-3 h-14 px-4 sm:px-6 border-b border-slate-800/80 bg-[#0a0a0a]">
+      <header className="shrink-0 flex items-center gap-3 h-14 px-4 sm:px-6 border-b border-line bg-surface">
 
         {/* Logo */}
         <span className="text-sm font-black tracking-[0.15em] select-none">
-          <span className="text-[#818cf8]">BODY</span>
-          <span className="text-slate-100">SENSE</span>
+          <span className="text-brand">BODY</span>
+          <span className="text-ink">SENSE</span>
         </span>
 
         {/* Badge vista */}
-        <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-900/40 text-emerald-400 border border-emerald-800/50">
+        <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/40">
           Vista Atleta
         </span>
 
@@ -53,15 +54,18 @@ export default async function AthleteLayout({ children }: { children: React.Reac
         <div className="flex-1" />
 
         {/* Nombre */}
-        <span className="text-slate-500 text-xs hidden sm:block truncate max-w-[160px]">
+        <span className="text-ink-soft text-xs hidden sm:block truncate max-w-[160px]">
           {displayName}
         </span>
+
+        {/* Selector de tema */}
+        <ThemeToggle compact />
 
         {/* Volver al Dashboard profesional (solo modo dual o role professional) */}
         {showBackLink && (
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 text-xs font-medium hover:border-slate-600 hover:text-slate-200 transition-all duration-150"
+            className="flex items-center gap-1.5 h-8 px-3 rounded-lg border border-line bg-surface-high/50 text-ink-soft text-xs font-medium hover:border-line-strong hover:text-ink transition-all duration-150"
           >
             ← Dashboard
           </Link>

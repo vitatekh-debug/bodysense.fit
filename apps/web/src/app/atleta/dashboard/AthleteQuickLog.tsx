@@ -40,26 +40,26 @@ function rpeLabel(v: number): string {
 
 /** Color del slider según RPE */
 function rpeColor(v: number): string {
-  if (v <= 4) return "#22C55E";
-  if (v <= 6) return "#EAB308";
-  if (v <= 8) return "#F97316";
-  return "#EF4444";
+  if (v <= 4) return "#6f9c4a";
+  if (v <= 6) return "#d9902a";
+  if (v <= 8) return "#d9702a";
+  return "#c0492f";
 }
 
 /** Color escala "menos es mejor" (fatiga, dolor 1-10) */
 function loadScaleColor(v: number, max: number): string {
   const pct = v / max;
-  if (pct <= 0.4) return "#22C55E";
-  if (pct <= 0.7) return "#EAB308";
-  return "#EF4444";
+  if (pct <= 0.4) return "#6f9c4a";
+  if (pct <= 0.7) return "#d9902a";
+  return "#c0492f";
 }
 
 /** Color escala "más es mejor" (ánimo, calidad sueño 1-5) */
 function positiveScaleColor(v: number, max: number): string {
   const pct = v / max;
-  if (pct >= 0.7) return "#22C55E";
-  if (pct >= 0.4) return "#EAB308";
-  return "#EF4444";
+  if (pct >= 0.7) return "#6f9c4a";
+  if (pct >= 0.4) return "#d9902a";
+  return "#c0492f";
 }
 
 const MOOD_LABELS = ["", "Muy bajo", "Bajo", "Neutral", "Bueno", "Excelente"];
@@ -91,7 +91,7 @@ function MetricSlider({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
+        <label className="text-[11px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
           {label}
         </label>
         <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ function MetricSlider({
           >
             {value}
           </motion.span>
-          {valueLabel && <span className="text-slate-400 text-xs">{valueLabel}</span>}
+          {valueLabel && <span className="text-ink-soft text-xs">{valueLabel}</span>}
         </div>
       </div>
       <input
@@ -115,7 +115,7 @@ function MetricSlider({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-800"
+        className="w-full h-2 rounded-full appearance-none cursor-pointer bg-surface-high"
         style={{ accentColor: color }}
       />
     </div>
@@ -234,17 +234,17 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
       {/* ── Saludo ── */}
       <div>
-        <h1 className="text-2xl font-black text-slate-100">
+        <h1 className="text-2xl font-black text-ink">
           Hola, {userName.split(" ")[0]} 👋
         </h1>
-        <p className="text-slate-500 text-sm mt-1">Registra la sesión de hoy.</p>
+        <p className="text-ink-soft text-sm mt-1">Registra la sesión de hoy.</p>
       </div>
 
       {/* ════════════ SECCIÓN 1: SESIÓN ════════════ */}
-      <div className="bg-[#111] border border-slate-700 rounded-2xl p-6 space-y-5">
+      <div className="bg-surface border border-line rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-2">
           <span className="text-xl">📊</span>
-          <h2 className="text-slate-100 font-bold">Registrar Sesión</h2>
+          <h2 className="text-ink font-bold">Registrar Sesión</h2>
         </div>
 
         <form onSubmit={handleSessionSubmit} className="space-y-5">
@@ -252,7 +252,7 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
           {/* RPE Slider */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
+              <label className="text-[11px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
                 RPE — Esfuerzo Percibido (1-10)
               </label>
               <div className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
                 >
                   {cr10Rpe}
                 </motion.span>
-                <span className="text-slate-400 text-xs">{rpeLabel(cr10Rpe)}</span>
+                <span className="text-ink-soft text-xs">{rpeLabel(cr10Rpe)}</span>
               </div>
             </div>
             <input
@@ -276,12 +276,12 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
               step={1}
               value={cr10Rpe}
               onChange={(e) => setCr10Rpe(Number(e.target.value))}
-              className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-800"
+              className="w-full h-2 rounded-full appearance-none cursor-pointer bg-surface-high"
               style={{
                 accentColor: rpeColor(cr10Rpe),
               }}
             />
-            <div className="flex justify-between text-[10px] text-slate-600">
+            <div className="flex justify-between text-[10px] text-ink-muted">
               <span>1 Muy ligero</span>
               <span>5 Moderado</span>
               <span>10 Máximo</span>
@@ -290,7 +290,7 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
           {/* Duración */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase">
+            <label className="text-[11px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
               Duración (minutos)
             </label>
             <input
@@ -300,32 +300,32 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
               value={durationMin}
               onChange={(e) => setDuration(Math.max(1, Number(e.target.value)))}
               required
-              className="w-full bg-black/40 border border-white/[0.09] rounded-lg px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-[#818cf8] focus:ring-2 focus:ring-[#818cf8]/20 transition-all"
+              className="w-full bg-surface-high border border-line rounded-lg px-4 py-3 text-ink text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all"
             />
           </div>
 
           {/* sRPE Preview */}
-          <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/40 px-4 py-3">
-            <div className="text-slate-500 text-xs">
+          <div className="flex items-center justify-between rounded-xl border border-line bg-surface-high px-4 py-3">
+            <div className="text-ink-soft text-xs">
               Carga de Sesión (sRPE)
-              <span className="text-slate-600 ml-1">
+              <span className="text-ink-muted ml-1">
                 = RPE {borgRpe} × {durationMin} min
               </span>
             </div>
             <div className="text-right">
-              <span className="text-2xl font-black text-indigo-300">{srpe}</span>
-              <span className="text-slate-500 text-xs ml-1">UA</span>
+              <span className="text-2xl font-black text-brand">{srpe}</span>
+              <span className="text-ink-soft text-xs ml-1">UA</span>
             </div>
           </div>
 
           {/* Feedback */}
           {sessionState === "success" && (
-            <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+            <div className="flex items-center gap-2 text-success text-sm font-medium">
               <span>✅</span> {sessionMsg}
             </div>
           )}
           {sessionState === "error" && (
-            <div className="flex items-center gap-2 text-red-400 text-sm">
+            <div className="flex items-center gap-2 text-danger text-sm">
               <span>⚠</span> {sessionMsg}
             </div>
           )}
@@ -333,11 +333,11 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
           <button
             type="submit"
             disabled={sessionState === "loading"}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-brand hover:bg-brand active:bg-brand-dark text-ink font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {sessionState === "loading" ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-line-strong border-t-white animate-spin" />
                 Guardando…
               </span>
             ) : (
@@ -348,12 +348,12 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
       </div>
 
       {/* ════════════ SECCIÓN 2: WELLNESS ════════════ */}
-      <div className="bg-[#111] border border-slate-700 rounded-2xl p-6 space-y-5">
+      <div className="bg-surface border border-line rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌙</span>
-          <h2 className="text-slate-100 font-bold">Check-in de Bienestar</h2>
+          <h2 className="text-ink font-bold">Check-in de Bienestar</h2>
         </div>
-        <p className="text-slate-500 text-xs -mt-3">
+        <p className="text-ink-soft text-xs -mt-3">
           Registra cómo te sientes hoy. Alimenta tus tendencias de recuperación.
         </p>
 
@@ -401,12 +401,12 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
 
           {/* Feedback */}
           {wellnessState === "success" && (
-            <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+            <div className="flex items-center gap-2 text-success text-sm font-medium">
               <span>✅</span> {wellnessMsg}
             </div>
           )}
           {wellnessState === "error" && (
-            <div className="flex items-center gap-2 text-red-400 text-sm">
+            <div className="flex items-center gap-2 text-danger text-sm">
               <span>⚠</span> {wellnessMsg}
             </div>
           )}
@@ -414,11 +414,11 @@ export default function AthleteQuickLog({ userId, userName, teamId }: Props) {
           <button
             type="submit"
             disabled={wellnessState === "loading"}
-            className="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-success hover:bg-success active:bg-success-dark text-ink font-bold text-sm tracking-wide py-3.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {wellnessState === "loading" ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                <span className="inline-block h-3.5 w-3.5 rounded-full border-2 border-line-strong border-t-white animate-spin" />
                 Guardando…
               </span>
             ) : (

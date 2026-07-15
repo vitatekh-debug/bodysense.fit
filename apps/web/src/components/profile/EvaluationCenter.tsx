@@ -47,7 +47,7 @@ function EvalCard({ cfg }: { cfg: CardConfig }) {
   return (
     <motion.div
       variants={fadeUpItem}
-      className="flex flex-col rounded-2xl border border-white/[0.09] bg-white/[0.025] p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]"
+      className="flex flex-col rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]"
     >
       <div className="flex items-start gap-3">
         <div
@@ -57,19 +57,19 @@ function EvalCard({ cfg }: { cfg: CardConfig }) {
           {cfg.emoji}
         </div>
         <div className="min-w-0">
-          <h3 className="text-slate-100 font-bold text-sm leading-tight">{cfg.title}</h3>
-          <p className="text-slate-500 text-xs mt-0.5 leading-snug">{cfg.subtitle}</p>
+          <h3 className="text-ink font-bold text-sm leading-tight">{cfg.title}</h3>
+          <p className="text-ink-soft text-xs mt-0.5 leading-snug">{cfg.subtitle}</p>
         </div>
       </div>
 
       {/* Último registro */}
-      <div className="mt-4 rounded-xl border border-white/[0.06] bg-black/20 px-3 py-2.5">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+      <div className="mt-4 rounded-xl border border-line bg-surface-high px-3 py-2.5">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-ink-soft">
           Último registro
         </p>
-        <p className="text-slate-300 text-sm font-medium mt-0.5">{fmtDate(cfg.data.lastDate)}</p>
+        <p className="text-ink-body text-sm font-medium mt-0.5">{fmtDate(cfg.data.lastDate)}</p>
         {cfg.data.lastSummary && (
-          <p className="text-slate-500 text-xs mt-1 tabular-nums">{cfg.data.lastSummary}</p>
+          <p className="text-ink-soft text-xs mt-1 tabular-nums">{cfg.data.lastSummary}</p>
         )}
       </div>
 
@@ -80,7 +80,7 @@ function EvalCard({ cfg }: { cfg: CardConfig }) {
           whileTap={{ scale: 0.97 }}
           transition={springPop}
           className="w-full text-center font-bold text-sm tracking-wide py-2.5 rounded-xl transition-colors"
-          style={{ backgroundColor: cfg.accent, color: "#0a0a0a" }}
+          style={{ backgroundColor: cfg.accent, color: "#fdf3ea" }}
         >
           {cfg.cta}
         </motion.div>
@@ -95,7 +95,7 @@ export default function EvaluationCenter({ athleteId, ankleFoot, fms, load }: Pr
       emoji: "🦶",
       title: "Tobillo, Pie y Rendimiento",
       subtitle: "WBLT · Feiss · Bosco · T-Test · Single-Leg Squat",
-      accent: "#818cf8",
+      accent: "#c65f3f",
       href: `/athletes/${athleteId}/ankle-foot`,
       cta: "Registrar Nuevo Test",
       data: ankleFoot,
@@ -104,7 +104,7 @@ export default function EvaluationCenter({ athleteId, ankleFoot, fms, load }: Pr
       emoji: "🏋️‍♂️",
       title: "Evaluación Funcional FMS",
       subtitle: "7 patrones de movimiento · umbral ≤ 14",
-      accent: "#22d3ee",
+      accent: "#3f9aa8",
       href: `/athletes/${athleteId}/fms`,
       cta: "Registrar Nuevo Test",
       data: fms,
@@ -113,7 +113,7 @@ export default function EvaluationCenter({ athleteId, ankleFoot, fms, load }: Pr
       emoji: "🧠",
       title: "Historial de Carga y Antropometría",
       subtitle: "Planificación sRPE y seguimiento de carga",
-      accent: "#f59e0b",
+      accent: "#d9902a",
       href: `/athletes/${athleteId}/plan`,
       cta: "Planificar Carga",
       data: load,

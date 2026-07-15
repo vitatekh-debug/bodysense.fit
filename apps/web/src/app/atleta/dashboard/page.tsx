@@ -59,17 +59,17 @@ export default async function AthleteDashboardPage() {
       {(teamName || sport) && (
         <div className="flex flex-wrap gap-2">
           {teamName && (
-            <span className="text-xs px-3 py-1 rounded-full bg-indigo-900/40 border border-indigo-800/50 text-indigo-300">
+            <span className="text-xs px-3 py-1 rounded-full bg-brand/10 border border-brand/30 text-brand">
               🏅 {teamName}
             </span>
           )}
           {sport && (
-            <span className="text-xs px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400">
+            <span className="text-xs px-3 py-1 rounded-full bg-surface-high border border-line text-ink-soft">
               {SPORT_LABELS[sport as keyof typeof SPORT_LABELS] ?? sport}
             </span>
           )}
           {!teamName && (
-            <span className="text-xs px-3 py-1 rounded-full bg-amber-950/40 border border-amber-800/50 text-amber-400">
+            <span className="text-xs px-3 py-1 rounded-full bg-warning/10 border border-warning/40 text-amber-text">
               ⚠ Sin equipo asignado — pide a tu entrenador que te vincule
             </span>
           )}
@@ -85,8 +85,8 @@ export default async function AthleteDashboardPage() {
 
       {/* ── Historial de sesiones recientes ── */}
       {recentSessions && recentSessions.length > 0 && (
-        <div className="bg-[#111] border border-slate-700 rounded-2xl p-5 space-y-3">
-          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+        <div className="bg-surface border border-line rounded-2xl p-5 space-y-3">
+          <h2 className="text-ink-soft text-xs font-bold uppercase tracking-widest">
             Últimas sesiones
           </h2>
           <div className="space-y-2">
@@ -95,24 +95,24 @@ export default async function AthleteDashboardPage() {
               return (
                 <div
                   key={s.id}
-                  className="flex items-center justify-between py-2 border-b border-slate-800 last:border-0"
+                  className="flex items-center justify-between py-2 border-b border-line last:border-0"
                 >
                   <div>
-                    <p className="text-slate-200 text-sm font-medium">
+                    <p className="text-ink text-sm font-medium">
                       {new Date(s.date).toLocaleDateString("es-CO", {
                         day: "2-digit", month: "short",
                       })}
                     </p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="text-ink-soft text-xs">
                       {s.duration_min} min · {s.session_type}
                     </p>
                   </div>
                   {rpe && (
                     <div className="text-right">
-                      <p className="text-indigo-300 text-sm font-bold">
+                      <p className="text-brand text-sm font-bold">
                         {rpe.srpe} UA
                       </p>
-                      <p className="text-slate-600 text-xs">sRPE</p>
+                      <p className="text-ink-muted text-xs">sRPE</p>
                     </div>
                   )}
                 </div>

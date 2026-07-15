@@ -55,8 +55,8 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap print:hidden">
         <div>
-          <h1 className="text-3xl font-black text-slate-100">Informes</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-3xl font-black text-ink">Informes</h1>
+          <p className="text-ink-soft text-sm mt-1">
             Generado el {generatedAt}
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
           <select
             value={selectedTeam}
             onChange={(e) => setSelectedTeam(e.target.value)}
-            className="bg-surface border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand"
+            className="bg-surface border border-line text-ink text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand"
           >
             <option value="all">Todos los equipos</option>
             {teamsWithAthletes.map((t) => (
@@ -76,7 +76,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
           {/* Print button */}
           <button
             onClick={handlePrint}
-            className="flex items-center gap-2 bg-brand hover:bg-brand-light text-white text-sm font-bold px-4 py-2 rounded-lg transition"
+            className="flex items-center gap-2 bg-brand hover:bg-brand-light text-ink text-sm font-bold px-4 py-2 rounded-lg transition"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -100,15 +100,15 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <SummaryCard label="Atletas" value={totalAthletes} color="text-slate-100" />
-        <SummaryCard label="En Riesgo ACWR" value={atRisk.length} color="text-amber-400" />
-        <SummaryCard label="Alertas Rojas" value={redAlerts.length} color="text-red-400" />
+        <SummaryCard label="Atletas" value={totalAthletes} color="text-ink" />
+        <SummaryCard label="En Riesgo ACWR" value={atRisk.length} color="text-amber-text" />
+        <SummaryCard label="Alertas Rojas" value={redAlerts.length} color="text-danger" />
         <SummaryCard
           label="Con datos completos"
           value={teams.flatMap((t) => t.athletes).filter((a) =>
             a.latest_acwr && a.latest_poms && a.latest_pain
           ).length}
-          color="text-green-400"
+          color="text-success"
         />
       </div>
 
@@ -119,26 +119,26 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
           <div className="flex items-center gap-3">
             <div className="w-2 h-8 bg-brand rounded-full" />
             <div>
-              <h2 className="text-xl font-black text-slate-100">{team.name}</h2>
-              <p className="text-slate-500 text-sm">
+              <h2 className="text-xl font-black text-ink">{team.name}</h2>
+              <p className="text-ink-soft text-sm">
                 {sportLabels[team.sport] ?? team.sport} · {team.athletes.length} atleta{team.athletes.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
 
           {/* Athletes table */}
-          <div className="bg-surface border border-slate-700 rounded-xl overflow-hidden print:border-gray-300 print:rounded-none">
+          <div className="bg-surface border border-line rounded-xl overflow-hidden print:border-gray-300 print:rounded-none">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-700 print:border-gray-300">
-                  <th className="text-left px-4 py-3 text-slate-400 font-semibold print:text-gray-500">Atleta</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">ACWR</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">Zona</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">EVA</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">TMD</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">H/Q</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">FMS</th>
-                  <th className="text-center px-3 py-3 text-slate-400 font-semibold print:text-gray-500">Alertas</th>
+                <tr className="border-b border-line print:border-gray-300">
+                  <th className="text-left px-4 py-3 text-ink-soft font-semibold print:text-gray-500">Atleta</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">ACWR</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">Zona</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">EVA</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">TMD</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">H/Q</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">FMS</th>
+                  <th className="text-center px-3 py-3 text-ink-soft font-semibold print:text-gray-500">Alertas</th>
                 </tr>
               </thead>
               <tbody>
@@ -150,20 +150,20 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
                   const oreCount  = athlete.prescriptions.filter((p) => p.alert_level === "orange").length;
                   const topAlert  = athlete.prescriptions[0];
                   const alertColor =
-                    redCount  > 0 ? "#EF4444" :
-                    oreCount > 0 ? "#F97316" :
-                    athlete.prescriptions.length > 0 ? "#EAB308" : "#22C55E";
+                    redCount  > 0 ? "#c0492f" :
+                    oreCount > 0 ? "#d9702a" :
+                    athlete.prescriptions.length > 0 ? "#d9902a" : "#6f9c4a";
 
                   return (
                     <tr
                       key={athlete.id}
-                      className="border-b border-slate-800 print:border-gray-200"
+                      className="border-b border-line print:border-gray-200"
                     >
                       <td className="px-4 py-3">
-                        <p className="text-slate-100 font-semibold print:text-gray-900">{athlete.full_name}</p>
-                        <p className="text-slate-500 text-xs">{athlete.email}</p>
+                        <p className="text-ink font-semibold print:text-gray-900">{athlete.full_name}</p>
+                        <p className="text-ink-soft text-xs">{athlete.email}</p>
                       </td>
-                      <td className="px-3 py-3 text-center font-black" style={{ color: zone?.color ?? "#94a3b8" }}>
+                      <td className="px-3 py-3 text-center font-black" style={{ color: zone?.color ?? "#8a7660" }}>
                         {athlete.latest_acwr?.acwr_ratio.toFixed(2) ?? "—"}
                       </td>
                       <td className="px-3 py-3 text-center">
@@ -174,7 +174,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
                           >
                             {zone.label}
                           </span>
-                        ) : <span className="text-slate-600 text-xs">—</span>}
+                        ) : <span className="text-ink-muted text-xs">—</span>}
                       </td>
                       <td className="px-3 py-3 text-center">
                         {athlete.latest_pain ? (
@@ -182,42 +182,42 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
                             score={athlete.latest_pain.eva_score}
                             light={athlete.latest_pain.traffic_light}
                           />
-                        ) : <span className="text-slate-600 text-xs">—</span>}
+                        ) : <span className="text-ink-muted text-xs">—</span>}
                       </td>
                       <td className="px-3 py-3 text-center">
                         {athlete.latest_poms != null ? (
                           <span className={`text-xs font-bold ${
                             athlete.latest_poms.tmd_score > 7
-                              ? "text-red-400"
+                              ? "text-danger"
                               : athlete.latest_poms.tmd_score > 0
                               ? "text-yellow-400"
-                              : "text-green-400"
+                              : "text-success"
                           }`}>
                             {athlete.latest_poms.tmd_score > 0
                               ? `+${athlete.latest_poms.tmd_score}`
                               : athlete.latest_poms.tmd_score}
                           </span>
-                        ) : <span className="text-slate-600 text-xs">—</span>}
+                        ) : <span className="text-ink-muted text-xs">—</span>}
                       </td>
                       <td className="px-3 py-3 text-center">
                         {athlete.latest_hq ? (
                           <span className={`text-xs font-bold ${
-                            athlete.latest_hq.risk_flag ? "text-red-400" : "text-green-400"
+                            athlete.latest_hq.risk_flag ? "text-danger" : "text-success"
                           }`}>
                             {athlete.latest_hq.hq_ratio.toFixed(3)}
                             {athlete.latest_hq.risk_flag ? " ⚠" : " ✓"}
                           </span>
-                        ) : <span className="text-slate-600 text-xs">—</span>}
+                        ) : <span className="text-ink-muted text-xs">—</span>}
                       </td>
                       <td className="px-3 py-3 text-center">
                         {athlete.latest_biomech ? (
                           <span className={`text-xs font-bold ${
-                            athlete.latest_biomech.fms_injury_risk ? "text-orange-400" : "text-green-400"
+                            athlete.latest_biomech.fms_injury_risk ? "text-orange" : "text-success"
                           }`}>
                             {athlete.latest_biomech.fms_total}/21
                             {athlete.latest_biomech.fms_injury_risk ? " ⚠" : " ✓"}
                           </span>
-                        ) : <span className="text-slate-600 text-xs">—</span>}
+                        ) : <span className="text-ink-muted text-xs">—</span>}
                       </td>
                       <td className="px-3 py-3 text-center">
                         {athlete.prescriptions.length > 0 ? (
@@ -228,7 +228,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
                             {athlete.prescriptions.length}
                           </span>
                         ) : (
-                          <span className="text-green-400 text-xs">✓</span>
+                          <span className="text-success text-xs">✓</span>
                         )}
                       </td>
                     </tr>
@@ -270,7 +270,7 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
       ))}
 
       {/* Disclaimer */}
-      <p className="text-slate-700 text-xs print:text-gray-400">
+      <p className="text-ink-muted text-xs print:text-gray-400">
         * Las prescripciones son generadas automáticamente por el Motor de Reglas de Bodysense basado en evidencia
         científica. No sustituyen el criterio clínico del profesional.
       </p>
@@ -280,16 +280,16 @@ export default function ReportsClient({ teamsWithAthletes, generatedAt, acwrZone
 
 function SummaryCard({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="bg-surface rounded-xl p-5 border border-slate-700 print:border-gray-200">
+    <div className="bg-surface rounded-xl p-5 border border-line print:border-gray-200">
       <p className={`text-3xl font-black ${color}`}>{value}</p>
-      <p className="text-slate-400 text-sm mt-1 print:text-gray-500">{label}</p>
+      <p className="text-ink-soft text-sm mt-1 print:text-gray-500">{label}</p>
     </div>
   );
 }
 
 function EvaChip({ score, light }: { score: number; light: string }) {
   const colors: Record<string, string> = {
-    green: "#22C55E", yellow: "#F59E0B", red: "#EF4444",
+    green: "#6f9c4a", yellow: "#d9902a", red: "#c0492f",
   };
   const color = colors[light] ?? "#6B7280";
   return (

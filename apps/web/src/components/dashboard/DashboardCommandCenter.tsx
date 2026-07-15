@@ -29,6 +29,7 @@ import {
 } from "recharts";
 import type { TooltipProps } from "recharts";
 import { clsx } from "clsx";
+import { useThemeColors } from "@/components/theme/useThemeColors";
 import {
   Moon,
   Calendar,
@@ -84,10 +85,10 @@ export interface DashboardCommandCenterProps {
 // ─── Zone config ──────────────────────────────────────────────────────────────
 
 const ZONE_CONFIG = {
-  low:       { label: "Carga Baja",      color: "#3B82F6", neon: "#60A5FA" },
-  optimal:   { label: "Zona Óptima",     color: "#22C55E", neon: "#4ADE80" },
-  high:      { label: "Riesgo Alto",     color: "#EAB308", neon: "#FDE047" },
-  very_high: { label: "Riesgo Muy Alto", color: "#EF4444", neon: "#F87171" },
+  low:       { label: "Carga Baja",      color: "#4a86b0", neon: "#60A5FA" },
+  optimal:   { label: "Zona Óptima",     color: "#6f9c4a", neon: "#4ADE80" },
+  high:      { label: "Riesgo Alto",     color: "#d9902a", neon: "#FDE047" },
+  very_high: { label: "Riesgo Muy Alto", color: "#c0492f", neon: "#F87171" },
 } as const;
 
 const SESSION_LABELS: Record<UpcomingSession["sessionType"], string> = {
@@ -120,26 +121,27 @@ function fmtSessionDate(iso: string): string {
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
 
 function AcwrTooltip({ active, payload, label }: TooltipProps<number, string>) {
+  const c = useThemeColors();
   if (!active || !payload?.length) return null;
   const acwrVal = payload.find((p) => p.dataKey === "acwr")?.value;
   const acuteVal = payload.find((p) => p.dataKey === "acuteLoad")?.value;
   return (
     <div
       role="tooltip"
-      className="rounded-xl border border-white/10 p-3 text-xs shadow-2xl"
-      style={{ background: "#0a0a0a" }}
+      className="rounded-xl border border-line p-3 text-xs shadow-2xl"
+      style={{ background: c.surfaceHigh }}
     >
-      <p className="text-slate-400 mb-2 font-medium">{fmtDate(String(label))}</p>
-      <p className="text-white font-bold">
+      <p className="text-ink-soft mb-2 font-medium">{fmtDate(String(label))}</p>
+      <p className="text-ink font-bold">
         ACWR{" "}
-        <span style={{ color: "#818cf8" }}>
+        <span style={{ color: c.brand }}>
           {typeof acwrVal === "number" ? acwrVal.toFixed(2) : "—"}
         </span>
       </p>
       {typeof acuteVal === "number" && (
-        <p className="text-slate-400 mt-0.5">
+        <p className="text-ink-soft mt-0.5">
           Carga aguda:{" "}
-          <span className="text-slate-300">{Math.round(acuteVal)} UA</span>
+          <span className="text-ink-body">{Math.round(acuteVal)} UA</span>
         </p>
       )}
     </div>
@@ -159,15 +161,16 @@ export default function DashboardCommandCenter({
   atRiskCount,
   criticalAlerts,
 }: DashboardCommandCenterProps) {
+  const c = useThemeColors();
   const zone = currentZone ? ZONE_CONFIG[currentZone] : null;
 
   // Color dinámico de la curva ACWR según zona actual
   const acwrLineColor =
-    currentAcwr === null ? "#818cf8"
-    : currentAcwr > 1.5  ? "#ef4444"
-    : currentAcwr > 1.3  ? "#f59e0b"
-    : currentAcwr > 0.8  ? "#22c55e"
-    : "#64748b";
+    currentAcwr === null ? c.brand
+    : currentAcwr > 1.5  ? c.danger
+    : currentAcwr > 1.3  ? c.warning
+    : currentAcwr > 0.8  ? c.success
+    : c.inkSoft;
 
   return (
     <motion.section
@@ -182,17 +185,17 @@ export default function DashboardCommandCenter({
         variants={fadeUpItem}
         className={clsx(
           "md:col-span-2 md:row-span-2",
-          "rounded-2xl border border-white/10 p-6 flex flex-col",
-          "bg-[#0f0f0f]"
+          "rounded-2xl border border-line p-6 flex flex-col",
+          "bg-surface"
         )}
       >
         {/* Card header */}
         <header className="flex items-start justify-between mb-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-soft mb-1">
               Acute:Chronic Workload Ratio
             </p>
-            <h2 className="text-slate-100 text-xl font-black leading-tight">
+            <h2 className="text-ink text-xl font-black leading-tight">
               ACWR del Equipo
             </h2>
           </div>
@@ -213,7 +216,7 @@ export default function DashboardCommandCenter({
               </p>
             </div>
           ) : (
-            <p className="text-slate-600 text-sm">Sin datos</p>
+            <p className="text-ink-muted text-sm">Sin datos</p>
           )}
         </header>
 
@@ -232,20 +235,20 @@ export default function DashboardCommandCenter({
               </defs>
 
               {/* ACWR risk zone bands */}
-              <ReferenceArea y1={0}   y2={0.8}  fill="#3B82F6" fillOpacity={0.05} strokeWidth={0} />
-              <ReferenceArea y1={0.8} y2={1.3}  fill="#22C55E" fillOpacity={0.05} strokeWidth={0} />
-              <ReferenceArea y1={1.3} y2={1.5}  fill="#EAB308" fillOpacity={0.08} strokeWidth={0} />
-              <ReferenceArea y1={1.5} y2={3}    fill="#EF4444" fillOpacity={0.08} strokeWidth={0} />
+              <ReferenceArea y1={0}   y2={0.8}  fill={c.info}    fillOpacity={0.05} strokeWidth={0} />
+              <ReferenceArea y1={0.8} y2={1.3}  fill={c.success} fillOpacity={0.05} strokeWidth={0} />
+              <ReferenceArea y1={1.3} y2={1.5}  fill={c.warning} fillOpacity={0.08} strokeWidth={0} />
+              <ReferenceArea y1={1.5} y2={3}    fill={c.danger}  fillOpacity={0.08} strokeWidth={0} />
 
               <CartesianGrid
-                stroke="rgba(255,255,255,0.04)"
+                stroke={c.line}
                 strokeDasharray="3 3"
                 vertical={false}
               />
               <XAxis
                 dataKey="date"
                 tickFormatter={fmtDate}
-                tick={{ fill: "#475569", fontSize: 10 }}
+                tick={{ fill: c.inkMuted, fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
                 interval="preserveStartEnd"
@@ -253,13 +256,13 @@ export default function DashboardCommandCenter({
               <YAxis
                 domain={[0, 2.5]}
                 ticks={[0, 0.8, 1.3, 1.5, 2.0, 2.5]}
-                tick={{ fill: "#475569", fontSize: 10 }}
+                tick={{ fill: c.inkMuted, fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip
                 content={<AcwrTooltip />}
-                cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }}
+                cursor={{ stroke: c.line, strokeWidth: 1 }}
               />
               <Area
                 type="monotone"
@@ -271,7 +274,7 @@ export default function DashboardCommandCenter({
                 activeDot={{
                   r: 5,
                   fill: acwrLineColor,
-                  stroke: "#0f0f0f",
+                  stroke: "#fdf9f2",
                   strokeWidth: 2,
                 }}
                 connectNulls
@@ -285,7 +288,7 @@ export default function DashboardCommandCenter({
 
         {/* Zone legend */}
         <footer
-          className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-4 border-t border-white/5"
+          className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-4 border-t border-line"
           aria-label="Leyenda de zonas ACWR"
         >
           {(Object.entries(ZONE_CONFIG) as [string, typeof ZONE_CONFIG.low][]).map(
@@ -296,7 +299,7 @@ export default function DashboardCommandCenter({
                   style={{ background: z.color }}
                   aria-hidden="true"
                 />
-                <span className="text-[10px] text-slate-500">{z.label}</span>
+                <span className="text-[10px] text-ink-soft">{z.label}</span>
               </div>
             )
           )}
@@ -307,8 +310,8 @@ export default function DashboardCommandCenter({
       <motion.div variants={fadeUpItem}>
       <BentoCard
         icon={<Moon size={15} aria-hidden="true" />}
-        iconBg="bg-indigo-500/10"
-        iconColor="text-indigo-400"
+        iconBg="bg-brand/10"
+        iconColor="text-brand"
         label="Estado de Recuperación"
       >
         {recovery ? (
@@ -318,7 +321,7 @@ export default function DashboardCommandCenter({
               value={recovery.sleepHours}
               max={12}
               unit="h"
-              color="#818cf8"
+              color="#c65f3f"
               aria={`${recovery.sleepHours} horas de sueño`}
             />
             <RecoveryBar
@@ -326,7 +329,7 @@ export default function DashboardCommandCenter({
               value={recovery.sleepQuality}
               max={5}
               unit="/5"
-              color="#22d3ee"
+              color="#3f9aa8"
               aria={`Calidad de sueño ${recovery.sleepQuality} de 5`}
             />
             <RecoveryBar
@@ -334,7 +337,7 @@ export default function DashboardCommandCenter({
               value={10 - recovery.fatigue}
               max={10}
               unit=""
-              color="#4ade80"
+              color="#6f9c4a"
               aria={`Nivel de recuperación ${10 - recovery.fatigue} de 10`}
             />
             <RecoveryBar
@@ -342,7 +345,7 @@ export default function DashboardCommandCenter({
               value={recovery.mood}
               max={5}
               unit="/5"
-              color="#f59e0b"
+              color="#d9902a"
               aria={`Ánimo ${recovery.mood} de 5`}
             />
           </div>
@@ -357,12 +360,12 @@ export default function DashboardCommandCenter({
       <BentoCard
         icon={<Calendar size={15} aria-hidden="true" />}
         iconBg="bg-cyan-500/10"
-        iconColor="text-cyan-400"
+        iconColor="text-cyan"
         label="Próxima Sesión"
       >
         {nextSession ? (
           <div className="space-y-3">
-            <p className="text-slate-100 font-bold text-sm leading-snug">
+            <p className="text-ink font-bold text-sm leading-snug">
               {nextSession.title}
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -371,7 +374,7 @@ export default function DashboardCommandCenter({
               </Chip>
               <Chip color="indigo">{nextSession.phase}</Chip>
             </div>
-            <dl className="text-xs text-slate-400 space-y-1 pt-1">
+            <dl className="text-xs text-ink-soft space-y-1 pt-1">
               <div className="flex gap-1.5">
                 <dt aria-hidden="true">📅</dt>
                 <dd>{fmtSessionDate(nextSession.scheduledAt)}</dd>
@@ -394,7 +397,7 @@ export default function DashboardCommandCenter({
         icon={<Users size={14} aria-hidden="true" />}
         label="Atletas"
         value={athleteCount}
-        accentColor="#818cf8"
+        accentColor="#c65f3f"
         sub={`${optimalCount} en zona óptima`}
       />
       </motion.div>
@@ -405,7 +408,7 @@ export default function DashboardCommandCenter({
         icon={<AlertTriangle size={14} aria-hidden="true" />}
         label="En Riesgo"
         value={atRiskCount}
-        accentColor={atRiskCount > 0 ? "#ef4444" : "#4ade80"}
+        accentColor={atRiskCount > 0 ? "#c0492f" : "#6f9c4a"}
         sub={
           criticalAlerts > 0
             ? `${criticalAlerts} alerta${criticalAlerts > 1 ? "s" : ""} crítica${criticalAlerts > 1 ? "s" : ""}`
@@ -433,7 +436,7 @@ function BentoCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0f0f0f] p-5 flex flex-col gap-4">
+    <div className="rounded-2xl border border-line bg-surface p-5 flex flex-col gap-4">
       <header className="flex items-center gap-2.5">
         <div
           className={clsx(
@@ -444,7 +447,7 @@ function BentoCard({
         >
           {icon}
         </div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
           {label}
         </p>
       </header>
@@ -472,13 +475,13 @@ function RecoveryBar({
   return (
     <div role="meter" aria-label={aria} aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
       <div className="flex justify-between text-xs mb-1.5">
-        <span className="text-slate-400">{label}</span>
-        <span className="text-slate-300 font-semibold tabular-nums">
+        <span className="text-ink-soft">{label}</span>
+        <span className="text-ink-body font-semibold tabular-nums">
           {value}
           {unit}
         </span>
       </div>
-      <div className="h-1.5 rounded-full overflow-hidden bg-white/5">
+      <div className="h-1.5 rounded-full overflow-hidden bg-surface-high">
         <div
           className="h-full rounded-full transition-all duration-700 ease-out"
           style={{ width: `${pct}%`, background: color }}
@@ -496,8 +499,8 @@ function Chip({
   children: React.ReactNode;
 }) {
   const styles = {
-    cyan:   "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    indigo: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+    cyan:   "bg-cyan-500/10 text-cyan border-cyan-500/20",
+    indigo: "bg-brand/10 text-brand border-brand/20",
   };
   return (
     <span
@@ -526,10 +529,10 @@ function MiniStat({
 }) {
   return (
     <article
-      className="rounded-2xl border border-white/10 bg-[#0f0f0f] p-5 flex flex-col justify-between gap-4"
+      className="rounded-2xl border border-line bg-surface p-5 flex flex-col justify-between gap-4"
       aria-label={`${label}: ${value}`}
     >
-      <header className="flex items-center gap-2 text-slate-500">
+      <header className="flex items-center gap-2 text-ink-soft">
         {icon}
         <span className="text-[10px] font-bold uppercase tracking-[0.18em]">{label}</span>
       </header>
@@ -540,7 +543,7 @@ function MiniStat({
         >
           {value}
         </p>
-        <p className="text-xs text-slate-500 mt-1.5">{sub}</p>
+        <p className="text-xs text-ink-soft mt-1.5">{sub}</p>
       </div>
     </article>
   );
@@ -549,7 +552,7 @@ function MiniStat({
 function EmptyMetric({ message }: { message: string }) {
   return (
     <div className="flex-1 flex items-center justify-center py-4">
-      <p className="text-slate-600 text-xs text-center">{message}</p>
+      <p className="text-ink-muted text-xs text-center">{message}</p>
     </div>
   );
 }

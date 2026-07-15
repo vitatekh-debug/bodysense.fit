@@ -10,7 +10,7 @@
  * Design:
  *   • backdrop-blur-md glass surface
  *   • Inset top-edge highlight simulates gradient border
- *   • ACWR hero card emits a soft zone-coloured glow on #080808 bg
+ *   • ACWR hero card emits a soft zone-coloured glow on #f1e6d4 bg
  *   • Staggered bs-fade-up on each card
  */
 
@@ -60,10 +60,10 @@ function BentoCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/[0.09] bg-white/[0.025]",
+        "rounded-2xl border border-line bg-surface",
         "p-5 backdrop-blur-md",
         // Inset top highlight → subtle gradient-border feel
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
+        "shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]",
         "transition-shadow duration-300",
         className
       )}
@@ -89,13 +89,13 @@ function MetricCard({
 }) {
   return (
     <BentoCard className={className}>
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-black text-white/90 tabular-nums">
+      <p className="mt-2 text-2xl font-black text-ink tabular-nums">
         {value}
       </p>
-      <p className="mt-0.5 text-[11px] font-medium text-white/25">{unit}</p>
+      <p className="mt-0.5 text-[11px] font-medium text-ink-muted">{unit}</p>
     </BentoCard>
   );
 }
@@ -112,27 +112,27 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
         "col-span-2 sm:col-span-1",
         // Brand-tinted border when data is present
         acwr
-          ? "border-white/[0.12] hover:border-white/[0.18]"
-          : "border-white/[0.07]"
+          ? "border-line-strong hover:border-line-strong"
+          : "border-line"
       )}
       style={{
         boxShadow: [
-          "inset 0 1px 0 rgba(255,255,255,0.08)",
-          "0 1px 3px rgba(0,0,0,0.4)",
+          "inset 0 1px 0 var(--bs-card-inset)",
+          "0 1px 3px var(--bs-card-shadow)",
           acwrGlow(acwr?.risk_zone),
         ]
           .filter(Boolean)
           .join(", "),
       }}
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">
         ACWR
       </p>
 
       {/* Large ratio number */}
       <p
-        className="mt-2 text-5xl font-black leading-none tabular-nums transition-colors duration-500"
-        style={{ color: zone?.color ?? "rgba(255,255,255,0.20)" }}
+        className="mt-2 text-5xl font-black leading-none tabular-nums transition-colors duration-500 text-ink-muted"
+        style={zone ? { color: zone.color } : undefined}
       >
         {ratio != null && isFinite(ratio) ? ratio.toFixed(2) : "—"}
       </p>
@@ -158,7 +158,7 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
           {zone.label}
         </span>
       ) : (
-        <span className="mt-3 inline-block text-[11px] text-white/20">
+        <span className="mt-3 inline-block text-[11px] text-ink-muted">
           Sin datos
         </span>
       )}

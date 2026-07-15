@@ -33,30 +33,30 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
       {/* Section header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-slate-200 font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+          <h2 className="text-ink font-bold text-sm uppercase tracking-widest flex items-center gap-2">
             🧠 Prescripciones Automáticas
-            <span className="text-xs font-normal text-slate-500 normal-case tracking-normal">
+            <span className="text-xs font-normal text-ink-soft normal-case tracking-normal">
               Motor de Reglas v1
             </span>
           </h2>
-          <p className="text-slate-500 text-xs mt-0.5">
+          <p className="text-ink-soft text-xs mt-0.5">
             {prescriptions.length} alerta{prescriptions.length > 1 ? "s" : ""} detectada{prescriptions.length > 1 ? "s" : ""}
-            {redCount > 0 && <span className="text-red-400 font-bold"> · {redCount} crítica{redCount > 1 ? "s" : ""}</span>}
+            {redCount > 0 && <span className="text-danger font-bold"> · {redCount} crítica{redCount > 1 ? "s" : ""}</span>}
           </p>
         </div>
 
         {/* Filter pills */}
         <div className="flex gap-1 flex-wrap">
           {[
-            { key: "all", label: `Todas (${prescriptions.length})`, color: "#94a3b8" },
+            { key: "all", label: `Todas (${prescriptions.length})`, color: "#8a7660" },
             ...(redCount > 0
-              ? [{ key: "red", label: `🔴 ${redCount}`, color: "#EF4444" }]
+              ? [{ key: "red", label: `🔴 ${redCount}`, color: "#c0492f" }]
               : []),
             ...(orangeCount > 0
-              ? [{ key: "orange", label: `🟠 ${orangeCount}`, color: "#F97316" }]
+              ? [{ key: "orange", label: `🟠 ${orangeCount}`, color: "#d9702a" }]
               : []),
             ...(yellowCount > 0
-              ? [{ key: "yellow", label: `🟡 ${yellowCount}`, color: "#EAB308" }]
+              ? [{ key: "yellow", label: `🟡 ${yellowCount}`, color: "#d9902a" }]
               : []),
           ].map(({ key, label, color }) => (
             <button
@@ -64,7 +64,7 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
               onClick={() => setFilter(key)}
               className="text-xs px-3 py-1 rounded-full border transition"
               style={{
-                borderColor: filter === key ? color : "#374151",
+                borderColor: filter === key ? color : "#d6c6ac",
                 color: filter === key ? color : "#9ca3af",
                 backgroundColor: filter === key ? color + "22" : "transparent",
               }}
@@ -95,7 +95,7 @@ export default function PrescriptionAlerts({ prescriptions, multiAthlete = true 
       </motion.div>
 
       {/* Disclaimer */}
-      <p className="text-slate-700 text-xs">
+      <p className="text-ink-muted text-xs">
         * Las prescripciones son generadas automáticamente por el Motor de Reglas de Bodysense
         basado en evidencia científica. No sustituyen el criterio clínico del profesional.
       </p>

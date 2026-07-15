@@ -50,10 +50,31 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Script anti-parpadeo (FOUC de tema).
+ *
+ * Corre de forma síncrona ANTES del primer paint y fija data-theme en <html>
+ * leyendo la preferencia guardada; si no hay, respeta la del sistema.
+ * Sin esto, el usuario vería un flash del tema por defecto al recargar.
+ */
+const THEME_INIT = `
+(function () {
+  try {
+    var stored = localStorage.getItem('bs-theme');
+    var theme = stored
+      || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'warm');
+    document.documentElement.dataset.theme = theme;
+  } catch (e) {
+    document.documentElement.dataset.theme = 'warm';
+  }
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
         {/*
          * Cache-busting meta — versión del build embebida en el HTML.
          * Cambia con cada deploy (= hash del commit en Netlify).
