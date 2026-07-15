@@ -262,7 +262,7 @@ export default function DashboardCommandCenter({
               />
               <Tooltip
                 content={<AcwrTooltip />}
-                cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }}
+                cursor={{ stroke: c.line, strokeWidth: 1 }}
               />
               <Area
                 type="monotone"

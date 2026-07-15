@@ -559,9 +559,9 @@ const DayColumn = memo(function DayColumn({
         "border bg-void",
         "backdrop-blur-md",
         // Inset top-edge highlight
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.5)]",
+        "shadow-[inset_0_1px_0_var(--bs-card-inset),0_2px_8px_var(--bs-card-shadow)]",
         today
-          ? "border-brand/40 shadow-[inset_0_1px_0_rgba(198,95,63,0.12),0_0_20px_rgba(198,95,63,0.08),0_2px_8px_rgba(0,0,0,0.5)]"
+          ? "border-brand/40 shadow-[inset_0_1px_0_rgba(198,95,63,0.12),0_0_20px_rgba(198,95,63,0.08),0_2px_8px_var(--bs-card-shadow)]"
           : "border-line",
         // Staggered fade-up
         "bs-fade-up",
@@ -802,7 +802,7 @@ export default function TrainingPlanner({
           "auth-grid-bg relative overflow-hidden rounded-2xl",
           "bg-void px-6 py-5",
           "border border-line backdrop-blur-md",
-          "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.5)]",
+          "shadow-[inset_0_1px_0_var(--bs-card-inset),0_2px_8px_var(--bs-card-shadow)]",
           "bs-fade-up bs-d0"
         )}
       >

@@ -74,7 +74,7 @@ export function MetricCardsSkeleton() {
         className={cn(
           "col-span-2 sm:col-span-1",
           "rounded-2xl border border-line bg-surface p-5 backdrop-blur-md",
-          "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+          "shadow-[inset_0_1px_0_var(--bs-card-inset)]"
         )}
       >
         <Bone className="mb-3 h-2.5 w-10" />
@@ -93,7 +93,7 @@ export function MetricCardsSkeleton() {
           key={i}
           className={cn(
             "rounded-2xl border border-line bg-surface p-5 backdrop-blur-md",
-            "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+            "shadow-[inset_0_1px_0_var(--bs-card-inset)]"
           )}
         >
           <Bone className="mb-3 h-2.5 w-24" />
@@ -112,7 +112,7 @@ export function AcwrChartSkeleton() {
     <div
       className={cn(
         "rounded-2xl border border-line bg-surface p-6 backdrop-blur-md",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+        "shadow-[inset_0_1px_0_var(--bs-card-inset)]"
       )}
     >
       {/* Y-axis + chart area */}
@@ -153,7 +153,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
     <div
       className={cn(
         "rounded-2xl border border-line bg-surface overflow-hidden backdrop-blur-md",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+        "shadow-[inset_0_1px_0_var(--bs-card-inset)]"
       )}
     >
       {/* Card header */}

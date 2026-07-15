@@ -81,9 +81,9 @@ function StatTile({ label, value, unit, color }: {
   label: string; value: string; unit?: string; color?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-line bg-surface p-4 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <div className="rounded-2xl border border-line bg-surface p-4 backdrop-blur-md shadow-[inset_0_1px_0_var(--bs-card-inset)]">
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">{label}</p>
-      <p className="mt-2 text-2xl font-black tabular-nums" style={{ color: color ?? "rgba(255,255,255,0.9)" }}>
+      <p className="mt-2 text-2xl font-black tabular-nums text-ink" style={color ? { color } : undefined}>
         {value}
       </p>
       {unit && <p className="mt-0.5 text-[11px] font-medium text-ink-muted">{unit}</p>}

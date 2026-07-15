@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { FMS_PATTERNS, FMS_SCORE_LABELS } from "@vitatekh/shared";
 import { springPop } from "@/components/motion/primitives";
+import { useThemeColors } from "@/components/theme/useThemeColors";
 
 const SURFACE_OPTIONS: { value: string; label: string }[] = [
   { value: "natural_grass", label: "Césped natural" },
@@ -32,8 +33,6 @@ const FOOTWEAR_OPTIONS: { value: string; label: string }[] = [
   { value: "other", label: "Otro" },
 ];
 
-const SCORE_COLOR = ["#c0492f", "#d9902a", "#84cc16", "#6f9c4a"];
-
 export default function FmsForm({
   athleteId,
   professionalId,
@@ -43,6 +42,10 @@ export default function FmsForm({
 }) {
   const router = useRouter();
   const supabase = createClient();
+  const c = useThemeColors();
+
+  // Escala FMS 0-3: dolor → correcto. Sigue el tema activo.
+  const SCORE_COLOR = [c.danger, c.warning, c.success, c.success];
 
   const [scores, setScores] = useState<Record<string, number | null>>(
     Object.fromEntries(FMS_PATTERNS.map((p) => [p.key, null]))
@@ -55,7 +58,7 @@ export default function FmsForm({
 
   const total = FMS_PATTERNS.reduce((sum, p) => sum + (scores[p.key] ?? 0), 0);
   const scored = FMS_PATTERNS.filter((p) => scores[p.key] != null).length;
-  const totalColor = total <= 14 ? "#d9902a" : "#6f9c4a";
+  const totalColor = total <= 14 ? c.warning : c.success;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -132,9 +135,9 @@ export default function FmsForm({
                     transition={springPop}
                     className="flex-1 rounded-lg border py-2 text-xs font-semibold transition-colors duration-200"
                     style={{
-                      borderColor: active ? SCORE_COLOR[score] : "rgba(255,255,255,0.09)",
-                      backgroundColor: active ? SCORE_COLOR[score]! + "22" : "rgba(0,0,0,0.3)",
-                      color: active ? SCORE_COLOR[score] : "#8a7660",
+                      borderColor: active ? SCORE_COLOR[score] : c.line,
+                      backgroundColor: active ? SCORE_COLOR[score]! + "22" : c.surfaceHigh,
+                      color: active ? SCORE_COLOR[score] : c.inkSoft,
                     }}
                   >
                     <span className="block text-base font-black">{score}</span>

@@ -53,7 +53,7 @@ export default function MetricTrendChart({
     latest != null && previous != null ? latest - previous : null;
 
   return (
-    <div className="rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <div className="rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_var(--bs-card-inset)]">
       <div className="flex items-start justify-between mb-4">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-soft">

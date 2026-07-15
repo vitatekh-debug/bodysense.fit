@@ -63,7 +63,7 @@ function BentoCard({
         "rounded-2xl border border-line bg-surface",
         "p-5 backdrop-blur-md",
         // Inset top highlight → subtle gradient-border feel
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
+        "shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]",
         "transition-shadow duration-300",
         className
       )}
@@ -117,8 +117,8 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
       )}
       style={{
         boxShadow: [
-          "inset 0 1px 0 rgba(255,255,255,0.08)",
-          "0 1px 3px rgba(0,0,0,0.4)",
+          "inset 0 1px 0 var(--bs-card-inset)",
+          "0 1px 3px var(--bs-card-shadow)",
           acwrGlow(acwr?.risk_zone),
         ]
           .filter(Boolean)
@@ -131,8 +131,8 @@ function AcwrHeroCard({ acwr }: { acwr: AcwrSummary | null }) {
 
       {/* Large ratio number */}
       <p
-        className="mt-2 text-5xl font-black leading-none tabular-nums transition-colors duration-500"
-        style={{ color: zone?.color ?? "rgba(255,255,255,0.20)" }}
+        className="mt-2 text-5xl font-black leading-none tabular-nums transition-colors duration-500 text-ink-muted"
+        style={zone ? { color: zone.color } : undefined}
       >
         {ratio != null && isFinite(ratio) ? ratio.toFixed(2) : "—"}
       </p>

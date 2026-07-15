@@ -104,7 +104,7 @@ export default function ProfileWellnessTable({
       className={cn(
         "rounded-2xl border border-line bg-surface overflow-hidden",
         "backdrop-blur-md",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
+        "shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]",
         "bs-fade-up bs-d0"
       )}
     >

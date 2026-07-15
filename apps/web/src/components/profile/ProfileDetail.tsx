@@ -94,7 +94,7 @@ async function AcwrChartSection({ athleteId }: { athleteId: string }) {
     <div
       className={[
         "rounded-2xl border border-line bg-surface p-6 backdrop-blur-md",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_3px_rgba(0,0,0,0.4)]",
+        "shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]",
         "bs-fade-up bs-d2",
       ].join(" ")}
     >
@@ -145,7 +145,7 @@ function EmptyState({ message }: { message: string }) {
       className={[
         "flex items-center justify-center rounded-2xl p-10 text-center",
         "border border-line bg-surface backdrop-blur-md",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
+        "shadow-[inset_0_1px_0_var(--bs-card-inset)]",
       ].join(" ")}
     >
       <p className="max-w-sm text-[13px] leading-relaxed text-ink-muted">{message}</p>

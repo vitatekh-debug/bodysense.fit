@@ -102,7 +102,7 @@ function AthleteCard({ athlete, zone, sportLabels }: {
 
   return (
     <motion.div variants={fadeUpItem}>
-      <div className="rounded-2xl border border-line bg-surface backdrop-blur-md p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]">
+      <div className="rounded-2xl border border-line bg-surface backdrop-blur-md p-4 shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]">
         <Link href={`/athletes/${athlete.id}`} className="flex items-center gap-3">
           <div
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold"
@@ -265,7 +265,7 @@ export default function AthletesClient({ athletes, acwrZones, sportLabels }: Pro
       </motion.div>
 
       {/* Desktop: scannable table */}
-      <div className="hidden md:block rounded-2xl overflow-hidden border border-line bg-surface backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+      <div className="hidden md:block rounded-2xl overflow-hidden border border-line bg-surface backdrop-blur-md shadow-[inset_0_1px_0_var(--bs-card-inset)]">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-line">

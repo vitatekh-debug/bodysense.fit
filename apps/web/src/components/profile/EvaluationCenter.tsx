@@ -47,7 +47,7 @@ function EvalCard({ cfg }: { cfg: CardConfig }) {
   return (
     <motion.div
       variants={fadeUpItem}
-      className="flex flex-col rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]"
+      className="flex flex-col rounded-2xl border border-line bg-surface p-5 backdrop-blur-md shadow-[inset_0_1px_0_var(--bs-card-inset),0_1px_3px_var(--bs-card-shadow)]"
     >
       <div className="flex items-start gap-3">
         <div
